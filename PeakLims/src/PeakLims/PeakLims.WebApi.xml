@@ -1,0 +1,433 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PeakLims</name>
+    </assembly>
+    <members>
+        <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.GetAccessionComments(PeakLims.Domain.AccessionComments.Dtos.AccessionCommentParametersDto)">
+            <summary>
+            Gets a list of all AccessionComments.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.GetAccessionComment(System.Guid)">
+            <summary>
+            Gets a single AccessionComment by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.AddAccessionComment(PeakLims.Domain.AccessionComments.Dtos.AccessionCommentForCreationDto)">
+            <summary>
+            Creates a new AccessionComment record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.UpdateAccessionComment(System.Guid,PeakLims.Domain.AccessionComments.Dtos.AccessionCommentForUpdateDto)">
+            <summary>
+            Updates an entire existing AccessionComment.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.DeleteAccessionComment(System.Guid)">
+            <summary>
+            Deletes an existing AccessionComment record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.GetAccessions(PeakLims.Domain.Accessions.Dtos.AccessionParametersDto)">
+            <summary>
+            Gets a list of all Accessions.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.GetAccession(System.Guid)">
+            <summary>
+            Gets a single Accession by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.AddAccession(PeakLims.Domain.Accessions.Dtos.AccessionForCreationDto)">
+            <summary>
+            Creates a new Accession record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.UpdateAccession(System.Guid,PeakLims.Domain.Accessions.Dtos.AccessionForUpdateDto)">
+            <summary>
+            Updates an entire existing Accession.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.DeleteAccession(System.Guid)">
+            <summary>
+            Deletes an existing Accession record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.ContainersController.GetContainers(PeakLims.Domain.Containers.Dtos.ContainerParametersDto)">
+            <summary>
+            Gets a list of all Containers.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.ContainersController.GetContainer(System.Guid)">
+            <summary>
+            Gets a single Container by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.ContainersController.AddContainer(PeakLims.Domain.Containers.Dtos.ContainerForCreationDto)">
+            <summary>
+            Creates a new Container record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.ContainersController.UpdateContainer(System.Guid,PeakLims.Domain.Containers.Dtos.ContainerForUpdateDto)">
+            <summary>
+            Updates an entire existing Container.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.ContainersController.DeleteContainer(System.Guid)">
+            <summary>
+            Deletes an existing Container record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationContactsController.GetHealthcareOrganizationContacts(PeakLims.Domain.HealthcareOrganizationContacts.Dtos.HealthcareOrganizationContactParametersDto)">
+            <summary>
+            Gets a list of all HealthcareOrganizationContacts.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationContactsController.GetHealthcareOrganizationContact(System.Guid)">
+            <summary>
+            Gets a single HealthcareOrganizationContact by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationContactsController.AddHealthcareOrganizationContact(PeakLims.Domain.HealthcareOrganizationContacts.Dtos.HealthcareOrganizationContactForCreationDto)">
+            <summary>
+            Creates a new HealthcareOrganizationContact record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationContactsController.UpdateHealthcareOrganizationContact(System.Guid,PeakLims.Domain.HealthcareOrganizationContacts.Dtos.HealthcareOrganizationContactForUpdateDto)">
+            <summary>
+            Updates an entire existing HealthcareOrganizationContact.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationContactsController.DeleteHealthcareOrganizationContact(System.Guid)">
+            <summary>
+            Deletes an existing HealthcareOrganizationContact record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.GetHealthcareOrganizations(PeakLims.Domain.HealthcareOrganizations.Dtos.HealthcareOrganizationParametersDto)">
+            <summary>
+            Gets a list of all HealthcareOrganizations.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.GetHealthcareOrganization(System.Guid)">
+            <summary>
+            Gets a single HealthcareOrganization by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.AddHealthcareOrganization(PeakLims.Domain.HealthcareOrganizations.Dtos.HealthcareOrganizationForCreationDto)">
+            <summary>
+            Creates a new HealthcareOrganization record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.UpdateHealthcareOrganization(System.Guid,PeakLims.Domain.HealthcareOrganizations.Dtos.HealthcareOrganizationForUpdateDto)">
+            <summary>
+            Updates an entire existing HealthcareOrganization.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.DeleteHealthcareOrganization(System.Guid)">
+            <summary>
+            Deletes an existing HealthcareOrganization record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.GetPanels(PeakLims.Domain.Panels.Dtos.PanelParametersDto)">
+            <summary>
+            Gets a list of all Panels.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.GetPanel(System.Guid)">
+            <summary>
+            Gets a single Panel by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.AddPanel(PeakLims.Domain.Panels.Dtos.PanelForCreationDto)">
+            <summary>
+            Creates a new Panel record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.UpdatePanel(System.Guid,PeakLims.Domain.Panels.Dtos.PanelForUpdateDto)">
+            <summary>
+            Updates an entire existing Panel.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.DeletePanel(System.Guid)">
+            <summary>
+            Deletes an existing Panel record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.GetPatients(PeakLims.Domain.Patients.Dtos.PatientParametersDto)">
+            <summary>
+            Gets a list of all Patients.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.GetPatient(System.Guid)">
+            <summary>
+            Gets a single Patient by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.AddPatient(PeakLims.Domain.Patients.Dtos.PatientForCreationDto)">
+            <summary>
+            Creates a new Patient record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.UpdatePatient(System.Guid,PeakLims.Domain.Patients.Dtos.PatientForUpdateDto)">
+            <summary>
+            Updates an entire existing Patient.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.DeletePatient(System.Guid)">
+            <summary>
+            Deletes an existing Patient record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PermissionsController.GetPermissions">
+            <summary>
+            Gets a list of all available permissions.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PermissionsController.GetAssignedPermissions">
+            <summary>
+            Gets a list of the current user's assigned permissions.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.RolePermissionsController.GetRolePermissions(PeakLims.Domain.RolePermissions.Dtos.RolePermissionParametersDto)">
+            <summary>
+            Gets a list of all RolePermissions.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.RolePermissionsController.GetRolePermission(System.Guid)">
+            <summary>
+            Gets a single RolePermission by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.RolePermissionsController.AddRolePermission(PeakLims.Domain.RolePermissions.Dtos.RolePermissionForCreationDto)">
+            <summary>
+            Creates a new RolePermission record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.RolePermissionsController.UpdateRolePermission(System.Guid,PeakLims.Domain.RolePermissions.Dtos.RolePermissionForUpdateDto)">
+            <summary>
+            Updates an entire existing RolePermission.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.RolePermissionsController.DeleteRolePermission(System.Guid)">
+            <summary>
+            Deletes an existing RolePermission record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.RolesController.GetRoles">
+            <summary>
+            Gets a list of all available roles.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.SamplesController.GetSamples(PeakLims.Domain.Samples.Dtos.SampleParametersDto)">
+            <summary>
+            Gets a list of all Samples.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.SamplesController.GetSample(System.Guid)">
+            <summary>
+            Gets a single Sample by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.SamplesController.AddSample(PeakLims.Domain.Samples.Dtos.SampleForCreationDto)">
+            <summary>
+            Creates a new Sample record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.SamplesController.UpdateSample(System.Guid,PeakLims.Domain.Samples.Dtos.SampleForUpdateDto)">
+            <summary>
+            Updates an entire existing Sample.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.SamplesController.DeleteSample(System.Guid)">
+            <summary>
+            Deletes an existing Sample record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.GetTestOrders(PeakLims.Domain.TestOrders.Dtos.TestOrderParametersDto)">
+            <summary>
+            Gets a list of all TestOrders.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.GetTestOrder(System.Guid)">
+            <summary>
+            Gets a single TestOrder by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.AddTestOrder(PeakLims.Domain.TestOrders.Dtos.TestOrderForCreationDto)">
+            <summary>
+            Creates a new TestOrder record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.UpdateTestOrder(System.Guid,PeakLims.Domain.TestOrders.Dtos.TestOrderForUpdateDto)">
+            <summary>
+            Updates an entire existing TestOrder.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.DeleteTestOrder(System.Guid)">
+            <summary>
+            Deletes an existing TestOrder record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestsController.GetTests(PeakLims.Domain.Tests.Dtos.TestParametersDto)">
+            <summary>
+            Gets a list of all Tests.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestsController.GetTest(System.Guid)">
+            <summary>
+            Gets a single Test by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestsController.AddTest(PeakLims.Domain.Tests.Dtos.TestForCreationDto)">
+            <summary>
+            Creates a new Test record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestsController.UpdateTest(System.Guid,PeakLims.Domain.Tests.Dtos.TestForUpdateDto)">
+            <summary>
+            Updates an entire existing Test.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestsController.DeleteTest(System.Guid)">
+            <summary>
+            Deletes an existing Test record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.UsersController.AddRole(System.Guid,System.String)">
+            <summary>
+            Adds a new role to a user.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.UsersController.RemoveRole(System.Guid,System.String)">
+            <summary>
+            Removes a role from a User
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.UsersController.GetUsers(PeakLims.Domain.Users.Dtos.UserParametersDto)">
+            <summary>
+            Gets a list of all Users.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.UsersController.GetUser(System.Guid)">
+            <summary>
+            Gets a single User by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.UsersController.AddUser(PeakLims.Domain.Users.Dtos.UserForCreationDto)">
+            <summary>
+            Creates a new User record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.UsersController.UpdateUser(System.Guid,PeakLims.Domain.Users.Dtos.UserForUpdateDto)">
+            <summary>
+            Updates an entire existing User.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.UsersController.DeleteUser(System.Guid)">
+            <summary>
+            Deletes an existing User record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.AccessionCommentConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.AccessionComments.AccessionComment})">
+            <summary>
+            The database configuration for AccessionComments. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.AccessionConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Accessions.Accession})">
+            <summary>
+            The database configuration for Accessions. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.ContainerConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Containers.Container})">
+            <summary>
+            The database configuration for Containers. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.HealthcareOrganizationConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.HealthcareOrganizations.HealthcareOrganization})">
+            <summary>
+            The database configuration for HealthcareOrganizations. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.HealthcareOrganizationContactConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.HealthcareOrganizationContacts.HealthcareOrganizationContact})">
+            <summary>
+            The database configuration for HealthcareOrganizationContacts. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.PanelConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Panels.Panel})">
+            <summary>
+            The database configuration for Panels. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.PatientConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Patients.Patient})">
+            <summary>
+            The database configuration for Patients. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.RolePermissionConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.RolePermissions.RolePermission})">
+            <summary>
+            The database configuration for RolePermissions. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.SampleConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Samples.Sample})">
+            <summary>
+            The database configuration for Samples. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.TestConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Tests.Test})">
+            <summary>
+            The database configuration for Tests. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.TestOrderConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.TestOrders.TestOrder})">
+            <summary>
+            The database configuration for TestOrders. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.UserConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Users.User})">
+            <summary>
+            The database configuration for Users. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.UserRoleConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Users.UserRole})">
+            <summary>
+            The database configuration for UserRoles. 
+            </summary>
+        </member>
+        <member name="P:PeakLims.Domain.Addresses.Address.Line1">
+            <summary>
+            Address line 1 (e.g., street, PO Box, or company name).
+            </summary>
+        </member>
+        <member name="P:PeakLims.Domain.Addresses.Address.Line2">
+            <summary>
+            Address line 2 (e.g., apartment, suite, unit, or building).
+            </summary>
+        </member>
+        <member name="P:PeakLims.Domain.Addresses.Address.City">
+            <summary>
+            City, district, suburb, town, or village.
+            </summary>
+        </member>
+        <member name="P:PeakLims.Domain.Addresses.Address.State">
+            <summary>
+            State, county, province, or region.
+            </summary>
+        </member>
+        <member name="P:PeakLims.Domain.Addresses.Address.PostalCode">
+            <summary>
+            ZIP or postal code.
+            </summary>
+        </member>
+        <member name="P:PeakLims.Domain.Addresses.Address.Country">
+            <summary>
+            Two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">(ISO 3166-1 alpha-2)</a>.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Extensions.Services.WebAppServiceConfiguration.AddBoundaryServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Reflection.Assembly[])">
+            <summary>
+            Registers all services in the assembly of the given interface.
+            </summary>
+        </member>
+    </members>
+</doc>

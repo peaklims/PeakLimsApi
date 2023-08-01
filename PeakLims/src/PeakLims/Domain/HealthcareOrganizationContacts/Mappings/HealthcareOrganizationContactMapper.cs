@@ -1,0 +1,14 @@
+namespace PeakLims.Domain.HealthcareOrganizationContacts.Mappings;
+
+using PeakLims.Domain.HealthcareOrganizationContacts.Dtos;
+using PeakLims.Domain.HealthcareOrganizationContacts.Models;
+using Riok.Mapperly.Abstractions;
+
+[Mapper]
+public static partial class HealthcareOrganizationContactMapper
+{
+    public static partial HealthcareOrganizationContactForCreation ToHealthcareOrganizationContactForCreation(this HealthcareOrganizationContactForCreationDto healthcareOrganizationContactForCreationDto);
+    public static partial HealthcareOrganizationContactForUpdate ToHealthcareOrganizationContactForUpdate(this HealthcareOrganizationContactForUpdateDto healthcareOrganizationContactForUpdateDto);
+    public static partial HealthcareOrganizationContactDto ToHealthcareOrganizationContactDto(this HealthcareOrganizationContact healthcareOrganizationContact);
+    public static partial IQueryable<HealthcareOrganizationContactDto> ToHealthcareOrganizationContactDtoQueryable(this IQueryable<HealthcareOrganizationContact> healthcareOrganizationContact);
+}
