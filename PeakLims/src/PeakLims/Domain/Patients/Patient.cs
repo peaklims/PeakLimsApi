@@ -9,9 +9,11 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using Ethnicities;
 using Lifespans;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
+using Races;
 using Sexes;
 
 public class Patient : BaseEntity
@@ -24,9 +26,9 @@ public class Patient : BaseEntity
 
     public Sex Sex { get; private set; }
 
-    public string Race { get; private set; }
+    public Race Race { get; private set; }
 
-    public string Ethnicity { get; private set; }
+    public Ethnicity Ethnicity { get; private set; }
 
     public string InternalId { get; private set; }
 
@@ -46,8 +48,8 @@ public class Patient : BaseEntity
         newPatient.LastName = patientForCreation.LastName;
         newPatient.Lifespan = new Lifespan(patientForCreation.Age, patientForCreation.DateOfBirth);
         newPatient.Sex = Sex.Of(patientForCreation.Sex);
-        newPatient.Race = patientForCreation.Race;
-        newPatient.Ethnicity = patientForCreation.Ethnicity;
+        newPatient.Race = Race.Of(patientForCreation.Race);
+        newPatient.Ethnicity = Ethnicity.Of(patientForCreation.Ethnicity);
         newPatient.InternalId = patientForCreation.InternalId;
 
         newPatient.QueueDomainEvent(new PatientCreated(){ Patient = newPatient });
@@ -61,8 +63,8 @@ public class Patient : BaseEntity
         LastName = patientForUpdate.LastName;
         Lifespan = new Lifespan(patientForUpdate.Age, patientForUpdate.DateOfBirth);
         Sex = Sex.Of(patientForUpdate.Sex);
-        Race = patientForUpdate.Race;
-        Ethnicity = patientForUpdate.Ethnicity;
+        Race = Race.Of(patientForUpdate.Race);
+        Ethnicity = Ethnicity.Of(patientForUpdate.Ethnicity);
         InternalId = patientForUpdate.InternalId;
 
         QueueDomainEvent(new PatientUpdated(){ Id = Id });

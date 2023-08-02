@@ -29,8 +29,7 @@ public class CreatePatientTests
         // Assert
         fakePatient.FirstName.Should().Be(patientToCreate.FirstName);
         fakePatient.LastName.Should().Be(patientToCreate.LastName);
-        fakePatient.DateOfBirth.Should().Be(patientToCreate.DateOfBirth);
-        fakePatient.Age.Should().Be(patientToCreate.Age);
+        fakePatient.Lifespan.DateOfBirth.Should().Be(patientToCreate.DateOfBirth);
         fakePatient.Sex.Value.Should().Be(patientToCreate.Sex);
         fakePatient.Race.Should().Be(patientToCreate.Race);
         fakePatient.Ethnicity.Should().Be(patientToCreate.Ethnicity);

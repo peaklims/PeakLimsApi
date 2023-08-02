@@ -1,5 +1,7 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.Ethnicities;
+using Domain.Races;
 using Domain.Sexes;
 using PeakLims.Domain.Patients;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +20,10 @@ public sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
 
         builder.Property(x => x.Sex)
             .HasConversion(x => x.Value, x => new Sex(x));
+        builder.Property(x => x.Race)
+            .HasConversion(x => x.Value, x => new Race(x));
+        builder.Property(x => x.Ethnicity)
+            .HasConversion(x => x.Value, x => new Ethnicity(x));
         builder.OwnsOne(x => x.Lifespan, opts =>
             {
                 opts.Property(x => x.DateOfBirth).HasColumnName("date_of_birth");
