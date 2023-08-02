@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.Sexes;
 using PeakLims.Domain.Patients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,10 +16,14 @@ public sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
         builder.HasMany(x => x.Samples)
             .WithOne(x => x.Patient);
 
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
+        builder.Property(x => x.Sex)
+            .HasConversion(x => x.Value, x => new Sex(x));
+        builder.OwnsOne(x => x.Lifespan, opts =>
+            {
+                opts.Property(x => x.DateOfBirth).HasColumnName("date_of_birth");
+                opts.Property(x => x.Age).HasColumnName("age");
+            }).Navigation(x => x.Lifespan)
+            .IsRequired();
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

@@ -9,21 +9,20 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using Lifespans;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
-
+using Sexes;
 
 public class Patient : BaseEntity
 {
     public string FirstName { get; private set; }
 
     public string LastName { get; private set; }
+    
+    public virtual Lifespan Lifespan { get; private set; }
 
-    public DateOnly? DateOfBirth { get; private set; }
-
-    public int? Age { get; private set; }
-
-    public string Sex { get; private set; }
+    public Sex Sex { get; private set; }
 
     public string Race { get; private set; }
 
@@ -45,9 +44,8 @@ public class Patient : BaseEntity
 
         newPatient.FirstName = patientForCreation.FirstName;
         newPatient.LastName = patientForCreation.LastName;
-        newPatient.DateOfBirth = patientForCreation.DateOfBirth;
-        newPatient.Age = patientForCreation.Age;
-        newPatient.Sex = patientForCreation.Sex;
+        newPatient.Lifespan = new Lifespan(patientForCreation.Age, patientForCreation.DateOfBirth);
+        newPatient.Sex = Sex.Of(patientForCreation.Sex);
         newPatient.Race = patientForCreation.Race;
         newPatient.Ethnicity = patientForCreation.Ethnicity;
         newPatient.InternalId = patientForCreation.InternalId;
@@ -61,9 +59,8 @@ public class Patient : BaseEntity
     {
         FirstName = patientForUpdate.FirstName;
         LastName = patientForUpdate.LastName;
-        DateOfBirth = patientForUpdate.DateOfBirth;
-        Age = patientForUpdate.Age;
-        Sex = patientForUpdate.Sex;
+        Lifespan = new Lifespan(patientForUpdate.Age, patientForUpdate.DateOfBirth);
+        Sex = Sex.Of(patientForUpdate.Sex);
         Race = patientForUpdate.Race;
         Ethnicity = patientForUpdate.Ethnicity;
         InternalId = patientForUpdate.InternalId;

@@ -29,7 +29,6 @@ public class AddPatientCommandTests : TestBase
         patientReturned.FirstName.Should().Be(fakePatientOne.FirstName);
         patientReturned.LastName.Should().Be(fakePatientOne.LastName);
         patientReturned.DateOfBirth.Should().Be(fakePatientOne.DateOfBirth);
-        patientReturned.Age.Should().Be(fakePatientOne.Age);
         patientReturned.Sex.Should().Be(fakePatientOne.Sex);
         patientReturned.Race.Should().Be(fakePatientOne.Race);
         patientReturned.Ethnicity.Should().Be(fakePatientOne.Ethnicity);
@@ -37,9 +36,8 @@ public class AddPatientCommandTests : TestBase
 
         patientCreated.FirstName.Should().Be(fakePatientOne.FirstName);
         patientCreated.LastName.Should().Be(fakePatientOne.LastName);
-        patientCreated.DateOfBirth.Should().Be(fakePatientOne.DateOfBirth);
-        patientCreated.Age.Should().Be(fakePatientOne.Age);
-        patientCreated.Sex.Should().Be(fakePatientOne.Sex);
+        patientCreated.Lifespan.DateOfBirth.Should().Be(fakePatientOne.DateOfBirth);
+        patientCreated.Sex.Value.Should().Be(fakePatientOne.Sex);
         patientCreated.Race.Should().Be(fakePatientOne.Race);
         patientCreated.Ethnicity.Should().Be(fakePatientOne.Ethnicity);
         patientCreated.InternalId.Should().Be(fakePatientOne.InternalId);

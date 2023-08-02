@@ -33,9 +33,8 @@ public class UpdatePatientCommandTests : TestBase
         // Assert
         updatedPatient.FirstName.Should().Be(updatedPatientDto.FirstName);
         updatedPatient.LastName.Should().Be(updatedPatientDto.LastName);
-        updatedPatient.DateOfBirth.Should().Be(updatedPatientDto.DateOfBirth);
-        updatedPatient.Age.Should().Be(updatedPatientDto.Age);
-        updatedPatient.Sex.Should().Be(updatedPatientDto.Sex);
+        updatedPatient.Lifespan.DateOfBirth.Should().Be(updatedPatientDto.DateOfBirth);
+        updatedPatient.Sex.Value.Should().Be(updatedPatientDto.Sex);
         updatedPatient.Race.Should().Be(updatedPatientDto.Race);
         updatedPatient.Ethnicity.Should().Be(updatedPatientDto.Ethnicity);
         updatedPatient.InternalId.Should().Be(updatedPatientDto.InternalId);
