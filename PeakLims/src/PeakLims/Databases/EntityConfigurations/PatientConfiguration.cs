@@ -27,7 +27,7 @@ public sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
         builder.OwnsOne(x => x.Lifespan, opts =>
             {
                 opts.Property(x => x.DateOfBirth).HasColumnName("date_of_birth");
-                opts.Property(x => x.Age).HasColumnName("age");
+                opts.Property(x => x.KnownAge).HasColumnName("known_age");
             }).Navigation(x => x.Lifespan)
             .IsRequired();
         

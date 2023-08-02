@@ -28,7 +28,7 @@ public class PatientQueryTests : TestBase
         patient.FirstName.Should().Be(fakePatientOne.FirstName);
         patient.LastName.Should().Be(fakePatientOne.LastName);
         patient.DateOfBirth.Should().Be(fakePatientOne.Lifespan.DateOfBirth);
-        patient.Age.Should().Be(fakePatientOne.Lifespan.Age);
+        patient.Age.Should().Be(fakePatientOne.Lifespan.KnownAge);
         patient.Sex.Should().Be(fakePatientOne.Sex.Value);
         patient.Race.Should().Be(fakePatientOne.Race.Value);
         patient.Ethnicity.Should().Be(fakePatientOne.Ethnicity.Value);
