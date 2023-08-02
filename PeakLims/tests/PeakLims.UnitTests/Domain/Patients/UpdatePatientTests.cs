@@ -32,8 +32,8 @@ public class UpdatePatientTests
         fakePatient.LastName.Should().Be(updatedPatient.LastName);
         fakePatient.Lifespan.DateOfBirth.Should().Be(updatedPatient.DateOfBirth);
         fakePatient.Sex.Value.Should().Be(updatedPatient.Sex);
-        fakePatient.Race.Should().Be(updatedPatient.Race);
-        fakePatient.Ethnicity.Should().Be(updatedPatient.Ethnicity);
+        fakePatient.Race.Value.Should().Be(updatedPatient.Race);
+        fakePatient.Ethnicity.Value.Should().Be(updatedPatient.Ethnicity);
         fakePatient.InternalId.Should().Be(updatedPatient.InternalId);
     }
     

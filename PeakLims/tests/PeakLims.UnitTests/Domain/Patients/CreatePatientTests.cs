@@ -31,8 +31,8 @@ public class CreatePatientTests
         fakePatient.LastName.Should().Be(patientToCreate.LastName);
         fakePatient.Lifespan.DateOfBirth.Should().Be(patientToCreate.DateOfBirth);
         fakePatient.Sex.Value.Should().Be(patientToCreate.Sex);
-        fakePatient.Race.Should().Be(patientToCreate.Race);
-        fakePatient.Ethnicity.Should().Be(patientToCreate.Ethnicity);
+        fakePatient.Race.Value.Should().Be(patientToCreate.Race);
+        fakePatient.Ethnicity.Value.Should().Be(patientToCreate.Ethnicity);
         fakePatient.InternalId.Should().Be(patientToCreate.InternalId);
     }
 
