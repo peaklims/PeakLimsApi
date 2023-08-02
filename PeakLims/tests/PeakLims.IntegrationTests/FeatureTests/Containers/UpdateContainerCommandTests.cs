@@ -31,8 +31,8 @@ public class UpdateContainerCommandTests : TestBase
         var updatedContainer = await testingServiceScope.ExecuteDbContextAsync(db => db.Containers.FirstOrDefaultAsync(c => c.Id == container.Id));
 
         // Assert
-        updatedContainer.UsedFor.Should().Be(updatedContainerDto.UsedFor);
-        updatedContainer.Status.Should().Be(updatedContainerDto.Status);
+        updatedContainer.UsedFor.Value.Should().Be(updatedContainerDto.UsedFor);
+        updatedContainer.Status.Should().Be(fakeContainerOne.Status);
         updatedContainer.Type.Should().Be(updatedContainerDto.Type);
     }
 

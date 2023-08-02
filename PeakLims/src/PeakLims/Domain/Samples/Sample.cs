@@ -5,9 +5,7 @@ using PeakLims.Domain.TestOrders;
 using PeakLims.Domain.Patients;
 using PeakLims.Domain.Samples.Models;
 using PeakLims.Domain.Samples.DomainEvents;
-using FluentValidation;
 using System.Text.Json.Serialization;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using PeakLims.Domain.Containers;
@@ -74,7 +72,17 @@ public class Sample : BaseEntity
 
     public Sample SetContainer(Container container)
     {
+        ValidationException.ThrowWhenNull(container, $"Invalid Container.");
+        if (!container.CanStore(Type))
+            throw new ValidationException(nameof(Sample),
+                $"A {container.Type} container is used to store {container.UsedFor.Value} samples, not {Type.Value}.");
+        if (!container.Status.IsActive())
+            throw new ValidationException(nameof(Sample),
+                $"Only active containers can be added to a sample.");
+        
         Container = container;
+        
+        QueueDomainEvent(new SampleUpdated(){ Id = Id });
         return this;
     }
 

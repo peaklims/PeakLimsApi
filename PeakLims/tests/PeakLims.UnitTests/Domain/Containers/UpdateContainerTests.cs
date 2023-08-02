@@ -28,8 +28,7 @@ public class UpdateContainerTests
         fakeContainer.Update(updatedContainer);
 
         // Assert
-        fakeContainer.UsedFor.Should().Be(updatedContainer.UsedFor);
-        fakeContainer.Status.Should().Be(updatedContainer.Status);
+        fakeContainer.UsedFor.Value.Should().Be(updatedContainer.UsedFor);
         fakeContainer.Type.Should().Be(updatedContainer.Type);
     }
     

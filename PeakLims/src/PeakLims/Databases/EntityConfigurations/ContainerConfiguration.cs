@@ -1,6 +1,7 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
 using Domain.ContainerStatuses;
+using Domain.SampleTypes;
 using PeakLims.Domain.Containers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,6 +17,8 @@ public sealed class ContainerConfiguration : IEntityTypeConfiguration<Container>
         
         builder.Property(x => x.Status)
             .HasConversion(x => x.Value, x => new ContainerStatus(x));
+        builder.Property(x => x.UsedFor)
+            .HasConversion(x => x.Value, x => new SampleType(x));
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

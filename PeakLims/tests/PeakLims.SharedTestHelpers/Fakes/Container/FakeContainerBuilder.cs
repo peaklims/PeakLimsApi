@@ -19,12 +19,6 @@ public class FakeContainerBuilder
         return this;
     }
     
-    public FakeContainerBuilder WithStatus(string status)
-    {
-        _creationData.Status = status;
-        return this;
-    }
-    
     public FakeContainerBuilder WithType(string type)
     {
         _creationData.Type = type;

@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Samples.Features;
 
+using Containers.Services;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Dtos;
 using PeakLims.Domain.Samples.Services;
@@ -30,12 +31,14 @@ public static class UpdateSample
         private readonly ISampleRepository _sampleRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHeimGuardClient _heimGuard;
+        private readonly IContainerRepository _containerRepository;
 
-        public Handler(ISampleRepository sampleRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
+        public Handler(ISampleRepository sampleRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard, IContainerRepository containerRepository)
         {
             _sampleRepository = sampleRepository;
             _unitOfWork = unitOfWork;
             _heimGuard = heimGuard;
+            _containerRepository = containerRepository;
         }
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
@@ -45,6 +48,12 @@ public static class UpdateSample
             var sampleToUpdate = await _sampleRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var sampleToAdd = request.UpdatedSampleData.ToSampleForUpdate();
             sampleToUpdate.Update(sampleToAdd);
+
+            if (request.UpdatedSampleData.ContainerId != null && request.UpdatedSampleData.ContainerId != sampleToUpdate.Container?.Id)
+            {
+                var container = await _containerRepository.GetById(request.UpdatedSampleData.ContainerId.Value, true, cancellationToken);
+                sampleToUpdate.SetContainer(container);
+            }
 
             _sampleRepository.Update(sampleToUpdate);
             await _unitOfWork.CommitChanges(cancellationToken);

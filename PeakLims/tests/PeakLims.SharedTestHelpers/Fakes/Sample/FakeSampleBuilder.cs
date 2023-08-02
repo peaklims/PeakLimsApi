@@ -1,5 +1,6 @@
 namespace PeakLims.SharedTestHelpers.Fakes.Sample;
 
+using Domain.Containers;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
 
@@ -28,6 +29,12 @@ public class FakeSampleBuilder
     public FakeSampleBuilder WithType(string type)
     {
         _creationData.Type = type;
+        return this;
+    }
+
+    public FakeSampleBuilder WithValidTypeForContainer(Container container)
+    {
+        _creationData.Type = container.UsedFor.Value;
         return this;
     }
     

@@ -10,6 +10,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using SharedTestHelpers.Fakes.Container;
 
 public class UpdateSampleCommandTests : TestBase
 {
@@ -31,13 +32,41 @@ public class UpdateSampleCommandTests : TestBase
         var updatedSample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples.FirstOrDefaultAsync(s => s.Id == sample.Id));
 
         // Assert
-        updatedSample.SampleNumber.Should().Be(updatedSampleDto.SampleNumber);
+        updatedSample.Type.Value.Should().Be(updatedSampleDto.Type);
         updatedSample.Status.Should().Be(updatedSampleDto.Status);
-        updatedSample.Type.Should().Be(updatedSampleDto.Type);
         updatedSample.Quantity.Should().Be(updatedSampleDto.Quantity);
         updatedSample.CollectionDate.Should().Be(updatedSampleDto.CollectionDate);
         updatedSample.ReceivedDate.Should().Be(updatedSampleDto.ReceivedDate);
         updatedSample.CollectionSite.Should().Be(updatedSampleDto.CollectionSite);
+    }
+    
+    [Fact]
+    public async Task can_update_existing_sample_in_db_with_container()
+    {
+        // Arrange
+        var testingServiceScope = new TestingServiceScope();
+        
+        var container = new FakeContainerBuilder().Build();
+        await testingServiceScope.InsertAsync(container);
+        
+        var fakeSampleOne = new FakeSampleBuilder().Build();
+        await testingServiceScope.InsertAsync(fakeSampleOne);
+        
+        var updatedSampleDto = new FakeSampleForUpdateDto()
+            .RuleFor(x => x.Type, f => container.UsedFor.Value)
+            .Generate();
+        updatedSampleDto.ContainerId = container.Id;
+
+        var sample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
+            .FirstOrDefaultAsync(s => s.Id == fakeSampleOne.Id));
+
+        // Act
+        var command = new UpdateSample.Command(sample.Id, updatedSampleDto);
+        await testingServiceScope.SendAsync(command);
+        var updatedSample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples.FirstOrDefaultAsync(s => s.Id == sample.Id));
+
+        // Assert
+        updatedSample.Container.Id.Should().Be(container.Id);
     }
 
     [Fact]

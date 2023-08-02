@@ -10,14 +10,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using ContainerStatuses;
+using SampleTypes;
 
 public class Container : BaseEntity
 {
-    public string UsedFor { get; private set; }
+    public SampleType UsedFor { get; private set; }
 
     public ContainerStatus Status { get; private set; }
 
     public string Type { get; private set; }
+    public bool CanStore(SampleType sampleType) => UsedFor == sampleType;
 
     public IReadOnlyCollection<Sample> Samples { get; }
 
@@ -28,8 +30,8 @@ public class Container : BaseEntity
     {
         var newContainer = new Container();
 
-        newContainer.UsedFor = containerForCreation.UsedFor;
-        newContainer.Status = ContainerStatus.Of(containerForCreation.Status);
+        newContainer.UsedFor = SampleType.Of(containerForCreation.UsedFor);
+        newContainer.Status = ContainerStatus.Active();
         newContainer.Type = containerForCreation.Type;
 
         newContainer.QueueDomainEvent(new ContainerCreated(){ Container = newContainer });
@@ -39,10 +41,29 @@ public class Container : BaseEntity
 
     public Container Update(ContainerForUpdate containerForUpdate)
     {
-        UsedFor = containerForUpdate.UsedFor;
-        Status = ContainerStatus.Of(containerForUpdate.Status);
+        UsedFor = SampleType.Of(containerForUpdate.UsedFor);
         Type = containerForUpdate.Type;
 
+        QueueDomainEvent(new ContainerUpdated(){ Id = Id });
+        return this;
+    }
+
+    public Container Activate()
+    {
+        if (Status == ContainerStatus.Active())
+            return this;
+        
+        Status = ContainerStatus.Active();
+        QueueDomainEvent(new ContainerUpdated(){ Id = Id });
+        return this;
+    }
+
+    public Container Deactivate()
+    {
+        if (Status == ContainerStatus.Inactive())
+            return this;
+        
+        Status = ContainerStatus.Inactive();
         QueueDomainEvent(new ContainerUpdated(){ Id = Id });
         return this;
     }

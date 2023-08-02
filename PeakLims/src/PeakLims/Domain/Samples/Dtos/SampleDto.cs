@@ -10,5 +10,5 @@ public sealed class SampleDto
     public DateOnly? CollectionDate { get; set; }
     public DateOnly? ReceivedDate { get; set; }
     public string CollectionSite { get; set; }
-
+    public Guid? ContainerId { get; set; }
 }

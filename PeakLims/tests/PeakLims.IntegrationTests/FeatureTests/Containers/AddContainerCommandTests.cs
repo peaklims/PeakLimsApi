@@ -7,6 +7,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using Domain.ContainerStatuses;
 using PeakLims.Domain.Containers.Features;
 using SharedKernel.Exceptions;
 
@@ -27,11 +28,11 @@ public class AddContainerCommandTests : TestBase
 
         // Assert
         containerReturned.UsedFor.Should().Be(fakeContainerOne.UsedFor);
-        containerReturned.Status.Should().Be(fakeContainerOne.Status);
+        containerReturned.Status.Should().Be(ContainerStatus.Active().Value);
         containerReturned.Type.Should().Be(fakeContainerOne.Type);
 
-        containerCreated.UsedFor.Should().Be(fakeContainerOne.UsedFor);
-        containerCreated.Status.Should().Be(fakeContainerOne.Status);
+        containerCreated.UsedFor.Value.Should().Be(fakeContainerOne.UsedFor);
+        containerCreated.Status.Should().Be(ContainerStatus.Active());
         containerCreated.Type.Should().Be(fakeContainerOne.Type);
     }
 
