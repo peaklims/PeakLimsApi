@@ -1,17 +1,11 @@
 namespace PeakLims.Domain.AccessionComments;
 
 using SharedKernel.Exceptions;
-using PeakLims.Domain.AccessionComments.Models;
 using PeakLims.Domain.AccessionComments.DomainEvents;
-using FluentValidation;
-using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
 using AccessionCommentStatuses;
 using PeakLims.Domain.Accessions;
-using PeakLims.Domain.Accessions.Models;
-
+using ValidationException = SharedKernel.Exceptions.ValidationException;
 
 public class AccessionComment : BaseEntity
 {
@@ -26,31 +20,47 @@ public class AccessionComment : BaseEntity
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
 
-    public static AccessionComment Create(AccessionCommentForCreation accessionCommentForCreation)
-    {
-        var newAccessionComment = new AccessionComment();
 
-        newAccessionComment.Comment = accessionCommentForCreation.Comment;
-        newAccessionComment.Status = AccessionCommentStatus.Of(accessionCommentForCreation.Status);
+
+    public static AccessionComment Create(Accession accession, string commentText)
+    {
+        GuardCommentNotEmptyOrNull(commentText);
+        
+        var newAccessionComment = new AccessionComment
+        {
+            Comment = commentText,
+            Accession = accession,
+            ParentComment = null,
+            Status = AccessionCommentStatus.Active()
+        };
 
         newAccessionComment.QueueDomainEvent(new AccessionCommentCreated(){ AccessionComment = newAccessionComment });
         
         return newAccessionComment;
     }
 
-    public AccessionComment Update(AccessionCommentForUpdate accessionCommentForUpdate)
+    public void Update(string commentText, out AccessionComment newComment, out AccessionComment archivedComment)
     {
-        Comment = accessionCommentForUpdate.Comment;
-        Status = AccessionCommentStatus.Of(accessionCommentForUpdate.Status);
+        GuardCommentNotEmptyOrNull(commentText);
+        newComment = new AccessionComment
+        {
+            Comment = commentText,
+            Accession = Accession,
+            ParentComment = null,
+            Status = AccessionCommentStatus.Active()
+        };
 
+        Status = AccessionCommentStatus.Archived();
+        ParentComment = newComment;
+        archivedComment = this;
+        
         QueueDomainEvent(new AccessionCommentUpdated(){ Id = Id });
-        return this;
+        newComment.QueueDomainEvent(new AccessionCommentCreated(){ AccessionComment = newComment });
     }
 
-    public AccessionComment SetAccession(Accession accession)
+    private static void GuardCommentNotEmptyOrNull(string commentText)
     {
-        Accession = accession;
-        return this;
+        ValidationException.ThrowWhenNullOrEmpty(commentText, "Please provide a valid comment.");
     }
 
     // Add Prop Methods Marker -- Deleting this comment will cause the add props utility to be incomplete

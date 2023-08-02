@@ -76,7 +76,7 @@ public sealed class AccessionCommentsController: ControllerBase
     [HttpPost(Name = "AddAccessionComment")]
     public async Task<ActionResult<AccessionCommentDto>> AddAccessionComment([FromBody]AccessionCommentForCreationDto accessionCommentForCreation)
     {
-        var command = new AddAccessionComment.Command(accessionCommentForCreation);
+        var command = new AddAccessionComment.Command(accessionCommentForCreation.AccessionId, accessionCommentForCreation.Comment);
         var commandResponse = await _mediator.Send(command);
 
         return CreatedAtRoute("GetAccessionComment",
@@ -92,7 +92,7 @@ public sealed class AccessionCommentsController: ControllerBase
     [HttpPut("{id:guid}", Name = "UpdateAccessionComment")]
     public async Task<IActionResult> UpdateAccessionComment(Guid id, AccessionCommentForUpdateDto accessionComment)
     {
-        var command = new UpdateAccessionComment.Command(id, accessionComment);
+        var command = new UpdateAccessionComment.Command(id, accessionComment.Comment);
         await _mediator.Send(command);
         return NoContent();
     }

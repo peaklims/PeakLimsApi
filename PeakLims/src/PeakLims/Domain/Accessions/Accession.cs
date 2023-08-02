@@ -46,7 +46,7 @@ public class Accession : BaseEntity
         var newAccession = new Accession();
 
         newAccession.AccessionNumber = accessionForCreation.AccessionNumber;
-        newAccession.Status = AccessionStatus.Of(accessionForCreation.Status);
+        newAccession.Status = AccessionStatus.Draft();
 
         newAccession.QueueDomainEvent(new AccessionCreated(){ Accession = newAccession });
         

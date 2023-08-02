@@ -7,8 +7,11 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using Bogus;
+using Domain.AccessionCommentStatuses;
 using PeakLims.Domain.AccessionComments.Features;
 using SharedKernel.Exceptions;
+using SharedTestHelpers.Fakes.Accession;
 
 public class AddAccessionCommentCommandTests : TestBase
 {
@@ -17,20 +20,26 @@ public class AddAccessionCommentCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeAccessionCommentOne = new FakeAccessionCommentForCreationDto().Generate();
+        var accession = new FakeAccessionBuilder().Build();
+        await testingServiceScope.InsertAsync(accession);
+        
+        var faker = new Faker();
+        var comment = faker.Lorem.Sentence();
 
         // Act
-        var command = new AddAccessionComment.Command(fakeAccessionCommentOne);
+        var command = new AddAccessionComment.Command(accession.Id, comment);
         var accessionCommentReturned = await testingServiceScope.SendAsync(command);
         var accessionCommentCreated = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionComments
             .FirstOrDefaultAsync(a => a.Id == accessionCommentReturned.Id));
 
         // Assert
-        accessionCommentReturned.Comment.Should().Be(fakeAccessionCommentOne.Comment);
-        accessionCommentReturned.Status.Should().Be(fakeAccessionCommentOne.Status);
+        accessionCommentReturned.Id.Should().Be(accessionCommentCreated.Id);
+        accessionCommentReturned.Comment.Should().Be(comment);
 
-        accessionCommentCreated.Comment.Should().Be(fakeAccessionCommentOne.Comment);
-        accessionCommentCreated.Status.Should().Be(fakeAccessionCommentOne.Status);
+        accessionCommentCreated.Comment.Should().Be(comment);
+        accessionCommentCreated.Accession.Id.Should().Be(accession.Id);
+        accessionCommentCreated.ParentComment.Should().BeNull();
+        accessionCommentCreated.Status.Should().Be(AccessionCommentStatus.Active());
     }
 
     [Fact]
@@ -39,10 +48,14 @@ public class AddAccessionCommentCommandTests : TestBase
         // Arrange
         var testingServiceScope = new TestingServiceScope();
         testingServiceScope.SetUserNotPermitted(Permissions.CanAddAccessionComments);
-        var fakeAccessionCommentOne = new FakeAccessionCommentForCreationDto();
+        var accession = new FakeAccessionBuilder().Build();
+        await testingServiceScope.InsertAsync(accession);
+        
+        var faker = new Faker();
+        var comment = faker.Lorem.Sentence();
 
         // Act
-        var command = new AddAccessionComment.Command(fakeAccessionCommentOne);
+        var command = new AddAccessionComment.Command(accession.Id, comment);
         var act = () => testingServiceScope.SendAsync(command);
 
         // Assert

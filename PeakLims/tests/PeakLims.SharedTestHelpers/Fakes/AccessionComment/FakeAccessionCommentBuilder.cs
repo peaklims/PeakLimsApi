@@ -1,33 +1,42 @@
 namespace PeakLims.SharedTestHelpers.Fakes.AccessionComment;
 
+using Accession;
+using Bogus;
+using Domain.Accessions;
 using PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.AccessionComments.Models;
 
-public class FakeAccessionCommentBuilder
+public class FakeAccessionCommentBuilder 
 {
-    private AccessionCommentForCreation _creationData = new FakeAccessionCommentForCreation().Generate();
+    private Accession _accession = null;
+    private string _comment;
 
-    public FakeAccessionCommentBuilder WithModel(AccessionCommentForCreation model)
-    {
-        _creationData = model;
-        return this;
-    }
-    
     public FakeAccessionCommentBuilder WithComment(string comment)
     {
-        _creationData.Comment = comment;
+        _comment = comment;
         return this;
     }
-    
-    public FakeAccessionCommentBuilder WithStatus(string status)
+
+    public FakeAccessionCommentBuilder WithAccession(Accession accession)
     {
-        _creationData.Status = status;
+        _accession = accession;
+        return this;
+    }
+
+    public FakeAccessionCommentBuilder WithMockAccession()
+    {
+        _accession = new FakeAccessionBuilder().Build();
         return this;
     }
     
     public AccessionComment Build()
     {
-        var result = AccessionComment.Create(_creationData);
-        return result;
+        if (_accession == null)
+            WithMockAccession();
+        
+        var faker = new Faker();
+        var comment = _comment ?? faker.Lorem.Sentence();
+        var accessionComment = AccessionComment.Create(_accession, comment);
+        return accessionComment;
     }
 }

@@ -10,6 +10,8 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using Bogus;
+using Domain.AccessionCommentStatuses;
 
 public class UpdateAccessionCommentCommandTests : TestBase
 {
@@ -18,21 +20,34 @@ public class UpdateAccessionCommentCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeAccessionCommentOne = new FakeAccessionCommentBuilder().Build();
-        var updatedAccessionCommentDto = new FakeAccessionCommentForUpdateDto().Generate();
-        await testingServiceScope.InsertAsync(fakeAccessionCommentOne);
-
-        var accessionComment = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionComments
-            .FirstOrDefaultAsync(a => a.Id == fakeAccessionCommentOne.Id));
+        var originalAccessionComment = new FakeAccessionCommentBuilder().Build();
+        await testingServiceScope.InsertAsync(originalAccessionComment);
+        
+        var faker = new Faker();
+        var comment = faker.Lorem.Sentence();
 
         // Act
-        var command = new UpdateAccessionComment.Command(accessionComment.Id, updatedAccessionCommentDto);
+        var command = new UpdateAccessionComment.Command(originalAccessionComment.Id, comment);
         await testingServiceScope.SendAsync(command);
-        var updatedAccessionComment = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionComments.FirstOrDefaultAsync(a => a.Id == accessionComment.Id));
-
+        
+        var accessionComments = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionComments
+            .Where(a => a.Accession.Id == originalAccessionComment.Accession.Id)
+            .ToListAsync());
+        var newComment = accessionComments.FirstOrDefault(a => a.Status == AccessionCommentStatus.Active());
+        var archivedComment = accessionComments.FirstOrDefault(a => a.Status == AccessionCommentStatus.Archived());
         // Assert
-        updatedAccessionComment.Comment.Should().Be(updatedAccessionCommentDto.Comment);
-        updatedAccessionComment.Status.Should().Be(updatedAccessionCommentDto.Status);
+        accessionComments.Count.Should().Be(2);
+        
+        newComment.Accession.Id.Should().Be(originalAccessionComment.Accession.Id);
+        newComment.Comment.Should().Be(comment);
+        newComment.ParentComment.Should().BeNull();
+        newComment.Status.Should().Be(AccessionCommentStatus.Active());
+        
+        archivedComment.Id.Should().Be(originalAccessionComment.Id);
+        archivedComment.Accession.Id.Should().Be(originalAccessionComment.Accession.Id);
+        archivedComment.ParentComment.Id.Should().Be(newComment.Id);
+        archivedComment.Comment.Should().Be(originalAccessionComment.Comment);
+        archivedComment.Status.Should().Be(AccessionCommentStatus.Archived());
     }
 
     [Fact]
@@ -41,10 +56,11 @@ public class UpdateAccessionCommentCommandTests : TestBase
         // Arrange
         var testingServiceScope = new TestingServiceScope();
         testingServiceScope.SetUserNotPermitted(Permissions.CanUpdateAccessionComments);
-        var fakeAccessionCommentOne = new FakeAccessionCommentForUpdateDto();
+        var faker = new Faker();
+        var comment = faker.Lorem.Sentence();
 
         // Act
-        var command = new UpdateAccessionComment.Command(Guid.NewGuid(), fakeAccessionCommentOne);
+        var command = new UpdateAccessionComment.Command(Guid.NewGuid(), comment);
         var act = () => testingServiceScope.SendAsync(command);
 
         // Assert

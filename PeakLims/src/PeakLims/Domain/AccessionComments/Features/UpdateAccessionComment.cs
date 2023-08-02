@@ -15,13 +15,13 @@ public static class UpdateAccessionComment
 {
     public sealed class Command : IRequest
     {
-        public readonly Guid Id;
-        public readonly AccessionCommentForUpdateDto UpdatedAccessionCommentData;
+        public readonly Guid AccessionCommentId;
+        public readonly string Comment;
 
-        public Command(Guid id, AccessionCommentForUpdateDto updatedAccessionCommentData)
+        public Command(Guid accessionCommentId, string comment)
         {
-            Id = id;
-            UpdatedAccessionCommentData = updatedAccessionCommentData;
+            AccessionCommentId = accessionCommentId;
+            Comment = comment;
         }
     }
 
@@ -42,11 +42,11 @@ public static class UpdateAccessionComment
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateAccessionComments);
 
-            var accessionCommentToUpdate = await _accessionCommentRepository.GetById(request.Id, cancellationToken: cancellationToken);
-            var accessionCommentToAdd = request.UpdatedAccessionCommentData.ToAccessionCommentForUpdate();
-            accessionCommentToUpdate.Update(accessionCommentToAdd);
+            var accessionCommentToUpdate = await _accessionCommentRepository.GetById(request.AccessionCommentId, cancellationToken: cancellationToken);
 
-            _accessionCommentRepository.Update(accessionCommentToUpdate);
+            accessionCommentToUpdate.Update(request.Comment, out var newComment, out var archivedComment);
+            await _accessionCommentRepository.Add(newComment, cancellationToken);
+            _accessionCommentRepository.Update(archivedComment);
             await _unitOfWork.CommitChanges(cancellationToken);
         }
     }
