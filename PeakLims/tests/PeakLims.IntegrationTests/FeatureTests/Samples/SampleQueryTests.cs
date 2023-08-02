@@ -32,6 +32,7 @@ public class SampleQueryTests : TestBase
         sample.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
         sample.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sample.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
+        sample.SampleNumber.Should().NotBeNull();
     }
 
     [Fact]

@@ -22,7 +22,7 @@ using PeakLims.Domain.TestOrders.Models;
 
 public class Accession : BaseEntity
 {
-    public string AccessionNumber { get; private set; }
+    public string AccessionNumber { get; }
 
     public AccessionStatus Status { get; private set; }
 
@@ -45,21 +45,11 @@ public class Accession : BaseEntity
     {
         var newAccession = new Accession();
 
-        newAccession.AccessionNumber = accessionForCreation.AccessionNumber;
         newAccession.Status = AccessionStatus.Draft();
 
         newAccession.QueueDomainEvent(new AccessionCreated(){ Accession = newAccession });
         
         return newAccession;
-    }
-
-    public Accession Update(AccessionForUpdate accessionForUpdate)
-    {
-        AccessionNumber = accessionForUpdate.AccessionNumber;
-        Status = AccessionStatus.Of(accessionForUpdate.Status);
-
-        QueueDomainEvent(new AccessionUpdated(){ Id = Id });
-        return this;
     }
 
     public Accession AddHealthcareOrganizationContact(HealthcareOrganizationContact healthcareOrganizationContact)

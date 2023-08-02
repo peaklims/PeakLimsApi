@@ -32,7 +32,7 @@ public class AddPatientCommandTests : TestBase
         patientReturned.Sex.Should().Be(fakePatientOne.Sex);
         patientReturned.Race.Should().Be(fakePatientOne.Race);
         patientReturned.Ethnicity.Should().Be(fakePatientOne.Ethnicity);
-        patientReturned.InternalId.Should().Be(fakePatientOne.InternalId);
+        patientReturned.InternalId.Should().NotBeNull();
 
         patientCreated.FirstName.Should().Be(fakePatientOne.FirstName);
         patientCreated.LastName.Should().Be(fakePatientOne.LastName);
@@ -40,7 +40,7 @@ public class AddPatientCommandTests : TestBase
         patientCreated.Sex.Value.Should().Be(fakePatientOne.Sex);
         patientCreated.Race.Value.Should().Be(fakePatientOne.Race);
         patientCreated.Ethnicity.Value.Should().Be(fakePatientOne.Ethnicity);
-        patientCreated.InternalId.Should().Be(fakePatientOne.InternalId);
+        patientCreated.InternalId.Should().NotBeNull();
     }
 
     [Fact]

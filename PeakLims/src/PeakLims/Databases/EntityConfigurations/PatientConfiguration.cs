@@ -6,6 +6,7 @@ using Domain.Sexes;
 using PeakLims.Domain.Patients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Resources;
 
 public sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
 {
@@ -17,6 +18,10 @@ public sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
         builder.HasMany(x => x.Samples)
             .WithOne(x => x.Patient);
+        
+        builder.Property(o => o.InternalId)
+            .HasDefaultValueSql($"concat('{Consts.DatabaseSequences.PatientInternalIdPrefix}', nextval('\"{Consts.DatabaseSequences.PatientInternalIdPrefix}\"'))")
+            .IsRequired();
 
         builder.Property(x => x.Sex)
             .HasConversion(x => x.Value, x => new Sex(x));

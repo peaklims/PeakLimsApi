@@ -14,12 +14,6 @@ public class FakeSampleBuilder
         return this;
     }
     
-    public FakeSampleBuilder WithSampleNumber(string sampleNumber)
-    {
-        _creationData.SampleNumber = sampleNumber;
-        return this;
-    }
-    
     public FakeSampleBuilder WithStatus(string status)
     {
         _creationData.Status = status;

@@ -55,12 +55,6 @@ public class FakePatientBuilder
         return this;
     }
     
-    public FakePatientBuilder WithInternalId(string internalId)
-    {
-        _creationData.InternalId = internalId;
-        return this;
-    }
-    
     public Patient Build()
     {
         var result = Patient.Create(_creationData);

@@ -9,6 +9,5 @@ public sealed class PatientForCreation
     public string Sex { get; set; }
     public string Race { get; set; }
     public string Ethnicity { get; set; }
-    public string InternalId { get; set; }
 
 }

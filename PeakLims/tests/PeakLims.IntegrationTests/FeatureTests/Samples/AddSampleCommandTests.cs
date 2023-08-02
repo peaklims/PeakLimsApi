@@ -67,6 +67,7 @@ public class AddSampleCommandTests : TestBase
         sampleReturned.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleReturned.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
         sampleReturned.ContainerId.Should().Be(container.Id);
+        sampleReturned.SampleNumber.Should().NotBeNull();
 
         sampleCreated.Type.Value.Should().Be(fakeSampleOne.Type);
         sampleCreated.Quantity.Should().Be(fakeSampleOne.Quantity);
@@ -75,6 +76,7 @@ public class AddSampleCommandTests : TestBase
         sampleCreated.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleCreated.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
         sampleCreated.Container.Id.Should().Be(container.Id);
+        sampleCreated.SampleNumber.Should().NotBeNull();
     }
 
     [Fact]

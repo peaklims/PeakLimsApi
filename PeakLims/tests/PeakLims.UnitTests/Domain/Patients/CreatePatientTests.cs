@@ -33,7 +33,6 @@ public class CreatePatientTests
         fakePatient.Sex.Value.Should().Be(patientToCreate.Sex);
         fakePatient.Race.Value.Should().Be(patientToCreate.Race);
         fakePatient.Ethnicity.Value.Should().Be(patientToCreate.Ethnicity);
-        fakePatient.InternalId.Should().Be(patientToCreate.InternalId);
     }
 
     [Fact]

@@ -2,7 +2,6 @@ namespace PeakLims.Domain.Samples.Dtos;
 
 public sealed class SampleForUpdateDto
 {
-    public string SampleNumber { get; set; }
     public string Status { get; set; }
     public string Type { get; set; }
     public decimal? Quantity { get; set; }

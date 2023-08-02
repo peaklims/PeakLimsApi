@@ -6,6 +6,7 @@ using PeakLims.Domain.Accessions.DomainEvents;
 using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using PeakLims.Domain.AccessionStatuses;
 using Xunit;
 
 public class CreateAccessionTests
@@ -27,8 +28,7 @@ public class CreateAccessionTests
         var fakeAccession = Accession.Create(accessionToCreate);
 
         // Assert
-        fakeAccession.AccessionNumber.Should().Be(accessionToCreate.AccessionNumber);
-        fakeAccession.Status.Should().Be(accessionToCreate.Status);
+        fakeAccession.Status.Should().Be(AccessionStatus.Draft());
     }
 
     [Fact]

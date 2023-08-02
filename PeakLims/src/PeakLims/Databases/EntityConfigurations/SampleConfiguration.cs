@@ -4,6 +4,7 @@ using Domain.SampleTypes;
 using PeakLims.Domain.Samples;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Resources;
 
 public sealed class SampleConfiguration : IEntityTypeConfiguration<Sample>
 {
@@ -16,6 +17,10 @@ public sealed class SampleConfiguration : IEntityTypeConfiguration<Sample>
         builder.HasOne(x => x.ParentSample);
         builder.HasOne(x => x.Container)
             .WithMany(x => x.Samples);
+        
+        builder.Property(o => o.SampleNumber)
+            .HasDefaultValueSql($"concat('{Consts.DatabaseSequences.SampleNumberPrefix}', nextval('\"{Consts.DatabaseSequences.SampleNumberPrefix}\"'))")
+            .IsRequired();
 
         builder.Property(x => x.Type)
             .HasConversion(x => x.Value, x => new SampleType(x));

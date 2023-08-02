@@ -44,11 +44,6 @@
             Creates a new Accession record.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.AccessionsController.UpdateAccession(System.Guid,PeakLims.Domain.Accessions.Dtos.AccessionForUpdateDto)">
-            <summary>
-            Updates an entire existing Accession.
-            </summary>
-        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.DeleteAccession(System.Guid)">
             <summary>
             Deletes an existing Accession record.
@@ -439,6 +434,30 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.InitialMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.UpdateLifespanAge">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.UpdateLifespanAge.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.UpdateLifespanAge.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.UpdateLifespanAge.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

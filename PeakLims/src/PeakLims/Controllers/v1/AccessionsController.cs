@@ -86,19 +86,6 @@ public sealed class AccessionsController: ControllerBase
 
 
     /// <summary>
-    /// Updates an entire existing Accession.
-    /// </summary>
-    [Authorize]
-    [HttpPut("{id:guid}", Name = "UpdateAccession")]
-    public async Task<IActionResult> UpdateAccession(Guid id, AccessionForUpdateDto accession)
-    {
-        var command = new UpdateAccession.Command(id, accession);
-        await _mediator.Send(command);
-        return NoContent();
-    }
-
-
-    /// <summary>
     /// Deletes an existing Accession record.
     /// </summary>
     [Authorize]

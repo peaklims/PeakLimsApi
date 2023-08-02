@@ -14,7 +14,7 @@ using SampleTypes;
 
 public class Sample : BaseEntity
 {
-    public string SampleNumber { get; private set; }
+    public string SampleNumber { get; }
 
     public string Status { get; private set; }
 
@@ -43,7 +43,6 @@ public class Sample : BaseEntity
     {
         var newSample = new Sample();
 
-        newSample.SampleNumber = sampleForCreation.SampleNumber;
         newSample.Status = sampleForCreation.Status;
         newSample.Type = SampleType.Of(sampleForCreation.Type);
         newSample.Quantity = sampleForCreation.Quantity;
@@ -58,7 +57,6 @@ public class Sample : BaseEntity
 
     public Sample Update(SampleForUpdate sampleForUpdate)
     {
-        SampleNumber = sampleForUpdate.SampleNumber;
         Status = sampleForUpdate.Status;
         Type = SampleType.Of(sampleForUpdate.Type);
         Quantity = sampleForUpdate.Quantity;

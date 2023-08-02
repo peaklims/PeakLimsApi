@@ -26,10 +26,10 @@ public class AddAccessionCommandTests : TestBase
             .FirstOrDefaultAsync(a => a.Id == accessionReturned.Id));
 
         // Assert
-        accessionReturned.AccessionNumber.Should().Be(fakeAccessionOne.AccessionNumber);
+        accessionReturned.AccessionNumber.Should().NotBeNull();
         accessionReturned.Status.Should().Be(fakeAccessionOne.Status);
 
-        accessionCreated.AccessionNumber.Should().Be(fakeAccessionOne.AccessionNumber);
+        accessionCreated.AccessionNumber.Should().NotBeNull();
         accessionCreated.Status.Should().Be(fakeAccessionOne.Status);
     }
 

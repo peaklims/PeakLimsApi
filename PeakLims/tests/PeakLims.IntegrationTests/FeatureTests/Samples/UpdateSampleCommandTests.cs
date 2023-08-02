@@ -38,6 +38,7 @@ public class UpdateSampleCommandTests : TestBase
         updatedSample.CollectionDate.Should().Be(updatedSampleDto.CollectionDate);
         updatedSample.ReceivedDate.Should().Be(updatedSampleDto.ReceivedDate);
         updatedSample.CollectionSite.Should().Be(updatedSampleDto.CollectionSite);
+        updatedSample.SampleNumber.Should().NotBeNull();
     }
     
     [Fact]

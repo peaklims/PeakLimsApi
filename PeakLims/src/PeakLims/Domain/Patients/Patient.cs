@@ -30,7 +30,7 @@ public class Patient : BaseEntity
 
     public Ethnicity Ethnicity { get; private set; }
 
-    public string InternalId { get; private set; }
+    public string InternalId { get; }
 
     private readonly List<Sample> _sample = new();
     public IReadOnlyCollection<Sample> Samples => _sample.AsReadOnly();
@@ -50,7 +50,6 @@ public class Patient : BaseEntity
         newPatient.Sex = Sex.Of(patientForCreation.Sex);
         newPatient.Race = Race.Of(patientForCreation.Race);
         newPatient.Ethnicity = Ethnicity.Of(patientForCreation.Ethnicity);
-        newPatient.InternalId = patientForCreation.InternalId;
 
         newPatient.QueueDomainEvent(new PatientCreated(){ Patient = newPatient });
         
@@ -65,7 +64,6 @@ public class Patient : BaseEntity
         Sex = Sex.Of(patientForUpdate.Sex);
         Race = Race.Of(patientForUpdate.Race);
         Ethnicity = Ethnicity.Of(patientForUpdate.Ethnicity);
-        InternalId = patientForUpdate.InternalId;
 
         QueueDomainEvent(new PatientUpdated(){ Id = Id });
         return this;

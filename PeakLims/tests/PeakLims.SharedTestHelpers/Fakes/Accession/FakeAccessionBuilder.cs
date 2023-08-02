@@ -13,12 +13,6 @@ public class FakeAccessionBuilder
         return this;
     }
     
-    public FakeAccessionBuilder WithAccessionNumber(string accessionNumber)
-    {
-        _creationData.AccessionNumber = accessionNumber;
-        return this;
-    }
-    
     public FakeAccessionBuilder WithStatus(string status)
     {
         _creationData.Status = status;
