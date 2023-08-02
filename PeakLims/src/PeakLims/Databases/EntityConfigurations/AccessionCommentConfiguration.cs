@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.AccessionCommentStatuses;
 using PeakLims.Domain.AccessionComments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,10 +17,8 @@ public sealed class AccessionCommentConfiguration : IEntityTypeConfiguration<Acc
             .WithMany(x => x.AccessionComments);
         builder.HasOne(x => x.ParentComment);
 
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
+        builder.Property(x => x.Status)
+            .HasConversion(x => x.Value, x => new AccessionCommentStatus(x));
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

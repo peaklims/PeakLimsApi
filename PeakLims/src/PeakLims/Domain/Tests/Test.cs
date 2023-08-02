@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
-
+using TestStatuses;
 
 public class Test : BaseEntity
 {
@@ -25,7 +25,7 @@ public class Test : BaseEntity
 
     public int TurnAroundTime { get; private set; }
 
-    public string Status { get; private set; }
+    public TestStatus Status { get; private set; }
 
     public IReadOnlyCollection<Panel> Panels { get; }
 
@@ -42,7 +42,7 @@ public class Test : BaseEntity
         newTest.Platform = testForCreation.Platform;
         newTest.Version = testForCreation.Version;
         newTest.TurnAroundTime = testForCreation.TurnAroundTime;
-        newTest.Status = testForCreation.Status;
+        newTest.Status = TestStatus.Of(testForCreation.Status);
 
         newTest.QueueDomainEvent(new TestCreated(){ Test = newTest });
         
@@ -57,7 +57,7 @@ public class Test : BaseEntity
         Platform = testForUpdate.Platform;
         Version = testForUpdate.Version;
         TurnAroundTime = testForUpdate.TurnAroundTime;
-        Status = testForUpdate.Status;
+        Status = TestStatus.Of(testForUpdate.Status);
 
         QueueDomainEvent(new TestUpdated(){ Id = Id });
         return this;

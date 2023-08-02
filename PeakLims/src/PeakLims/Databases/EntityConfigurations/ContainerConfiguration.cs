@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.ContainerStatuses;
 using PeakLims.Domain.Containers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,11 +13,9 @@ public sealed class ContainerConfiguration : IEntityTypeConfiguration<Container>
     public void Configure(EntityTypeBuilder<Container> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
-
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
+        
+        builder.Property(x => x.Status)
+            .HasConversion(x => x.Value, x => new ContainerStatus(x));
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

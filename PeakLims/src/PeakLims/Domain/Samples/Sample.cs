@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using PeakLims.Domain.Containers;
 using PeakLims.Domain.Containers.Models;
-
+using SampleTypes;
 
 public class Sample : BaseEntity
 {
@@ -20,7 +20,7 @@ public class Sample : BaseEntity
 
     public string Status { get; private set; }
 
-    public string Type { get; private set; }
+    public SampleType Type { get; private set; }
 
     public decimal? Quantity { get; private set; }
 
@@ -47,7 +47,7 @@ public class Sample : BaseEntity
 
         newSample.SampleNumber = sampleForCreation.SampleNumber;
         newSample.Status = sampleForCreation.Status;
-        newSample.Type = sampleForCreation.Type;
+        newSample.Type = SampleType.Of(sampleForCreation.Type);
         newSample.Quantity = sampleForCreation.Quantity;
         newSample.CollectionDate = sampleForCreation.CollectionDate;
         newSample.ReceivedDate = sampleForCreation.ReceivedDate;
@@ -62,7 +62,7 @@ public class Sample : BaseEntity
     {
         SampleNumber = sampleForUpdate.SampleNumber;
         Status = sampleForUpdate.Status;
-        Type = sampleForUpdate.Type;
+        Type = SampleType.Of(sampleForUpdate.Type);
         Quantity = sampleForUpdate.Quantity;
         CollectionDate = sampleForUpdate.CollectionDate;
         ReceivedDate = sampleForUpdate.ReceivedDate;

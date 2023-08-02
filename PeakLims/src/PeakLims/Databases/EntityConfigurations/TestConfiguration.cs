@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.TestStatuses;
 using PeakLims.Domain.Tests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,10 +14,8 @@ public sealed class TestConfiguration : IEntityTypeConfiguration<Test>
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
 
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
+        builder.Property(x => x.Status)
+            .HasConversion(x => x.Value, x => new TestStatus(x));
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

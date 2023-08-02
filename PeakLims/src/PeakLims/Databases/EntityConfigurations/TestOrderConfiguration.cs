@@ -1,5 +1,7 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.TestOrderCancellationReasons;
+using Domain.TestOrderStatuses;
 using PeakLims.Domain.TestOrders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,10 +17,10 @@ public sealed class TestOrderConfiguration : IEntityTypeConfiguration<TestOrder>
         builder.HasOne(x => x.Sample)
             .WithMany(x => x.TestOrders);
 
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
+        builder.Property(x => x.Status)
+            .HasConversion(x => x.Value, x => new TestOrderStatus(x));
+        builder.Property(x => x.CancellationReason)
+            .HasConversion(x => x.Value, x => new TestOrderCancellationReason(x));
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

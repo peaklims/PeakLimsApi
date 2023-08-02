@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.AccessionStatuses;
 using PeakLims.Domain.Accessions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -21,11 +22,9 @@ public sealed class AccessionConfiguration : IEntityTypeConfiguration<Accession>
         builder.HasMany(x => x.TestOrders)
             .WithOne(x => x.Accession);
 
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
-        
+        builder.Property(x => x.Status)
+            .HasConversion(x => x.Value, x => new AccessionStatus(x));
+
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>
         // {

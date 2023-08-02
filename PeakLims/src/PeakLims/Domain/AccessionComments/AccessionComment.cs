@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using AccessionCommentStatuses;
 using PeakLims.Domain.Accessions;
 using PeakLims.Domain.Accessions.Models;
 
@@ -16,7 +17,7 @@ public class AccessionComment : BaseEntity
 {
     public string Comment { get; private set; }
 
-    public string Status { get; private set; }
+    public AccessionCommentStatus Status { get; private set; }
 
     public Accession Accession { get; private set; }
 
@@ -30,7 +31,7 @@ public class AccessionComment : BaseEntity
         var newAccessionComment = new AccessionComment();
 
         newAccessionComment.Comment = accessionCommentForCreation.Comment;
-        newAccessionComment.Status = accessionCommentForCreation.Status;
+        newAccessionComment.Status = AccessionCommentStatus.Of(accessionCommentForCreation.Status);
 
         newAccessionComment.QueueDomainEvent(new AccessionCommentCreated(){ AccessionComment = newAccessionComment });
         
@@ -40,7 +41,7 @@ public class AccessionComment : BaseEntity
     public AccessionComment Update(AccessionCommentForUpdate accessionCommentForUpdate)
     {
         Comment = accessionCommentForUpdate.Comment;
-        Status = accessionCommentForUpdate.Status;
+        Status = AccessionCommentStatus.Of(accessionCommentForUpdate.Status);
 
         QueueDomainEvent(new AccessionCommentUpdated(){ Id = Id });
         return this;

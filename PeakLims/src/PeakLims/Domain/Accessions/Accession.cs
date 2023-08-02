@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using AccessionStatuses;
 using PeakLims.Domain.Patients;
 using PeakLims.Domain.Patients.Models;
 using PeakLims.Domain.HealthcareOrganizations;
@@ -23,7 +24,7 @@ public class Accession : BaseEntity
 {
     public string AccessionNumber { get; private set; }
 
-    public string Status { get; private set; }
+    public AccessionStatus Status { get; private set; }
 
     public Patient Patient { get; private set; }
 
@@ -45,7 +46,7 @@ public class Accession : BaseEntity
         var newAccession = new Accession();
 
         newAccession.AccessionNumber = accessionForCreation.AccessionNumber;
-        newAccession.Status = accessionForCreation.Status;
+        newAccession.Status = AccessionStatus.Of(accessionForCreation.Status);
 
         newAccession.QueueDomainEvent(new AccessionCreated(){ Accession = newAccession });
         
@@ -55,7 +56,7 @@ public class Accession : BaseEntity
     public Accession Update(AccessionForUpdate accessionForUpdate)
     {
         AccessionNumber = accessionForUpdate.AccessionNumber;
-        Status = accessionForUpdate.Status;
+        Status = AccessionStatus.Of(accessionForUpdate.Status);
 
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
         return this;

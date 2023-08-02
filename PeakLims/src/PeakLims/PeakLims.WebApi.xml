@@ -429,5 +429,17 @@
             Registers all services in the assembly of the given interface.
             </summary>
         </member>
+        <member name="T:PeakLims.Migrations.InitialMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.InitialMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.InitialMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.InitialMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

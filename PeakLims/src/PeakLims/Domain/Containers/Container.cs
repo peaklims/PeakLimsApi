@@ -9,13 +9,13 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
-
+using ContainerStatuses;
 
 public class Container : BaseEntity
 {
     public string UsedFor { get; private set; }
 
-    public string Status { get; private set; }
+    public ContainerStatus Status { get; private set; }
 
     public string Type { get; private set; }
 
@@ -29,7 +29,7 @@ public class Container : BaseEntity
         var newContainer = new Container();
 
         newContainer.UsedFor = containerForCreation.UsedFor;
-        newContainer.Status = containerForCreation.Status;
+        newContainer.Status = ContainerStatus.Of(containerForCreation.Status);
         newContainer.Type = containerForCreation.Type;
 
         newContainer.QueueDomainEvent(new ContainerCreated(){ Container = newContainer });
@@ -40,7 +40,7 @@ public class Container : BaseEntity
     public Container Update(ContainerForUpdate containerForUpdate)
     {
         UsedFor = containerForUpdate.UsedFor;
-        Status = containerForUpdate.Status;
+        Status = ContainerStatus.Of(containerForUpdate.Status);
         Type = containerForUpdate.Type;
 
         QueueDomainEvent(new ContainerUpdated(){ Id = Id });

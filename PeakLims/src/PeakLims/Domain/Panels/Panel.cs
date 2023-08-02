@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using PanelStatuses;
 using PeakLims.Domain.Tests;
 using PeakLims.Domain.Tests.Models;
 
@@ -22,7 +23,7 @@ public class Panel : BaseEntity
 
     public int Version { get; private set; }
 
-    public string Status { get; private set; }
+    public PanelStatus Status { get; private set; }
 
     private readonly List<Test> _test = new();
     public IReadOnlyCollection<Test> Tests => _test.AsReadOnly();
@@ -38,7 +39,7 @@ public class Panel : BaseEntity
         newPanel.PanelName = panelForCreation.PanelName;
         newPanel.Type = panelForCreation.Type;
         newPanel.Version = panelForCreation.Version;
-        newPanel.Status = panelForCreation.Status;
+        newPanel.Status = PanelStatus.Of(panelForCreation.Status);
 
         newPanel.QueueDomainEvent(new PanelCreated(){ Panel = newPanel });
         
@@ -51,7 +52,7 @@ public class Panel : BaseEntity
         PanelName = panelForUpdate.PanelName;
         Type = panelForUpdate.Type;
         Version = panelForUpdate.Version;
-        Status = panelForUpdate.Status;
+        Status = PanelStatus.Of(panelForUpdate.Status);
 
         QueueDomainEvent(new PanelUpdated(){ Id = Id });
         return this;

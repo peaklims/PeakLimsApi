@@ -11,17 +11,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
-
+using TestOrderCancellationReasons;
+using TestOrderStatuses;
 
 public class TestOrder : BaseEntity
 {
-    public string Status { get; private set; }
+    public TestOrderStatus Status { get; private set; }
 
     public DateOnly? DueDate { get; private set; }
 
     public int? TatSnapshot { get; private set; }
 
-    public string CancellationReason { get; private set; }
+    public TestOrderCancellationReason CancellationReason { get; private set; }
 
     public string CancellationComments { get; private set; }
 
@@ -38,10 +39,10 @@ public class TestOrder : BaseEntity
     {
         var newTestOrder = new TestOrder();
 
-        newTestOrder.Status = testOrderForCreation.Status;
+        newTestOrder.Status = TestOrderStatus.Of(testOrderForCreation.Status);
         newTestOrder.DueDate = testOrderForCreation.DueDate;
         newTestOrder.TatSnapshot = testOrderForCreation.TatSnapshot;
-        newTestOrder.CancellationReason = testOrderForCreation.CancellationReason;
+        newTestOrder.CancellationReason = TestOrderCancellationReason.Of(testOrderForCreation.CancellationReason);
         newTestOrder.CancellationComments = testOrderForCreation.CancellationComments;
         newTestOrder.AssociatedPanelId = testOrderForCreation.AssociatedPanelId;
 
@@ -52,10 +53,10 @@ public class TestOrder : BaseEntity
 
     public TestOrder Update(TestOrderForUpdate testOrderForUpdate)
     {
-        Status = testOrderForUpdate.Status;
+        Status = TestOrderStatus.Of(testOrderForUpdate.Status);
         DueDate = testOrderForUpdate.DueDate;
         TatSnapshot = testOrderForUpdate.TatSnapshot;
-        CancellationReason = testOrderForUpdate.CancellationReason;
+        CancellationReason = TestOrderCancellationReason.Of(testOrderForUpdate.CancellationReason);
         CancellationComments = testOrderForUpdate.CancellationComments;
         AssociatedPanelId = testOrderForUpdate.AssociatedPanelId;
 

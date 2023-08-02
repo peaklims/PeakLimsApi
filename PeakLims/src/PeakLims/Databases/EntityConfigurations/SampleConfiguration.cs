@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.SampleTypes;
 using PeakLims.Domain.Samples;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,10 +17,8 @@ public sealed class SampleConfiguration : IEntityTypeConfiguration<Sample>
         builder.HasOne(x => x.Container)
             .WithMany(x => x.Samples);
 
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
+        builder.Property(x => x.Type)
+            .HasConversion(x => x.Value, x => new SampleType(x));
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.PanelStatuses;
 using PeakLims.Domain.Panels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,10 +16,8 @@ public sealed class PanelConfiguration : IEntityTypeConfiguration<Panel>
         builder.HasMany(x => x.Tests)
             .WithMany(x => x.Panels);
 
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
+        builder.Property(x => x.Status)
+            .HasConversion(x => x.Value, x => new PanelStatus(x));
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>
