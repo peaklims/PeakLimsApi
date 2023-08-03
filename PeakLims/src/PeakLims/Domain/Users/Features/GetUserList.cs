@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Users.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.Users.Dtos;
 using PeakLims.Domain.Users.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetUserList
@@ -48,25 +49,14 @@ public static class GetUserList
                 Configuration = queryKitConfig
             };
 
-            var userSpecification = new UserWorklistSpecification(request.QueryParameters, queryKitData);
-            var userList = await _userRepository.ListAsync(userSpecification, cancellationToken);
-            var totalUserCount = await _userRepository.TotalCount(cancellationToken);
+            var collection = _userRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToUserDtoQueryable();
 
-            return new PagedList<UserDto>(userList, 
-                totalUserCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class UserWorklistSpecification : Specification<User, UserDto>
-        {
-            public UserWorklistSpecification(UserParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToUserDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<UserDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

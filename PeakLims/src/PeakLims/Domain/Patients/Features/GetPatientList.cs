@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Patients.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.Patients.Dtos;
 using PeakLims.Domain.Patients.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetPatientList
@@ -48,25 +49,14 @@ public static class GetPatientList
                 Configuration = queryKitConfig
             };
 
-            var patientSpecification = new PatientWorklistSpecification(request.QueryParameters, queryKitData);
-            var patientList = await _patientRepository.ListAsync(patientSpecification, cancellationToken);
-            var totalPatientCount = await _patientRepository.TotalCount(cancellationToken);
+            var collection = _patientRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToPatientDtoQueryable();
 
-            return new PagedList<PatientDto>(patientList, 
-                totalPatientCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class PatientWorklistSpecification : Specification<Patient, PatientDto>
-        {
-            public PatientWorklistSpecification(PatientParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToPatientDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<PatientDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

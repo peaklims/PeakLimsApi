@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.RolePermissions.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.RolePermissions.Dtos;
 using PeakLims.Domain.RolePermissions.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetRolePermissionList
@@ -48,25 +49,14 @@ public static class GetRolePermissionList
                 Configuration = queryKitConfig
             };
 
-            var rolePermissionSpecification = new RolePermissionWorklistSpecification(request.QueryParameters, queryKitData);
-            var rolePermissionList = await _rolePermissionRepository.ListAsync(rolePermissionSpecification, cancellationToken);
-            var totalRolePermissionCount = await _rolePermissionRepository.TotalCount(cancellationToken);
+            var collection = _rolePermissionRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToRolePermissionDtoQueryable();
 
-            return new PagedList<RolePermissionDto>(rolePermissionList, 
-                totalRolePermissionCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class RolePermissionWorklistSpecification : Specification<RolePermission, RolePermissionDto>
-        {
-            public RolePermissionWorklistSpecification(RolePermissionParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToRolePermissionDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<RolePermissionDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Tests.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.Tests.Dtos;
 using PeakLims.Domain.Tests.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetTestList
@@ -48,25 +49,14 @@ public static class GetTestList
                 Configuration = queryKitConfig
             };
 
-            var testSpecification = new TestWorklistSpecification(request.QueryParameters, queryKitData);
-            var testList = await _testRepository.ListAsync(testSpecification, cancellationToken);
-            var totalTestCount = await _testRepository.TotalCount(cancellationToken);
+            var collection = _testRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToTestDtoQueryable();
 
-            return new PagedList<TestDto>(testList, 
-                totalTestCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class TestWorklistSpecification : Specification<Test, TestDto>
-        {
-            public TestWorklistSpecification(TestParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToTestDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<TestDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

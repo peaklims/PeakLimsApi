@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Panels.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.Panels.Dtos;
 using PeakLims.Domain.Panels.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetPanelList
@@ -48,25 +49,14 @@ public static class GetPanelList
                 Configuration = queryKitConfig
             };
 
-            var panelSpecification = new PanelWorklistSpecification(request.QueryParameters, queryKitData);
-            var panelList = await _panelRepository.ListAsync(panelSpecification, cancellationToken);
-            var totalPanelCount = await _panelRepository.TotalCount(cancellationToken);
+            var collection = _panelRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToPanelDtoQueryable();
 
-            return new PagedList<PanelDto>(panelList, 
-                totalPanelCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class PanelWorklistSpecification : Specification<Panel, PanelDto>
-        {
-            public PanelWorklistSpecification(PanelParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToPanelDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<PanelDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

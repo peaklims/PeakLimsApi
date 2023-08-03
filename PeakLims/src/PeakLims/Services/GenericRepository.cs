@@ -1,14 +1,11 @@
 namespace PeakLims.Services;
 
-using Ardalis.Specification;
-using Ardalis.Specification.EntityFrameworkCore;
 using PeakLims.Domain;
 using PeakLims.Databases;
 using SharedKernel.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using QueryKit;
 using QueryKit.Configuration;
-using SearchEvaluator = Ardalis.Specification.EntityFrameworkCore.SearchEvaluator;
 
 public interface IGenericRepository<TEntity> : IPeakLimsScopedService
     where TEntity : BaseEntity
@@ -22,37 +19,16 @@ public interface IGenericRepository<TEntity> : IPeakLimsScopedService
     void Update(TEntity entity);
     void Remove(TEntity entity);
     void RemoveRange(IEnumerable<TEntity> entity);
-    Task<int> TotalCount(CancellationToken cancellationToken = default);
-    Task<List<TEntity>> ListAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
-    Task<List<TResult>> ListAsync<TResult>(ISpecification<TEntity, TResult> specification, CancellationToken cancellationToken = default);
-    Task<TEntity?> GetByIdOrDefault(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
-    Task<TResult?> GetByIdOrDefault<TResult>(ISpecification<TEntity, TResult> specification, CancellationToken cancellationToken = default);
-    Task<TEntity> GetById(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
-    Task<TResult> GetById<TResult>(ISpecification<TEntity, TResult> specification, CancellationToken cancellationToken = default);
-    Task<bool> AnyAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
 }
 
 public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> 
     where TEntity : BaseEntity
 {
-    private readonly SpecificationEvaluator _specificationEvaluator = CustomEvaluator.Default;
     private readonly PeakLimsDbContext _dbContext;
 
     protected GenericRepository(PeakLimsDbContext dbContext)
     {
         this._dbContext = dbContext;
-    }
-    
-    private class CustomEvaluator : SpecificationEvaluator
-    {
-        public new static CustomEvaluator Default { get; } = new CustomEvaluator();
-        public CustomEvaluator() : base(new List<IEvaluator>
-        {
-            PaginationEvaluator.Instance,
-            QueryKitEvaluator.Instance
-        })
-        {
-        }
     }
     
     public IQueryable<TEntity> Query()
@@ -109,157 +85,5 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity>
     public virtual void RemoveRange(IEnumerable<TEntity> entities)
     {
         _dbContext.Set<TEntity>().RemoveRange(entities);
-    }
-    
-    public virtual Task<int> TotalCount(CancellationToken cancellationToken = default)
-    {
-        return _dbContext.Set<TEntity>().CountAsync(cancellationToken);
-    }
-    
-    public virtual async Task<List<TResult>> ListAsync<TResult>(ISpecification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
-    {
-        var queryResult = await ApplySpecification(specification).ToListAsync(cancellationToken);
-
-        return specification.PostProcessingAction == null 
-            ? queryResult 
-            : specification.PostProcessingAction(queryResult).ToList();
-    }
-    
-    public virtual async Task<List<TEntity>> ListAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
-    {
-        var queryResult = await ApplySpecification(specification).ToListAsync(cancellationToken);
-        
-        return specification.PostProcessingAction == null 
-            ? queryResult 
-            : specification.PostProcessingAction(queryResult).ToList();
-    }
-    
-    public virtual async Task<TEntity?> GetByIdOrDefault(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
-    {
-        return await ApplySpecification(specification).FirstOrDefaultAsync(cancellationToken);
-    }
-    
-    public virtual async Task<TResult?> GetByIdOrDefault<TResult>(ISpecification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
-    {
-        return await ApplySpecification(specification).FirstOrDefaultAsync(cancellationToken);
-    }
-    
-    public virtual async Task<TEntity> GetById(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
-    {
-        var entity = await GetByIdOrDefault(specification, cancellationToken);
-        
-        if(entity == null)
-            throw new NotFoundException($"{typeof(TEntity).Name} with a query '{specification.Query}' was not found.");
-
-        return entity;
-    }
-    
-    public virtual async Task<TResult> GetById<TResult>(ISpecification<TEntity, TResult> specification, CancellationToken cancellationToken = default)
-    {
-        var entity = await GetByIdOrDefault(specification, cancellationToken);
-        
-        if(entity == null)
-            throw new NotFoundException($"{typeof(TEntity).Name} with a query '{specification.Query}' was not found.");
-
-        return entity;
-    }
-    
-    private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification, bool evaluateCriteriaOnly = false)
-    {
-        return _specificationEvaluator.GetQuery(_dbContext.Set<TEntity>().AsQueryable(), specification, evaluateCriteriaOnly);
-    }
-    
-    private IQueryable<TResult> ApplySpecification<TResult>(ISpecification<TEntity, TResult> specification)
-    {
-        return _specificationEvaluator.GetQuery(_dbContext.Set<TEntity>().AsQueryable(), specification);
-    }
-    
-    public virtual async Task<bool> AnyAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
-    {
-        return await ApplySpecification(specification).AnyAsync(cancellationToken);
-    }
-}
-
-public class PaginationEvaluator : IEvaluator
-{
-    private PaginationEvaluator() { }
-    public static PaginationEvaluator Instance { get; } = new PaginationEvaluator();
-
-    public bool IsCriteriaEvaluator { get; } = true;
-
-    public IQueryable<T> GetQuery<T>(IQueryable<T> query, ISpecification<T> specification) where T : class
-    {
-        if (specification.Items.TryGetValue("PageNumber", out var pageNumber) &&
-            specification.Items.TryGetValue("PageSize", out var pageSize))
-        {
-            query = query.Skip(((int)pageNumber - 1) * (int)pageSize).Take((int)pageSize);
-        }
-
-        return query;
-    }
-}
-
-public class QueryKitEvaluator : IEvaluator
-{
-    private QueryKitEvaluator()
-    {
-    }
-
-    public static QueryKitEvaluator Instance { get; } = new QueryKitEvaluator();
-
-    public bool IsCriteriaEvaluator { get; } = false;
-
-    public IQueryable<T> GetQuery<T>(IQueryable<T> query, ISpecification<T> specification) where T : class
-    {
-        if (specification.Items.TryGetValue("QueryKitData", out var data))
-        {
-            var queryKitData = data as QueryKitData;
-
-            if (queryKitData != null)
-            {
-                query = query.ApplyQueryKit(queryKitData);
-            }
-        }
-
-        return query;
-    }
-}
-
-public static class SpecificationBuilderExtensions
-{
-    public static ISpecificationBuilder<T> Paginate<T>(
-        this ISpecificationBuilder<T> specificationBuilder,
-        int pageNumber,
-        int pageSize) where T : class
-    {
-        specificationBuilder.Specification.Items["PageNumber"] = pageNumber;
-        specificationBuilder.Specification.Items["PageSize"] = pageSize;
-        return specificationBuilder;
-    }
-    
-    public static ISpecificationBuilder<T, TResult> Paginate<T, TResult>(
-        this ISpecificationBuilder<T, TResult> specificationBuilder,
-        int pageNumber,
-        int pageSize) where T : class
-    {
-        specificationBuilder.Specification.Items["PageNumber"] = pageNumber;
-        specificationBuilder.Specification.Items["PageSize"] = pageSize;
-        return specificationBuilder;
-    }
-
-    public static ISpecificationBuilder<T> ApplyQueryKit<T>(
-        this ISpecificationBuilder<T> specificationBuilder,
-        QueryKitData queryKitData) where T : class
-    {
-        specificationBuilder.Specification.Items["QueryKitData"] = queryKitData;
-        return specificationBuilder;
-    }
-    
-    public static ISpecificationBuilder<T, TResult> ApplyQueryKit<T, TResult>(
-        this ISpecificationBuilder<T, TResult> specificationBuilder,
-        QueryKitData queryKitData) where T : class
-    {
-        specificationBuilder.Specification.Items["QueryKitData"] = queryKitData;
-        return specificationBuilder;
     }
 }

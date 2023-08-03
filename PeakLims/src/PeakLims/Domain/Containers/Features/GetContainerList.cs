@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Containers.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.Containers.Dtos;
 using PeakLims.Domain.Containers.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetContainerList
@@ -47,26 +48,15 @@ public static class GetContainerList
                 SortOrder = request.QueryParameters.SortOrder ?? "-CreatedOn",
                 Configuration = queryKitConfig
             };
+            
+            var collection = _containerRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToContainerDtoQueryable();
 
-            var containerSpecification = new ContainerWorklistSpecification(request.QueryParameters, queryKitData);
-            var containerList = await _containerRepository.ListAsync(containerSpecification, cancellationToken);
-            var totalContainerCount = await _containerRepository.TotalCount(cancellationToken);
-
-            return new PagedList<ContainerDto>(containerList, 
-                totalContainerCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class ContainerWorklistSpecification : Specification<Container, ContainerDto>
-        {
-            public ContainerWorklistSpecification(ContainerParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToContainerDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<ContainerDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

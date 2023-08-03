@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.TestOrders.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.TestOrders.Dtos;
 using PeakLims.Domain.TestOrders.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetTestOrderList
@@ -48,25 +49,14 @@ public static class GetTestOrderList
                 Configuration = queryKitConfig
             };
 
-            var testOrderSpecification = new TestOrderWorklistSpecification(request.QueryParameters, queryKitData);
-            var testOrderList = await _testOrderRepository.ListAsync(testOrderSpecification, cancellationToken);
-            var totalTestOrderCount = await _testOrderRepository.TotalCount(cancellationToken);
+            var collection = _testOrderRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToTestOrderDtoQueryable();
 
-            return new PagedList<TestOrderDto>(testOrderList, 
-                totalTestOrderCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class TestOrderWorklistSpecification : Specification<TestOrder, TestOrderDto>
-        {
-            public TestOrderWorklistSpecification(TestOrderParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToTestOrderDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<TestOrderDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

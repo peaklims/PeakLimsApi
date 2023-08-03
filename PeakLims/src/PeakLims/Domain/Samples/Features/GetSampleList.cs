@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Samples.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.Samples.Dtos;
 using PeakLims.Domain.Samples.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetSampleList
@@ -48,25 +49,14 @@ public static class GetSampleList
                 Configuration = queryKitConfig
             };
 
-            var sampleSpecification = new SampleWorklistSpecification(request.QueryParameters, queryKitData);
-            var sampleList = await _sampleRepository.ListAsync(sampleSpecification, cancellationToken);
-            var totalSampleCount = await _sampleRepository.TotalCount(cancellationToken);
+            var collection = _sampleRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToSampleDtoQueryable();
 
-            return new PagedList<SampleDto>(sampleList, 
-                totalSampleCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class SampleWorklistSpecification : Specification<Sample, SampleDto>
-        {
-            public SampleWorklistSpecification(SampleParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToSampleDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<SampleDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

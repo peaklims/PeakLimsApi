@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.HealthcareOrganizations.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.HealthcareOrganizations.Dtos;
 using PeakLims.Domain.HealthcareOrganizations.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetHealthcareOrganizationList
@@ -48,25 +49,14 @@ public static class GetHealthcareOrganizationList
                 Configuration = queryKitConfig
             };
 
-            var healthcareOrganizationSpecification = new HealthcareOrganizationWorklistSpecification(request.QueryParameters, queryKitData);
-            var healthcareOrganizationList = await _healthcareOrganizationRepository.ListAsync(healthcareOrganizationSpecification, cancellationToken);
-            var totalHealthcareOrganizationCount = await _healthcareOrganizationRepository.TotalCount(cancellationToken);
+            var collection = _healthcareOrganizationRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToHealthcareOrganizationDtoQueryable();
 
-            return new PagedList<HealthcareOrganizationDto>(healthcareOrganizationList, 
-                totalHealthcareOrganizationCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class HealthcareOrganizationWorklistSpecification : Specification<HealthcareOrganization, HealthcareOrganizationDto>
-        {
-            public HealthcareOrganizationWorklistSpecification(HealthcareOrganizationParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToHealthcareOrganizationDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<HealthcareOrganizationDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }

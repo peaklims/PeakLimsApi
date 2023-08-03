@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.HealthcareOrganizationContacts.Features;
 
-using Ardalis.Specification;
 using PeakLims.Domain.HealthcareOrganizationContacts.Dtos;
 using PeakLims.Domain.HealthcareOrganizationContacts.Services;
 using PeakLims.Wrappers;
@@ -11,6 +10,8 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using QueryKit;
 using QueryKit.Configuration;
 
 public static class GetHealthcareOrganizationContactList
@@ -47,26 +48,15 @@ public static class GetHealthcareOrganizationContactList
                 SortOrder = request.QueryParameters.SortOrder ?? "-CreatedOn",
                 Configuration = queryKitConfig
             };
+            
+            var collection = _healthcareOrganizationContactRepository.Query().AsNoTracking();
+            var appliedCollection = collection.ApplyQueryKit(queryKitData);
+            var dtoCollection = appliedCollection.ToHealthcareOrganizationContactDtoQueryable();
 
-            var healthcareOrganizationContactSpecification = new HealthcareOrganizationContactWorklistSpecification(request.QueryParameters, queryKitData);
-            var healthcareOrganizationContactList = await _healthcareOrganizationContactRepository.ListAsync(healthcareOrganizationContactSpecification, cancellationToken);
-            var totalHealthcareOrganizationContactCount = await _healthcareOrganizationContactRepository.TotalCount(cancellationToken);
-
-            return new PagedList<HealthcareOrganizationContactDto>(healthcareOrganizationContactList, 
-                totalHealthcareOrganizationContactCount,
-                request.QueryParameters.PageNumber, 
-                request.QueryParameters.PageSize);
-        }
-
-        private sealed class HealthcareOrganizationContactWorklistSpecification : Specification<HealthcareOrganizationContact, HealthcareOrganizationContactDto>
-        {
-            public HealthcareOrganizationContactWorklistSpecification(HealthcareOrganizationContactParametersDto parameters, QueryKitData queryKitData)
-            {
-                Query.ApplyQueryKit(queryKitData)
-                    .Paginate(parameters.PageNumber, parameters.PageSize)
-                    .Select(x => x.ToHealthcareOrganizationContactDto())
-                    .AsNoTracking();
-            }
+            return await PagedList<HealthcareOrganizationContactDto>.CreateAsync(dtoCollection,
+                request.QueryParameters.PageNumber,
+                request.QueryParameters.PageSize,
+                cancellationToken);
         }
     }
 }
