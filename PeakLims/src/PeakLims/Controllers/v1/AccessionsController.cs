@@ -74,9 +74,9 @@ public sealed class AccessionsController: ControllerBase
     /// </summary>
     [Authorize]
     [HttpPost(Name = "AddAccession")]
-    public async Task<ActionResult<AccessionDto>> AddAccession([FromBody]AccessionForCreationDto accessionForCreation)
+    public async Task<ActionResult<AccessionDto>> AddAccession()
     {
-        var command = new AddAccession.Command(accessionForCreation);
+        var command = new AddAccession.Command();
         var commandResponse = await _mediator.Send(command);
 
         return CreatedAtRoute("GetAccession",

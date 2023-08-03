@@ -34,7 +34,7 @@
             Gets a single Accession by ID.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.AccessionsController.AddAccession(PeakLims.Domain.Accessions.Dtos.AccessionForCreationDto)">
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.AddAccession">
             <summary>
             Creates a new Accession record.
             </summary>

@@ -2,7 +2,6 @@ namespace PeakLims.Domain.Accessions;
 
 using SharedKernel.Exceptions;
 using PeakLims.Domain.AccessionComments;
-using PeakLims.Domain.Accessions.Models;
 using PeakLims.Domain.Accessions.DomainEvents;
 using FluentValidation;
 using System.Text.Json.Serialization;
@@ -41,7 +40,7 @@ public class Accession : BaseEntity
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
 
-    public static Accession Create(AccessionForCreation accessionForCreation)
+    public static Accession Create()
     {
         var newAccession = new Accession();
 

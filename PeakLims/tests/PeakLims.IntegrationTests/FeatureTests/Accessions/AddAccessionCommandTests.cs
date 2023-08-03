@@ -7,6 +7,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using Domain.AccessionStatuses;
 using PeakLims.Domain.Accessions.Features;
 using SharedKernel.Exceptions;
 
@@ -17,20 +18,19 @@ public class AddAccessionCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeAccessionOne = new FakeAccessionForCreationDto().Generate();
 
         // Act
-        var command = new AddAccession.Command(fakeAccessionOne);
+        var command = new AddAccession.Command();
         var accessionReturned = await testingServiceScope.SendAsync(command);
         var accessionCreated = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .FirstOrDefaultAsync(a => a.Id == accessionReturned.Id));
 
         // Assert
         accessionReturned.AccessionNumber.Should().NotBeNull();
-        accessionReturned.Status.Should().Be(fakeAccessionOne.Status);
+        accessionReturned.Status.Should().Be(AccessionStatus.Draft().Value);
 
         accessionCreated.AccessionNumber.Should().NotBeNull();
-        accessionCreated.Status.Should().Be(fakeAccessionOne.Status);
+        accessionCreated.Status.Should().Be(AccessionStatus.Draft());
     }
 
     [Fact]
@@ -39,10 +39,9 @@ public class AddAccessionCommandTests : TestBase
         // Arrange
         var testingServiceScope = new TestingServiceScope();
         testingServiceScope.SetUserNotPermitted(Permissions.CanAddAccessions);
-        var fakeAccessionOne = new FakeAccessionForCreationDto();
 
         // Act
-        var command = new AddAccession.Command(fakeAccessionOne);
+        var command = new AddAccession.Command();
         var act = () => testingServiceScope.SendAsync(command);
 
         // Assert

@@ -3,7 +3,6 @@ namespace PeakLims.Domain.Accessions.Features;
 using PeakLims.Domain.Accessions.Services;
 using PeakLims.Domain.Accessions;
 using PeakLims.Domain.Accessions.Dtos;
-using PeakLims.Domain.Accessions.Models;
 using PeakLims.Services;
 using SharedKernel.Exceptions;
 using PeakLims.Domain;
@@ -13,15 +12,7 @@ using MediatR;
 
 public static class AddAccession
 {
-    public sealed class Command : IRequest<AccessionDto>
-    {
-        public readonly AccessionForCreationDto AccessionToAdd;
-
-        public Command(AccessionForCreationDto accessionToAdd)
-        {
-            AccessionToAdd = accessionToAdd;
-        }
-    }
+    public sealed record Command : IRequest<AccessionDto>;
 
     public sealed class Handler : IRequestHandler<Command, AccessionDto>
     {
@@ -40,8 +31,7 @@ public static class AddAccession
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddAccessions);
 
-            var accessionToAdd = request.AccessionToAdd.ToAccessionForCreation();
-            var accession = Accession.Create(accessionToAdd);
+            var accession = Accession.Create();
 
             await _accessionRepository.Add(accession, cancellationToken);
             await _unitOfWork.CommitChanges(cancellationToken);

@@ -22,10 +22,8 @@ public class CreateAccessionTests
     public void can_create_valid_accession()
     {
         // Arrange
-        var accessionToCreate = new FakeAccessionForCreation().Generate();
-        
         // Act
-        var fakeAccession = Accession.Create(accessionToCreate);
+        var fakeAccession = Accession.Create();
 
         // Assert
         fakeAccession.Status.Should().Be(AccessionStatus.Draft());
@@ -35,10 +33,8 @@ public class CreateAccessionTests
     public void queue_domain_event_on_create()
     {
         // Arrange
-        var accessionToCreate = new FakeAccessionForCreation().Generate();
-        
         // Act
-        var fakeAccession = Accession.Create(accessionToCreate);
+        var fakeAccession = Accession.Create();
 
         // Assert
         fakeAccession.DomainEvents.Count.Should().Be(1);
