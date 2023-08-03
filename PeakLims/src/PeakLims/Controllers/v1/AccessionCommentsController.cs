@@ -24,36 +24,6 @@ public sealed class AccessionCommentsController: ControllerBase
     {
         _mediator = mediator;
     }
-    
-
-    /// <summary>
-    /// Gets a list of all AccessionComments.
-    /// </summary>
-    [Authorize]
-    [HttpGet(Name = "GetAccessionComments")]
-    public async Task<IActionResult> GetAccessionComments([FromQuery] AccessionCommentParametersDto accessionCommentParametersDto)
-    {
-        var query = new GetAccessionCommentList.Query(accessionCommentParametersDto);
-        var queryResponse = await _mediator.Send(query);
-
-        var paginationMetadata = new
-        {
-            totalCount = queryResponse.TotalCount,
-            pageSize = queryResponse.PageSize,
-            currentPageSize = queryResponse.CurrentPageSize,
-            currentStartIndex = queryResponse.CurrentStartIndex,
-            currentEndIndex = queryResponse.CurrentEndIndex,
-            pageNumber = queryResponse.PageNumber,
-            totalPages = queryResponse.TotalPages,
-            hasPrevious = queryResponse.HasPrevious,
-            hasNext = queryResponse.HasNext
-        };
-
-        Response.Headers.Add("X-Pagination",
-            JsonSerializer.Serialize(paginationMetadata));
-
-        return Ok(queryResponse);
-    }
 
 
     /// <summary>

@@ -4,11 +4,6 @@
         <name>PeakLims</name>
     </assembly>
     <members>
-        <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.GetAccessionComments(PeakLims.Domain.AccessionComments.Dtos.AccessionCommentParametersDto)">
-            <summary>
-            Gets a list of all AccessionComments.
-            </summary>
-        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.GetAccessionComment(System.Guid)">
             <summary>
             Gets a single AccessionComment by ID.

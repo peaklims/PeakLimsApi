@@ -8,10 +8,12 @@ using SharedKernel.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using QueryKit;
 using QueryKit.Configuration;
+using SearchEvaluator = Ardalis.Specification.EntityFrameworkCore.SearchEvaluator;
 
 public interface IGenericRepository<TEntity> : IPeakLimsScopedService
     where TEntity : BaseEntity
 {
+    IQueryable<TEntity> Query();
     Task<TEntity?> GetByIdOrDefault(Guid id, bool withTracking = true, CancellationToken cancellationToken = default);
     Task<TEntity> GetById(Guid id, bool withTracking = true, CancellationToken cancellationToken = default);
     Task<bool> Exists(Guid id, CancellationToken cancellationToken = default);
@@ -51,6 +53,11 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity>
         })
         {
         }
+    }
+    
+    public IQueryable<TEntity> Query()
+    {
+        return _dbContext.Set<TEntity>().AsQueryable();
     }
 
     public virtual async Task<TEntity> GetByIdOrDefault(Guid id, bool withTracking = true, CancellationToken cancellationToken = default)

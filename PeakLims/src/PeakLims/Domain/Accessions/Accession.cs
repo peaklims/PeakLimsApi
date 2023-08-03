@@ -36,7 +36,7 @@ public class Accession : BaseEntity
     private readonly List<TestOrder> _testOrder = new();
     public IReadOnlyCollection<TestOrder> TestOrders => _testOrder.AsReadOnly();
 
-    public IReadOnlyCollection<AccessionComment> AccessionComments { get; }
+    public IReadOnlyCollection<AccessionComment> Comments { get; } = new List<AccessionComment>();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 

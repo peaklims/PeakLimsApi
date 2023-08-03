@@ -14,7 +14,7 @@ public sealed class AccessionCommentConfiguration : IEntityTypeConfiguration<Acc
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
         builder.HasOne(x => x.Accession)
-            .WithMany(x => x.AccessionComments);
+            .WithMany(x => x.Comments);
         builder.HasOne(x => x.ParentComment);
 
         builder.Property(x => x.Status)

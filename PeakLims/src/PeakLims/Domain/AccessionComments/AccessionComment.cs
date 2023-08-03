@@ -19,9 +19,7 @@ public class AccessionComment : BaseEntity
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
-
-
-
+    
     public static AccessionComment Create(Accession accession, string commentText)
     {
         GuardCommentNotEmptyOrNull(commentText);
