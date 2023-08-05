@@ -98,7 +98,7 @@ public class TestOrder : BaseEntity
 
     public TestOrder SetSample(Sample sample)
     {
-        ValidationException.ThrowWhenNull(sample, $"A sample must be provided.");
+        ValidationException.ThrowWhenNull(sample, $"A valid sample must be provided.");
         GuardSampleIfTestOrderIsProcessing();
 
         Sample = sample;
