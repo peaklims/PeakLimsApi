@@ -8,6 +8,8 @@ using FluentAssertions;
 using Xunit;
 using System.Net;
 using System.Threading.Tasks;
+using Domain.TestOrders.Dtos;
+using SharedTestHelpers.Fakes.Test;
 
 public class CreateTestOrderTests : TestBase
 {
@@ -15,7 +17,12 @@ public class CreateTestOrderTests : TestBase
     public async Task create_testorder_returns_created_using_valid_dto_and_valid_auth_credentials()
     {
         // Arrange
-        var fakeTestOrder = new FakeTestOrderForCreationDto().Generate();
+        var test = new FakeTestBuilder().Build();
+        await InsertAsync(test);
+        
+        var fakeTestOrder = new TestOrderForCreationDto();
+        fakeTestOrder.TestId = test.Id;
+        fakeTestOrder.PanelId = null;
 
         var user = await AddNewSuperAdmin();
         FactoryClient.AddAuth(user.Identifier);
