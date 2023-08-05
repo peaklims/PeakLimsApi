@@ -8,5 +8,6 @@ public sealed class FakeTestForUpdateDto : AutoFaker<TestForUpdateDto>
 {
     public FakeTestForUpdateDto()
     {
+        RuleFor(x => x.TurnAroundTime, x => x.Random.Int(min: 1, max: 1000));
     }
 }
