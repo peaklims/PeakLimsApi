@@ -13,6 +13,8 @@ public static class Permissions
     public const string CanUpdateHealthcareOrganizations = nameof(CanUpdateHealthcareOrganizations);
     public const string CanAddHealthcareOrganizations = nameof(CanAddHealthcareOrganizations);
     public const string CanReadHealthcareOrganizations = nameof(CanReadHealthcareOrganizations);
+    public const string CanActivateHealthcareOrganizations = nameof(CanActivateHealthcareOrganizations);
+    public const string CanDeactivateHealthcareOrganizations = nameof(CanDeactivateHealthcareOrganizations);
     public const string CanDeleteTests = nameof(CanDeleteTests);
     public const string CanUpdateTests = nameof(CanUpdateTests);
     public const string CanAddTests = nameof(CanAddTests);

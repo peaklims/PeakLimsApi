@@ -25,24 +25,9 @@ public class SetAccessionStatusToReadyForTestingCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakePatientOne = new FakePatientBuilder().Build();
-        var fakeHealthcareOrganizationOne = new FakeHealthcareOrganizationBuilder().Build();
-        var fakeHealthcareOrganizationContactOne = new FakeHealthcareOrganizationContactBuilder().Build();
-        var container = new FakeContainerBuilder().Build();
-        var sample = new FakeSampleBuilder()
-            .WithValidContainer(container)
-            .Build();
-
-        var test = new FakeTestBuilder().Build().Activate();
-        await testingServiceScope.InsertAsync(test);
-        
         var fakeAccessionOne = new FakeAccessionBuilder()
-            .WithTest(test)
-            .Build()
-            .SetPatient(fakePatientOne)
-            .SetHealthcareOrganization(fakeHealthcareOrganizationOne)
-            .AddContact(fakeHealthcareOrganizationContactOne);
-        fakeAccessionOne.TestOrders.FirstOrDefault()!.SetSample(sample);
+            .WithSetupForValidReadyForTestingTransition()
+            .Build();
         
         await testingServiceScope.InsertAsync(fakeAccessionOne);
 

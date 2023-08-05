@@ -24,14 +24,12 @@ public static class SetAccessionStatusToReadyForTesting
         private readonly IAccessionRepository _accessionRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHeimGuardClient _heimGuard;
-        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public Handler(IAccessionRepository accessionRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard, IDateTimeProvider dateTimeProvider)
+        public Handler(IAccessionRepository accessionRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
         {
             _accessionRepository = accessionRepository;
             _unitOfWork = unitOfWork;
             _heimGuard = heimGuard;
-            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
