@@ -7,6 +7,7 @@ using PeakLims.Domain.Samples.Models;
 public class FakeSampleBuilder
 {
     private SampleForCreation _creationData = new FakeSampleForCreation().Generate();
+    private Container _container = null;
 
     public FakeSampleBuilder WithModel(SampleForCreation model)
     {
@@ -56,9 +57,19 @@ public class FakeSampleBuilder
         return this;
     }
     
+    public FakeSampleBuilder WithValidContainer(Container container)
+    {
+        _container = container;
+        _creationData.Type = container.UsedFor.Value;
+        return this;
+    }
+    
     public Sample Build()
     {
         var result = Sample.Create(_creationData);
+        if (_container != null)
+            result.SetContainer(_container);
+
         return result;
     }
 }
