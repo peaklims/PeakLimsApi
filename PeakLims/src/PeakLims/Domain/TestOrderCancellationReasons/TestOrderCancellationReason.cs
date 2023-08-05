@@ -6,16 +6,19 @@ using SharedKernel.Exceptions;
 
 public class TestOrderCancellationReason : ValueObject
 {
-    private TestOrderCancellationReasonEnum _status;
+    private TestOrderCancellationReasonEnum _reason;
     public string Value
     {
-        get => _status.Name;
+        get => _reason.Name;
         private set
         {
+            if (value == null)
+                _reason = null;
+            
             if (!TestOrderCancellationReasonEnum.TryFromName(value, true, out var parsed))
                 throw new InvalidSmartEnumPropertyName(nameof(Value), value);
 
-            _status = parsed;
+            _reason = parsed;
         }
     }
     
@@ -29,7 +32,7 @@ public class TestOrderCancellationReason : ValueObject
     }
     
     public static TestOrderCancellationReason Of(string value) => new TestOrderCancellationReason(value);
-    public static implicit operator string(TestOrderCancellationReason value) => value.Value;
+    public static implicit operator string(TestOrderCancellationReason value) => value == null ? null : value.Value;
     public static List<string> ListNames() => TestOrderCancellationReasonEnum.List.Select(x => x.Name).ToList();
 
     public static TestOrderCancellationReason Qns() => new TestOrderCancellationReason(TestOrderCancellationReasonEnum.Qns.Name);

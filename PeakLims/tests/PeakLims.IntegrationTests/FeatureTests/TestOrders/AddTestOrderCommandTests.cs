@@ -7,8 +7,10 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using Domain.TestOrderStatuses;
 using PeakLims.Domain.TestOrders.Features;
 using SharedKernel.Exceptions;
+using SharedTestHelpers.Fakes.Test;
 
 public class AddTestOrderCommandTests : TestBase
 {
@@ -17,28 +19,22 @@ public class AddTestOrderCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeTestOrderOne = new FakeTestOrderForCreationDto().Generate();
+        var fakeTest = new FakeTestBuilder().Build();
+        await testingServiceScope.InsertAsync(fakeTest);
 
         // Act
-        var command = new AddTestOrder.Command(fakeTestOrderOne);
+        var command = new AddTestOrder.Command(fakeTest.Id, null);
         var testOrderReturned = await testingServiceScope.SendAsync(command);
         var testOrderCreated = await testingServiceScope.ExecuteDbContextAsync(db => db.TestOrders
+            .Include(t => t.Test)
             .FirstOrDefaultAsync(t => t.Id == testOrderReturned.Id));
 
         // Assert
-        testOrderReturned.Status.Should().Be(fakeTestOrderOne.Status);
-        testOrderReturned.DueDate.Should().Be(fakeTestOrderOne.DueDate);
-        testOrderReturned.TatSnapshot.Should().Be(fakeTestOrderOne.TatSnapshot);
-        testOrderReturned.CancellationReason.Should().Be(fakeTestOrderOne.CancellationReason);
-        testOrderReturned.CancellationComments.Should().Be(fakeTestOrderOne.CancellationComments);
-        testOrderReturned.AssociatedPanelId.Should().Be(fakeTestOrderOne.AssociatedPanelId);
+        testOrderReturned.Status.Should().Be(TestOrderStatus.Pending());
+        testOrderReturned.TestId.Should().Be(fakeTest.Id);
 
-        testOrderCreated.Status.Should().Be(fakeTestOrderOne.Status);
-        testOrderCreated.DueDate.Should().Be(fakeTestOrderOne.DueDate);
-        testOrderCreated.TatSnapshot.Should().Be(fakeTestOrderOne.TatSnapshot);
-        testOrderCreated.CancellationReason.Should().Be(fakeTestOrderOne.CancellationReason);
-        testOrderCreated.CancellationComments.Should().Be(fakeTestOrderOne.CancellationComments);
-        testOrderCreated.AssociatedPanelId.Should().Be(fakeTestOrderOne.AssociatedPanelId);
+        testOrderCreated.Status.Should().Be(TestOrderStatus.Pending());
+        testOrderCreated.Test.Id.Should().Be(fakeTest.Id);
     }
 
     [Fact]
@@ -47,10 +43,9 @@ public class AddTestOrderCommandTests : TestBase
         // Arrange
         var testingServiceScope = new TestingServiceScope();
         testingServiceScope.SetUserNotPermitted(Permissions.CanAddTestOrders);
-        var fakeTestOrderOne = new FakeTestOrderForCreationDto();
-
+        
         // Act
-        var command = new AddTestOrder.Command(fakeTestOrderOne);
+        var command = new AddTestOrder.Command(Guid.NewGuid(), null);
         var act = () => testingServiceScope.SendAsync(command);
 
         // Assert

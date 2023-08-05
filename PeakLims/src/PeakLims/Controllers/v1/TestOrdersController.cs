@@ -76,38 +76,12 @@ public sealed class TestOrdersController: ControllerBase
     [HttpPost(Name = "AddTestOrder")]
     public async Task<ActionResult<TestOrderDto>> AddTestOrder([FromBody]TestOrderForCreationDto testOrderForCreation)
     {
-        var command = new AddTestOrder.Command(testOrderForCreation);
+        var command = new AddTestOrder.Command(testOrderForCreation.TestId, testOrderForCreation.PanelId);
         var commandResponse = await _mediator.Send(command);
 
         return CreatedAtRoute("GetTestOrder",
             new { commandResponse.Id },
             commandResponse);
-    }
-
-
-    /// <summary>
-    /// Updates an entire existing TestOrder.
-    /// </summary>
-    [Authorize]
-    [HttpPut("{id:guid}", Name = "UpdateTestOrder")]
-    public async Task<IActionResult> UpdateTestOrder(Guid id, TestOrderForUpdateDto testOrder)
-    {
-        var command = new UpdateTestOrder.Command(id, testOrder);
-        await _mediator.Send(command);
-        return NoContent();
-    }
-
-
-    /// <summary>
-    /// Deletes an existing TestOrder record.
-    /// </summary>
-    [Authorize]
-    [HttpDelete("{id:guid}", Name = "DeleteTestOrder")]
-    public async Task<ActionResult> DeleteTestOrder(Guid id)
-    {
-        var command = new DeleteTestOrder.Command(id);
-        await _mediator.Send(command);
-        return NoContent();
     }
 
     // endpoint marker - do not delete this comment

@@ -30,19 +30,7 @@ public class FakePanelBuilder
         _creationData.Type = type;
         return this;
     }
-    
-    public FakePanelBuilder WithVersion(int version)
-    {
-        _creationData.Version = version;
-        return this;
-    }
-    
-    public FakePanelBuilder WithStatus(string status)
-    {
-        _creationData.Status = status;
-        return this;
-    }
-    
+
     public Panel Build()
     {
         var result = Panel.Create(_creationData);

@@ -8,6 +8,6 @@ public sealed class TestOrderDto
     public int? TatSnapshot { get; set; }
     public string CancellationReason { get; set; }
     public string CancellationComments { get; set; }
-    public Guid? AssociatedPanelId { get; set; }
-
+    public Guid? PanelId { get; set; }
+    public Guid? TestId { get; set; }
 }

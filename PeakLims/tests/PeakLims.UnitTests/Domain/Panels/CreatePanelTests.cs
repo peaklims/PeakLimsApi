@@ -30,8 +30,6 @@ public class CreatePanelTests
         fakePanel.PanelCode.Should().Be(panelToCreate.PanelCode);
         fakePanel.PanelName.Should().Be(panelToCreate.PanelName);
         fakePanel.Type.Should().Be(panelToCreate.Type);
-        fakePanel.Version.Should().Be(panelToCreate.Version);
-        fakePanel.Status.Should().Be(panelToCreate.Status);
     }
 
     [Fact]

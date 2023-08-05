@@ -30,7 +30,6 @@ public class TestOrderQueryTests : TestBase
         testOrder.TatSnapshot.Should().Be(fakeTestOrderOne.TatSnapshot);
         testOrder.CancellationReason.Should().Be(fakeTestOrderOne.CancellationReason);
         testOrder.CancellationComments.Should().Be(fakeTestOrderOne.CancellationComments);
-        testOrder.AssociatedPanelId.Should().Be(fakeTestOrderOne.AssociatedPanelId);
     }
 
     [Fact]

@@ -249,16 +249,6 @@
             Creates a new TestOrder record.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.TestOrdersController.UpdateTestOrder(System.Guid,PeakLims.Domain.TestOrders.Dtos.TestOrderForUpdateDto)">
-            <summary>
-            Updates an entire existing TestOrder.
-            </summary>
-        </member>
-        <member name="M:PeakLims.Controllers.v1.TestOrdersController.DeleteTestOrder(System.Guid)">
-            <summary>
-            Deletes an existing TestOrder record.
-            </summary>
-        </member>
         <member name="M:PeakLims.Controllers.v1.TestsController.GetTests(PeakLims.Domain.Tests.Dtos.TestParametersDto)">
             <summary>
             Gets a list of all Tests.
@@ -453,6 +443,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.TestOrderCleanup">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.TestOrderCleanup.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.TestOrderCleanup.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.TestOrderCleanup.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

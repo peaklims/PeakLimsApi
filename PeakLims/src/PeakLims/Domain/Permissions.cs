@@ -23,6 +23,7 @@ public static class Permissions
     public const string CanReadPanels = nameof(CanReadPanels);
     public const string CanDeleteTestOrders = nameof(CanDeleteTestOrders);
     public const string CanUpdateTestOrders = nameof(CanUpdateTestOrders);
+    public const string CanCancelTestOrders = nameof(CanCancelTestOrders);
     public const string CanAddTestOrders = nameof(CanAddTestOrders);
     public const string CanReadTestOrders = nameof(CanReadTestOrders);
     public const string CanDeleteContainers = nameof(CanDeleteContainers);
@@ -38,7 +39,6 @@ public static class Permissions
     public const string CanAddAccessionComments = nameof(CanAddAccessionComments);
     public const string CanReadAccessionComments = nameof(CanReadAccessionComments);
     public const string CanDeleteAccessions = nameof(CanDeleteAccessions);
-    public const string CanUpdateAccessions = nameof(CanUpdateAccessions);
     public const string CanAddAccessions = nameof(CanAddAccessions);
     public const string CanReadAccessions = nameof(CanReadAccessions);
     public const string CanDeletePatients = nameof(CanDeletePatients);
@@ -57,6 +57,8 @@ public static class Permissions
     public const string CanAddUserRoles = nameof(CanAddUserRoles);
     public const string CanGetRoles = nameof(CanGetRoles);
     public const string CanGetPermissions = nameof(CanGetPermissions);
+    public const string CanSetSampleOnTestOrder = nameof(CanSetSampleOnTestOrder);
+    public const string CanRemoveSampleOnTestOrder = nameof(CanRemoveSampleOnTestOrder);
     
     public static List<string> List()
     {

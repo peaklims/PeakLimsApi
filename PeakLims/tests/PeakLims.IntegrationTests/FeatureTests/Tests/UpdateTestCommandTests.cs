@@ -35,9 +35,7 @@ public class UpdateTestCommandTests : TestBase
         updatedTest.TestName.Should().Be(updatedTestDto.TestName);
         updatedTest.Methodology.Should().Be(updatedTestDto.Methodology);
         updatedTest.Platform.Should().Be(updatedTestDto.Platform);
-        updatedTest.Version.Should().Be(updatedTestDto.Version);
         updatedTest.TurnAroundTime.Should().Be(updatedTestDto.TurnAroundTime);
-        updatedTest.Status.Should().Be(updatedTestDto.Status);
     }
 
     [Fact]

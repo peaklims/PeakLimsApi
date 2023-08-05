@@ -6,6 +6,7 @@ using PeakLims.Domain.Tests.DomainEvents;
 using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using PeakLims.Domain.TestStatuses;
 using Xunit;
 
 public class CreateTestTests
@@ -31,9 +32,8 @@ public class CreateTestTests
         fakeTest.TestName.Should().Be(testToCreate.TestName);
         fakeTest.Methodology.Should().Be(testToCreate.Methodology);
         fakeTest.Platform.Should().Be(testToCreate.Platform);
-        fakeTest.Version.Should().Be(testToCreate.Version);
         fakeTest.TurnAroundTime.Should().Be(testToCreate.TurnAroundTime);
-        fakeTest.Status.Should().Be(testToCreate.Status);
+        fakeTest.Status.Should().Be(TestStatus.Draft());
     }
 
     [Fact]

@@ -29,14 +29,10 @@ public class AddPanelCommandTests : TestBase
         panelReturned.PanelCode.Should().Be(fakePanelOne.PanelCode);
         panelReturned.PanelName.Should().Be(fakePanelOne.PanelName);
         panelReturned.Type.Should().Be(fakePanelOne.Type);
-        panelReturned.Version.Should().Be(fakePanelOne.Version);
-        panelReturned.Status.Should().Be(fakePanelOne.Status);
-
+        
         panelCreated.PanelCode.Should().Be(fakePanelOne.PanelCode);
         panelCreated.PanelName.Should().Be(fakePanelOne.PanelName);
         panelCreated.Type.Should().Be(fakePanelOne.Type);
-        panelCreated.Version.Should().Be(fakePanelOne.Version);
-        panelCreated.Status.Should().Be(fakePanelOne.Status);
     }
 
     [Fact]

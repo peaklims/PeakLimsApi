@@ -34,8 +34,6 @@ public class UpdatePanelCommandTests : TestBase
         updatedPanel.PanelCode.Should().Be(updatedPanelDto.PanelCode);
         updatedPanel.PanelName.Should().Be(updatedPanelDto.PanelName);
         updatedPanel.Type.Should().Be(updatedPanelDto.Type);
-        updatedPanel.Version.Should().Be(updatedPanelDto.Version);
-        updatedPanel.Status.Should().Be(updatedPanelDto.Status);
     }
 
     [Fact]

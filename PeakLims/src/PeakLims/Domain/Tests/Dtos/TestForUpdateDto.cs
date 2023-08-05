@@ -6,7 +6,5 @@ public sealed class TestForUpdateDto
     public string TestName { get; set; }
     public string Methodology { get; set; }
     public string Platform { get; set; }
-    public int Version { get; set; }
     public int TurnAroundTime { get; set; }
-    public string Status { get; set; }
 }

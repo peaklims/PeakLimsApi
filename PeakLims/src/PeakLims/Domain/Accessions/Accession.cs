@@ -16,7 +16,6 @@ using PeakLims.Domain.HealthcareOrganizations.Models;
 using PeakLims.Domain.HealthcareOrganizationContacts;
 using PeakLims.Domain.HealthcareOrganizationContacts.Models;
 using PeakLims.Domain.TestOrders;
-using PeakLims.Domain.TestOrders.Models;
 
 
 public class Accession : BaseEntity

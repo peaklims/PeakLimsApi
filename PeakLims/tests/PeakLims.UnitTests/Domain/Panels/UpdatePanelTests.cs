@@ -31,8 +31,6 @@ public class UpdatePanelTests
         fakePanel.PanelCode.Should().Be(updatedPanel.PanelCode);
         fakePanel.PanelName.Should().Be(updatedPanel.PanelName);
         fakePanel.Type.Should().Be(updatedPanel.Type);
-        fakePanel.Version.Should().Be(updatedPanel.Version);
-        fakePanel.Status.Should().Be(updatedPanel.Status);
     }
     
     [Fact]

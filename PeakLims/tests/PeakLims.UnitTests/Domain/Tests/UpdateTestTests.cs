@@ -32,9 +32,7 @@ public class UpdateTestTests
         fakeTest.TestName.Should().Be(updatedTest.TestName);
         fakeTest.Methodology.Should().Be(updatedTest.Methodology);
         fakeTest.Platform.Should().Be(updatedTest.Platform);
-        fakeTest.Version.Should().Be(updatedTest.Version);
         fakeTest.TurnAroundTime.Should().Be(updatedTest.TurnAroundTime);
-        fakeTest.Status.Should().Be(updatedTest.Status);
     }
     
     [Fact]

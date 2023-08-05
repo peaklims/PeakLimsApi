@@ -37,21 +37,9 @@ public class FakeTestBuilder
         return this;
     }
     
-    public FakeTestBuilder WithVersion(int version)
-    {
-        _creationData.Version = version;
-        return this;
-    }
-    
     public FakeTestBuilder WithTurnAroundTime(int turnAroundTime)
     {
         _creationData.TurnAroundTime = turnAroundTime;
-        return this;
-    }
-    
-    public FakeTestBuilder WithStatus(string status)
-    {
-        _creationData.Status = status;
         return this;
     }
     

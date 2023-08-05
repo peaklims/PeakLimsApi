@@ -6,6 +6,8 @@ using PeakLims.Domain.TestOrders.DomainEvents;
 using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using PeakLims.Domain.TestOrderStatuses;
+using SharedTestHelpers.Fakes.Test;
 using Xunit;
 
 public class CreateTestOrderTests
@@ -21,28 +23,23 @@ public class CreateTestOrderTests
     public void can_create_valid_testOrder()
     {
         // Arrange
-        var testOrderToCreate = new FakeTestOrderForCreation().Generate();
+        var fakeTest = new FakeTestBuilder().Build();
         
         // Act
-        var fakeTestOrder = TestOrder.Create(testOrderToCreate);
+        var fakeTestOrder = TestOrder.Create(fakeTest);
 
         // Assert
-        fakeTestOrder.Status.Should().Be(testOrderToCreate.Status);
-        fakeTestOrder.DueDate.Should().Be(testOrderToCreate.DueDate);
-        fakeTestOrder.TatSnapshot.Should().Be(testOrderToCreate.TatSnapshot);
-        fakeTestOrder.CancellationReason.Should().Be(testOrderToCreate.CancellationReason);
-        fakeTestOrder.CancellationComments.Should().Be(testOrderToCreate.CancellationComments);
-        fakeTestOrder.AssociatedPanelId.Should().Be(testOrderToCreate.AssociatedPanelId);
+        fakeTestOrder.Status.Should().Be(TestOrderStatus.Pending());
     }
 
     [Fact]
     public void queue_domain_event_on_create()
     {
         // Arrange
-        var testOrderToCreate = new FakeTestOrderForCreation().Generate();
+        var fakeTest = new FakeTestBuilder().Build();
         
         // Act
-        var fakeTestOrder = TestOrder.Create(testOrderToCreate);
+        var fakeTestOrder = TestOrder.Create(fakeTest);
 
         // Assert
         fakeTestOrder.DomainEvents.Count.Should().Be(1);
