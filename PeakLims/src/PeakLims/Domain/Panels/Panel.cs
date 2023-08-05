@@ -24,8 +24,8 @@ public class Panel : BaseEntity
 
     public PanelStatus Status { get; private set; }
 
-    private readonly List<Test> _test = new();
-    public IReadOnlyCollection<Test> Tests => _test.AsReadOnly();
+    private readonly List<Test> _tests = new();
+    public IReadOnlyCollection<Test> Tests => _tests.AsReadOnly();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
@@ -58,13 +58,7 @@ public class Panel : BaseEntity
 
     public Panel AddTest(Test test)
     {
-        _test.Add(test);
-        return this;
-    }
-    
-    public Panel RemoveTest(Test test)
-    {
-        _test.Remove(test);
+        _tests.Add(test);
         return this;
     }
 
@@ -98,7 +92,7 @@ public class Panel : BaseEntity
     public void RemoveTest(Test test, ITestOrderRepository testOrderRepository)
     {
         GuardWhenPanelIsAssignedToAnAccession(testOrderRepository);
-        RemoveTest(test);
+        _tests.RemoveAll(t => t.Id == test.Id);
         QueueDomainEvent(new PanelUpdated(){ Id = Id });
     }
 
