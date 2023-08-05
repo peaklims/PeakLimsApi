@@ -10,13 +10,14 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
-
+using HealthcareOrganizationStatuses;
 
 public class HealthcareOrganization : BaseEntity
 {
     public string Name { get; private set; }
 
     public string Email { get; private set; }
+    public HealthcareOrganizationStatus Status { get; private set; }
 
     public IReadOnlyCollection<Accession> Accessions { get; }
 
@@ -31,6 +32,7 @@ public class HealthcareOrganization : BaseEntity
 
         newHealthcareOrganization.Name = healthcareOrganizationForCreation.Name;
         newHealthcareOrganization.Email = healthcareOrganizationForCreation.Email;
+        newHealthcareOrganization.Status = HealthcareOrganizationStatus.Active();
 
         newHealthcareOrganization.QueueDomainEvent(new HealthcareOrganizationCreated(){ HealthcareOrganization = newHealthcareOrganization });
         

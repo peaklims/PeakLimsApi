@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.HealthcareOrganizationStatuses;
 using PeakLims.Domain.HealthcareOrganizations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,12 +13,10 @@ public sealed class HealthcareOrganizationConfiguration : IEntityTypeConfigurati
     public void Configure(EntityTypeBuilder<HealthcareOrganization> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
-
-        // example for a simple 1:1 value object
-        // builder.Property(x => x.Percent)
-        //     .HasConversion(x => x.Value, x => new Percent(x))
-        //     .HasColumnName("percent");
         
+        builder.Property(x => x.Status)
+            .HasConversion(x => x.Value, x => new HealthcareOrganizationStatus(x));
+
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>
         // {
