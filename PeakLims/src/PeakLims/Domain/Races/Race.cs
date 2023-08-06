@@ -12,7 +12,7 @@ public class Race : ValueObject
         private set
         {
             if (!RaceEnum.TryFromName(value, true, out var parsed))
-                parsed = RaceEnum.Unknown;
+                parsed = RaceEnum.NotGiven;
 
             _race = parsed;
         }
@@ -31,6 +31,7 @@ public class Race : ValueObject
     public static Race NativeHawaiianPacificIslander() => new Race(RaceEnum.NativeHawaiianPacificIslander.Name);
     public static Race White() => new Race(RaceEnum.White.Name);
     public static Race Asian() => new Race(RaceEnum.Asian.Name);
+    public static Race NotGiven() => new Race(RaceEnum.NotGiven.Name);
 
     protected Race() { } // EF Core
 }
@@ -43,6 +44,7 @@ public abstract class RaceEnum : SmartEnum<RaceEnum>
     public static readonly RaceEnum NativeHawaiianPacificIslander = new NativeHawaiianPacificIslanderType();
     public static readonly RaceEnum White = new WhiteType();
     public static readonly RaceEnum Asian = new AsianType();
+    public static readonly RaceEnum NotGiven = new NotGivenType();
 
     protected RaceEnum(string name, int value) : base(name, value)
     {
@@ -86,6 +88,13 @@ public abstract class RaceEnum : SmartEnum<RaceEnum>
     private class WhiteType : RaceEnum
     {
         public WhiteType() : base("White", 5)
+        {
+        }
+    }
+    
+    private class NotGivenType : RaceEnum
+    {
+        public NotGivenType() : base("Not Given", 6)
         {
         }
     }

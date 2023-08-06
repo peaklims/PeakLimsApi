@@ -12,14 +12,14 @@ public class Sex : ValueObject
         private set
         {
             if(string.IsNullOrEmpty(value))
-                value = SexEnum.Unknown.Name;
+                value = SexEnum.NotGiven.Name;
             if (value.Trim().Equals("m", StringComparison.InvariantCultureIgnoreCase))
                 value = SexEnum.Male.Name;
             if (value.Trim().Equals("f", StringComparison.InvariantCultureIgnoreCase))
                 value = SexEnum.Female.Name;
 
             if (!SexEnum.TryFromName(value, true, out var parsed))
-                parsed = SexEnum.Unknown;
+                parsed = SexEnum.NotGiven;
 
             _sex = parsed;
         }
@@ -41,6 +41,7 @@ public class Sex : ValueObject
     public static Sex Unknown() => new Sex(SexEnum.Unknown.Name);
     public static Sex Male() => new Sex(SexEnum.Male.Name);
     public static Sex Female() => new Sex(SexEnum.Female.Name);
+    public static Sex NotGiven() => new Sex(SexEnum.NotGiven.Name);
 
     protected Sex() { } // EF Core
 }
@@ -50,6 +51,7 @@ public abstract class SexEnum : SmartEnum<SexEnum>
     public static readonly SexEnum Unknown = new UnknownType();
     public static readonly SexEnum Male = new MaleType();
     public static readonly SexEnum Female = new FemaleType();
+    public static readonly SexEnum NotGiven = new NotGivenType();
 
     protected SexEnum(string name, int value) : base(name, value)
     {
@@ -72,6 +74,13 @@ public abstract class SexEnum : SmartEnum<SexEnum>
     private class FemaleType : SexEnum
     {
         public FemaleType() : base("Female", 2)
+        {
+        }
+    }
+    
+    private class NotGivenType : SexEnum
+    {
+        public NotGivenType() : base("NotGiven", 3)
         {
         }
     }
