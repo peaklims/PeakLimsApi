@@ -11,10 +11,10 @@ public static partial class PatientMapper
     public static partial PatientForUpdate ToPatientForUpdate(this PatientForUpdateDto patientForUpdateDto);
     
     [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth) }, new[] { nameof(PatientDto.DateOfBirth) })]
-    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.KnownAge) }, new[] { nameof(PatientDto.Age) })]
+    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(PatientDto.Age) })]
     public static partial PatientDto ToPatientDto(this Patient patient);
     
     [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth) }, new[] { nameof(PatientDto.DateOfBirth) })]
-    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.KnownAge) }, new[] { nameof(PatientDto.Age) })]
+    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(PatientDto.Age) })]
     public static partial IQueryable<PatientDto> ToPatientDtoQueryable(this IQueryable<Patient> patient);
 }
