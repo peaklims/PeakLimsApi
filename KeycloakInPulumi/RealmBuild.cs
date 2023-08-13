@@ -68,6 +68,24 @@ class RealmBuild : Stack
         peakLimsNextClient.ExtendDefaultScopes(peaklimsScope.Name);
         peakLimsNextClient.AddAudienceMapper("peak_lims");
         
+        var peakLimsSpaClient = ClientFactory.CreateCodeFlowClient(realm.Id,
+            "peak_lims.spa", 
+            "f8d59983-2a9b-45f4-86ca-c081283c92df", 
+            "PeakLims Spa",
+            "https://localhost:4378",
+            redirectUris: new InputList<string>() 
+            {
+                "https://localhost:4378/*",
+            },
+            webOrigins: new InputList<string>() 
+            {
+                "https://localhost:5227",
+                "https://localhost:4378",
+            }
+        );
+        peakLimsSpaClient.ExtendDefaultScopes(peaklimsScope.Name);
+        peakLimsSpaClient.AddAudienceMapper("peak_lims");
+        
         var bob = new User("bob", new UserArgs
         {
             RealmId = realm.Id,

@@ -1,0 +1,24 @@
+﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:25376",
+      "sslPort": 44359
+    }
+  },
+  "profiles": {
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:7164",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AUTH_AUTHORITY": "http://localhost:4933/auth/realms/DevRealm",
+        "AUTH_CLIENT_ID": "peak_lims.spa",
+        "AUTH_CLIENT_SECRET": "f8d59983-2a9b-45f4-86ca-c081283c92df"
+      }
+    }
+  }
+}
