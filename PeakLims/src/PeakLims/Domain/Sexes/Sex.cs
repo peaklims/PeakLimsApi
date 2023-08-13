@@ -80,7 +80,7 @@ public abstract class SexEnum : SmartEnum<SexEnum>
     
     private class NotGivenType : SexEnum
     {
-        public NotGivenType() : base("NotGiven", 3)
+        public NotGivenType() : base("Not Given", 3)
         {
         }
     }
