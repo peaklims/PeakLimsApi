@@ -54,6 +54,36 @@ public sealed class AccessionsController: ControllerBase
 
         return Ok(queryResponse);
     }
+    
+
+    /// <summary>
+    /// Gets a list of all Accessions for the worklist view.
+    /// </summary>
+    [Authorize]
+    [HttpGet("worklist", Name = "GetAccessioningWorklist")]
+    public async Task<IActionResult> GetAccessioningWorklist([FromQuery] AccessionParametersDto accessionParametersDto)
+    {
+        var query = new GetAccessionWorklist.Query(accessionParametersDto);
+        var queryResponse = await _mediator.Send(query);
+
+        var paginationMetadata = new
+        {
+            totalCount = queryResponse.TotalCount,
+            pageSize = queryResponse.PageSize,
+            currentPageSize = queryResponse.CurrentPageSize,
+            currentStartIndex = queryResponse.CurrentStartIndex,
+            currentEndIndex = queryResponse.CurrentEndIndex,
+            pageNumber = queryResponse.PageNumber,
+            totalPages = queryResponse.TotalPages,
+            hasPrevious = queryResponse.HasPrevious,
+            hasNext = queryResponse.HasNext
+        };
+
+        Response.Headers.Add("X-Pagination",
+            JsonSerializer.Serialize(paginationMetadata));
+
+        return Ok(queryResponse);
+    }
 
 
     /// <summary>

@@ -29,6 +29,11 @@
             Gets a list of all Accessions.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.GetAccessioningWorklist(PeakLims.Domain.Accessions.Dtos.AccessionParametersDto)">
+            <summary>
+            Gets a list of all Accessions for the worklist view.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.GetAccession(System.Guid)">
             <summary>
             Gets a single Accession by ID.
