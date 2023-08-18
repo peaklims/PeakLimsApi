@@ -1,14 +1,6 @@
 ﻿{
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:25376",
-      "sslPort": 44359
-    }
-  },
   "profiles": {
-    "https": {
+    "BFF (Dev)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
