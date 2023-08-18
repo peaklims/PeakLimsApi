@@ -26,7 +26,7 @@ public static partial class AccessionMapper
             : new AccessionWorklistDto() 
             { 
                 Id = x.Id, AccessionNumber = x.AccessionNumber, 
-                Status = x.Status != null ? (string)x.Status : default,
+                Status = x.Status != null ? x.Status.Value : default,
                 Patient = new AccessionWorklistDto.PatientDto() 
                 { 
                     FirstName = x.Patient.FirstName, 

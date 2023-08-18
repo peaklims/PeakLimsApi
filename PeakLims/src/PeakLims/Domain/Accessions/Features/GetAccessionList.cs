@@ -41,7 +41,10 @@ public static class GetAccessionList
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessions);
             
-            var queryKitConfig = new CustomQueryKitConfiguration();
+            var queryKitConfig = new QueryKitConfiguration(config =>
+            {
+                config.Property<Accession>(x => x.Status.Value).HasQueryName("status");
+            });
             var queryKitData = new QueryKitData()
             {
                 Filters = request.QueryParameters.Filters,

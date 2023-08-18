@@ -27,9 +27,12 @@ public sealed class AccessionConfiguration : IEntityTypeConfiguration<Accession>
             .HasDefaultValueSql($"concat('{Consts.DatabaseSequences.AccessionNumberPrefix}', nextval('\"{Consts.DatabaseSequences.AccessionNumberPrefix}\"'))")
             .IsRequired();
 
-        builder.Property(x => x.Status)
-            .HasConversion(x => x.Value, x => new AccessionStatus(x));
-
+        builder.OwnsOne(x => x.Status, opts =>
+            {
+                opts.Property(x => x.Value).HasColumnName("status");
+            }).Navigation(x => x.Status)
+            .IsRequired();
+        
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>
         // {
