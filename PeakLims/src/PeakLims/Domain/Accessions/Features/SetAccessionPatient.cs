@@ -40,6 +40,9 @@ public static class SetAccessionPatient
             if (isNewPatient)
             {
                 await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddPatients);
+                if (request.PatientForCreationDto == null)
+                    throw new ArgumentNullException(nameof(request.PatientForCreationDto));
+                
                 var newPatientToCreate = request.PatientForCreationDto.ToPatientForCreation();
                 var newPatient = Patient.Create(newPatientToCreate);
                 await _patientRepository.Add(newPatient, cancellationToken);

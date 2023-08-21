@@ -120,9 +120,9 @@ public sealed class AccessionsController: ControllerBase
     /// </summary>
     [Authorize]
     [HttpPut("setPatient", Name = "SetAccessionPatient")]
-    public async Task<ActionResult<AccessionDto>> SetAccessionPatient([FromBody] SetPatientDto setPatientDto)
+    public async Task<IActionResult> SetAccessionPatient([FromBody] SetPatientDto setPatientDto)
     {
-        var command = new SetAccessionPatient.Command(setPatientDto.AccessionId, setPatientDto.PatientId, setPatientDto.PatientForCreationDto);
+        var command = new SetAccessionPatient.Command(setPatientDto.AccessionId, setPatientDto.PatientId, setPatientDto.PatientForCreation);
         await _mediator.Send(command);
         return NoContent();
     }
