@@ -44,6 +44,11 @@
             Creates a new Accession record.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.SetAccessionPatient(PeakLims.Domain.Accessions.Dtos.SetPatientDto)">
+            <summary>
+            Sets the patient on an accession.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.DeleteAccession(System.Guid)">
             <summary>
             Deletes an existing Accession record.

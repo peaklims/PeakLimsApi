@@ -7,22 +7,15 @@ using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using MediatR;
+using Patients;
+using Patients.Dtos;
+using Patients.Mappings;
 
 public static class SetAccessionPatient
 {
-    public sealed class Command : IRequest<bool>
-    {
-        public readonly Guid AccessionId;
-        public readonly Guid PatientId;
+    public sealed record Command(Guid AccessionId, Guid? PatientId, PatientForCreationDto PatientForCreationDto) : IRequest;
 
-        public Command(Guid accessionId, Guid patientId)
-        {
-            AccessionId = accessionId;
-            PatientId = patientId;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Command, bool>
+    public sealed class Handler : IRequestHandler<Command>
     {
         private readonly IAccessionRepository _accessionRepository;
         private readonly IPatientRepository _patientRepository;
@@ -37,16 +30,29 @@ public static class SetAccessionPatient
             _patientRepository = patientRepository;
         }
 
-        public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
+        public async Task Handle(Command request, CancellationToken cancellationToken)
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateAccessions);
-
+            
             var accession = await _accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
-            var patient = await _patientRepository.GetById(request.PatientId, cancellationToken: cancellationToken);
-            accession.SetPatient(patient);
+            var isNewPatient = request.PatientId == null;
+
+            if (isNewPatient)
+            {
+                await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddPatients);
+                var newPatientToCreate = request.PatientForCreationDto.ToPatientForCreation();
+                var newPatient = Patient.Create(newPatientToCreate);
+                await _patientRepository.Add(newPatient, cancellationToken);
+                accession.SetPatient(newPatient);
+            }
+            else
+            {
+                var existingPatient = await _patientRepository.GetById(request.PatientId!.Value, cancellationToken: cancellationToken);
+                accession.SetPatient(existingPatient);
+            }
 
             _accessionRepository.Update(accession);
-            return await _unitOfWork.CommitChanges(cancellationToken) >= 1;
+            await _unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }

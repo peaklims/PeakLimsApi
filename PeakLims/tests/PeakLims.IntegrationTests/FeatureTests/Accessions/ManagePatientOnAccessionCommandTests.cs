@@ -25,7 +25,7 @@ public class ManagePatientOnAccessionCommandTests : TestBase
     }
     
     [Fact]
-    public async Task can_manage_patient()
+    public async Task can_manage_existing_patients()
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
@@ -35,7 +35,7 @@ public class ManagePatientOnAccessionCommandTests : TestBase
         await testingServiceScope.InsertAsync(accession);
 
         // Act - set
-        var command = new SetAccessionPatient.Command(accession.Id, patient.Id);
+        var command = new SetAccessionPatient.Command(accession.Id, patient.Id, null);
         await testingServiceScope.SendAsync(command);
         var accessionFromDb = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .FirstOrDefaultAsync(x => x.Id == accession.Id));
@@ -51,5 +51,28 @@ public class ManagePatientOnAccessionCommandTests : TestBase
 
         // Assert - remove
         accessionFromDb.Patient.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task can_add_a_patient()
+    {
+        // Arrange
+        var testingServiceScope = new TestingServiceScope();
+        var accession = Accession.Create();
+        await testingServiceScope.InsertAsync(accession);
+        var patientToAdd = new FakePatientForCreationDto().Generate();
+
+        // Act
+        var command = new SetAccessionPatient.Command(accession.Id, null, patientToAdd);
+        await testingServiceScope.SendAsync(command);
+        var accessionFromDb = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
+            .FirstOrDefaultAsync(x => x.Id == accession.Id));
+
+        // Assert
+        accessionFromDb.Patient.FirstName.Should().Be(patientToAdd.FirstName);
+        accessionFromDb.Patient.LastName.Should().Be(patientToAdd.LastName);
+        accessionFromDb.Patient.Lifespan.DateOfBirth.Should().Be(patientToAdd.DateOfBirth);
+        accessionFromDb.Patient.Race.Value.Should().Be(patientToAdd.Race);
+        accessionFromDb.Patient.Ethnicity.Value.Should().Be(patientToAdd.Ethnicity);
     }
 }

@@ -116,6 +116,19 @@ public sealed class AccessionsController: ControllerBase
 
 
     /// <summary>
+    /// Sets the patient on an accession.
+    /// </summary>
+    [Authorize]
+    [HttpPut("setPatient", Name = "SetAccessionPatient")]
+    public async Task<ActionResult<AccessionDto>> SetAccessionPatient([FromBody] SetPatientDto setPatientDto)
+    {
+        var command = new SetAccessionPatient.Command(setPatientDto.AccessionId, setPatientDto.PatientId, setPatientDto.PatientForCreationDto);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
     /// Deletes an existing Accession record.
     /// </summary>
     [Authorize]
