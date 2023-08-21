@@ -15,6 +15,7 @@ using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
 using Races;
 using Sexes;
+using ValidationException = SharedKernel.Exceptions.ValidationException;
 
 public class Patient : BaseEntity
 {
@@ -43,6 +44,12 @@ public class Patient : BaseEntity
     public static Patient Create(PatientForCreation patientForCreation)
     {
         var newPatient = new Patient();
+        
+        ValidationException.ThrowWhenNullOrWhitespace(patientForCreation.FirstName, "Please provide a first name.");
+        ValidationException.ThrowWhenNullOrWhitespace(patientForCreation.LastName, "Please provide a last name.");
+        ValidationException.ThrowWhenNullOrWhitespace(patientForCreation.Sex, "Please provide a sex.");
+        ValidationException.MustNot(patientForCreation.Age == null && patientForCreation.DateOfBirth == null, 
+            "Please provide a valid age or birth date.");
 
         newPatient.FirstName = patientForCreation.FirstName;
         newPatient.LastName = patientForCreation.LastName;
