@@ -54,6 +54,11 @@
             Sets the patient on an accession.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.RemoveAccessionPatient(System.Guid)">
+            <summary>
+            Removes the patient from a given accession.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.DeleteAccession(System.Guid)">
             <summary>
             Deletes an existing Accession record.

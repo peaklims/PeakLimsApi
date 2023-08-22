@@ -7,20 +7,13 @@ using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 public static class RemoveAccessionPatient
 {
-    public sealed class Command : IRequest<bool>
-    {
-        public readonly Guid AccessionId;
+    public sealed record Command(Guid AccessionId) : IRequest;
 
-        public Command(Guid accessionId)
-        {
-            AccessionId = accessionId;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Command, bool>
+    public sealed class Handler : IRequestHandler<Command>
     {
         private readonly IAccessionRepository _accessionRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,15 +26,21 @@ public static class RemoveAccessionPatient
             _heimGuard = heimGuard;
         }
 
-        public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
+        public async Task Handle(Command request, CancellationToken cancellationToken)
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateAccessions);
 
-            var accession = await _accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
+            var accession = await _accessionRepository.Query()
+                .Include(x => x.Patient)
+                .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);
+            
+            if(accession == null)
+                throw new NotFoundException(nameof(Accession), request.AccessionId);
+            
             accession.RemovePatient();
 
             _accessionRepository.Update(accession);
-            return await _unitOfWork.CommitChanges(cancellationToken) >= 1;
+            await _unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }

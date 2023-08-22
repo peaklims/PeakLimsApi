@@ -126,7 +126,6 @@ public sealed class AccessionsController: ControllerBase
             commandResponse);
     }
 
-
     /// <summary>
     /// Sets the patient on an accession.
     /// </summary>
@@ -139,6 +138,17 @@ public sealed class AccessionsController: ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Removes the patient from a given accession.
+    /// </summary>
+    [Authorize]
+    [HttpPut("{id:guid}/removePatient", Name = "RemoveAccessionPatient")]
+    public async Task<IActionResult> RemoveAccessionPatient(Guid id)
+    {
+        var command = new RemoveAccessionPatient.Command(id);
+        await _mediator.Send(command);
+        return NoContent();
+    }
 
     /// <summary>
     /// Deletes an existing Accession record.
