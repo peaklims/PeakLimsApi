@@ -39,6 +39,27 @@ public static partial class AccessionMapper
                     PanelName = x.AssociatedPanel.PanelName
                 }).ToList() 
             });
-        
+    }
+    
+    public static EditableAccessionDto ToEditableAccessionDto(this Accession accession)
+    {
+        return new EditableAccessionDto()
+        {
+            Id = accession.Id,
+            AccessionNumber = accession.AccessionNumber,
+            Status = accession.Status != null ? accession.Status.Value : default,
+            Patient = accession?.Patient == null ? null : new EditableAccessionDto.PatientDto()
+            {
+                Id = accession.Patient.Id,
+                FirstName = accession.Patient.FirstName,
+                LastName = accession.Patient.LastName,
+                Age = accession.Patient.Lifespan.Age,
+                DateOfBirth = accession.Patient.Lifespan.DateOfBirth,
+                Race = accession.Patient.Race.Value,
+                Ethnicity = accession.Patient.Ethnicity.Value,
+                Sex = accession.Patient.Sex.Value,
+                InternalId = accession.Patient.InternalId
+            }
+        };
     }
 }

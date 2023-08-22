@@ -100,6 +100,18 @@ public sealed class AccessionsController: ControllerBase
 
 
     /// <summary>
+    /// Gets a single Accession by ID.
+    /// </summary>
+    [Authorize]
+    [HttpGet("{id:guid}/forAggregateEdit", Name = "GetEditableAccessionAggregate")]
+    public async Task<IActionResult> GetEditableAccessionAggregate(Guid id)
+    {
+        var query = new GetEditableAccessionAggregate.Query(id);
+        var queryResponse = await _mediator.Send(query);
+        return Ok(queryResponse);
+    }
+
+    /// <summary>
     /// Creates a new Accession record.
     /// </summary>
     [Authorize]
