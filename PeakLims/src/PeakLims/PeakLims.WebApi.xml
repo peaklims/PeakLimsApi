@@ -169,6 +169,11 @@
             Gets a list of all Patients.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.SearchExistingPatients(PeakLims.Domain.Patients.Dtos.PatientParametersDto)">
+            <summary>
+            Search for an existing patient
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PatientsController.GetPatient(System.Guid)">
             <summary>
             Gets a single Patient by ID.

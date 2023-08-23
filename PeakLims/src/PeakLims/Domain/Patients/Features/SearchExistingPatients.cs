@@ -14,11 +14,11 @@ using Microsoft.EntityFrameworkCore;
 using QueryKit;
 using QueryKit.Configuration;
 
-public static class GetPatientList
+public static class SearchExistingPatients
 {
-    public sealed record Query(PatientParametersDto QueryParameters) : IRequest<PagedList<PatientDto>>;
+    public sealed record Query(PatientParametersDto QueryParameters) : IRequest<PagedList<PatientSearchResultDto>>;
 
-    public sealed class Handler : IRequestHandler<Query, PagedList<PatientDto>>
+    public sealed class Handler : IRequestHandler<Query, PagedList<PatientSearchResultDto>>
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IHeimGuardClient _heimGuard;
@@ -29,11 +29,16 @@ public static class GetPatientList
             _heimGuard = heimGuard;
         }
 
-        public async Task<PagedList<PatientDto>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<PagedList<PatientSearchResultDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadPatients);
+            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessions);
             
             var queryKitConfig = new CustomQueryKitConfiguration();
+            // var queryKitConfig = new CustomQueryKitConfiguration(config =>
+            // {
+            //     config.Property<Patient>(x => x.Accessions).HasQueryName("status");
+            // });
             var queryKitData = new QueryKitData()
             {
                 Filters = request.QueryParameters.Filters,
@@ -41,11 +46,13 @@ public static class GetPatientList
                 Configuration = queryKitConfig
             };
 
-            var collection = _patientRepository.Query().AsNoTracking();
+            var collection = _patientRepository.Query()
+                .Include(x => x.Accessions)
+                .AsNoTracking();
             var appliedCollection = collection.ApplyQueryKit(queryKitData);
-            var dtoCollection = appliedCollection.ToPatientDtoQueryable();
+            var dtoCollection = appliedCollection.ToPatientSearchResultDtoQueryable();
 
-            return await PagedList<PatientDto>.CreateAsync(dtoCollection,
+            return await PagedList<PatientSearchResultDto>.CreateAsync(dtoCollection,
                 request.QueryParameters.PageNumber,
                 request.QueryParameters.PageSize,
                 cancellationToken);
