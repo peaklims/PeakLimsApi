@@ -1,37 +1,24 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
-using Domain.AccessionStatuses;
-using PeakLims.Domain.Accessions;
+using PeakLims.Domain.AccessionContacts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Resources;
 
-public sealed class AccessionConfiguration : IEntityTypeConfiguration<Accession>
+public sealed class AccessionContactConfiguration : IEntityTypeConfiguration<AccessionContact>
 {
     /// <summary>
-    /// The database configuration for Accessions. 
+    /// The database configuration for AccessionContacts. 
     /// </summary>
-    public void Configure(EntityTypeBuilder<Accession> builder)
+    public void Configure(EntityTypeBuilder<AccessionContact> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
-        builder.HasMany(x => x.AccessionContacts)
-            .WithOne(x => x.Accession);
-        builder.HasOne(x => x.Patient)
-            .WithMany(x => x.Accessions);
-        builder.HasOne(x => x.HealthcareOrganization)
-            .WithMany(x => x.Accessions);
-        builder.HasMany(x => x.TestOrders)
-            .WithOne(x => x.Accession);
-        
-        builder.Property(o => o.AccessionNumber)
-            .HasDefaultValueSql($"concat('{Consts.DatabaseSequences.AccessionNumberPrefix}', nextval('\"{Consts.DatabaseSequences.AccessionNumberPrefix}\"'))")
-            .IsRequired();
+        builder.HasOne(x => x.HealthcareOrganizationContact)
+            .WithMany(x => x.AccessionContacts);
 
-        builder.OwnsOne(x => x.Status, opts =>
-            {
-                opts.Property(x => x.Value).HasColumnName("status");
-            }).Navigation(x => x.Status)
-            .IsRequired();
+        // example for a simple 1:1 value object
+        // builder.Property(x => x.Percent)
+        //     .HasConversion(x => x.Value, x => new Percent(x))
+        //     .HasColumnName("percent");
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

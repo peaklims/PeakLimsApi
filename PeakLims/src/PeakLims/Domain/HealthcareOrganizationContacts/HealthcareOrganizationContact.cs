@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.HealthcareOrganizationContacts;
 
 using SharedKernel.Exceptions;
+using PeakLims.Domain.AccessionContacts;
 using PeakLims.Domain.Accessions;
 using PeakLims.Domain.HealthcareOrganizationContacts.Models;
 using PeakLims.Domain.HealthcareOrganizationContacts.DomainEvents;
@@ -25,6 +26,8 @@ public class HealthcareOrganizationContact : BaseEntity
     public IReadOnlyCollection<HealthcareOrganization> HealthcareOrganizations => _healthcareOrganization.AsReadOnly();
 
     public Accession Accession { get; }
+
+    public IReadOnlyCollection<AccessionContact> AccessionContacts { get; } = new List<AccessionContact>();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 

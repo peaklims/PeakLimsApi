@@ -24,6 +24,31 @@
             Deletes an existing AccessionComment record.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionContactsController.GetAccessionContacts(PeakLims.Domain.AccessionContacts.Dtos.AccessionContactParametersDto)">
+            <summary>
+            Gets a list of all AccessionContacts.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionContactsController.GetAccessionContact(System.Guid)">
+            <summary>
+            Gets a single AccessionContact by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionContactsController.AddAccessionContact(PeakLims.Domain.AccessionContacts.Dtos.AccessionContactForCreationDto)">
+            <summary>
+            Creates a new AccessionContact record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionContactsController.UpdateAccessionContact(System.Guid,PeakLims.Domain.AccessionContacts.Dtos.AccessionContactForUpdateDto)">
+            <summary>
+            Updates an entire existing AccessionContact.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionContactsController.DeleteAccessionContact(System.Guid)">
+            <summary>
+            Deletes an existing AccessionContact record.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.GetAccessions(PeakLims.Domain.Accessions.Dtos.AccessionParametersDto)">
             <summary>
             Gets a list of all Accessions.
@@ -359,6 +384,11 @@
             The database configuration for Accessions. 
             </summary>
         </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.AccessionContactConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.AccessionContacts.AccessionContact})">
+            <summary>
+            The database configuration for AccessionContacts. 
+            </summary>
+        </member>
         <member name="M:PeakLims.Databases.EntityConfigurations.ContainerConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Containers.Container})">
             <summary>
             The database configuration for Containers. 
@@ -507,6 +537,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.AddOrgStatus.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.AddAccessionContact">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionContact.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionContact.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionContact.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

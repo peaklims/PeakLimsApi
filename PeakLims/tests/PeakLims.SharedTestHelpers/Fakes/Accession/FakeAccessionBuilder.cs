@@ -1,12 +1,13 @@
 namespace PeakLims.SharedTestHelpers.Fakes.Accession;
 
-using Domain.HealthcareOrganizationContacts;
+using Domain.AccessionContacts;
+using Domain.AccessionContacts;
 using Domain.HealthcareOrganizations;
 using Domain.Panels;
 using Domain.Patients;
 using Domain.Tests;
 using HealthcareOrganization;
-using HealthcareOrganizationContact;
+using AccessionContact;
 using Panel;
 using Patient;
 using PeakLims.Domain.Accessions;
@@ -19,7 +20,7 @@ public class FakeAccessionBuilder
     private List<Test> _tests = new List<Test>();
     private Patient _patient = null;
     private HealthcareOrganization _healthcareOrganization = null;
-    private HealthcareOrganizationContact _healthcareOrganizationContact = null;
+    private AccessionContact _accessionContact = null;
 
     public FakeAccessionBuilder WithPanel(Panel panel)
     {
@@ -55,8 +56,8 @@ public class FakeAccessionBuilder
         if(_healthcareOrganization == null)
             _healthcareOrganization = new FakeHealthcareOrganizationBuilder().Build().Activate();
         
-        if(_healthcareOrganizationContact == null)
-            _healthcareOrganizationContact = new FakeHealthcareOrganizationContactBuilder().Build();
+        if(_accessionContact == null)
+            _accessionContact = new FakeAccessionContactBuilder().Build();
 
         if (_tests.Count == 0)
             WithRandomTest();
@@ -87,9 +88,9 @@ public class FakeAccessionBuilder
         {
             result.SetHealthcareOrganization(_healthcareOrganization);
         }
-        if (_healthcareOrganizationContact != null)
+        if (_accessionContact != null)
         {
-            result.AddContact(_healthcareOrganizationContact);
+            result.AddContact(_accessionContact);
         }
         
         return result;

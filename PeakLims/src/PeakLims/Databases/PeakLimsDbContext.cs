@@ -17,6 +17,7 @@ using PeakLims.Domain.Panels;
 using PeakLims.Domain.Tests;
 using PeakLims.Domain.HealthcareOrganizations;
 using PeakLims.Domain.HealthcareOrganizationContacts;
+using PeakLims.Domain.AccessionContacts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
@@ -40,6 +41,7 @@ public sealed class PeakLimsDbContext : DbContext
     }
 
     #region DbSet Region - Do Not Delete
+    public DbSet<AccessionContact> AccessionContacts { get; set; }
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Accession> Accessions { get; set; }
     public DbSet<AccessionComment> AccessionComments { get; set; }
@@ -78,6 +80,7 @@ public sealed class PeakLimsDbContext : DbContext
         */
 
         #region Entity Database Config Region - Only delete if you don't want to automatically add configurations
+        modelBuilder.ApplyConfiguration(new AccessionContactConfiguration());
         modelBuilder.ApplyConfiguration(new PatientConfiguration());
         modelBuilder.ApplyConfiguration(new AccessionConfiguration());
         modelBuilder.ApplyConfiguration(new AccessionCommentConfiguration());

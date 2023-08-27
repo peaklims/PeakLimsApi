@@ -5,6 +5,10 @@ using System.Reflection;
 public static class Permissions
 {
     // Permissions marker - do not delete this comment
+    public const string CanDeleteAccessionContacts = nameof(CanDeleteAccessionContacts);
+    public const string CanUpdateAccessionContacts = nameof(CanUpdateAccessionContacts);
+    public const string CanAddAccessionContacts = nameof(CanAddAccessionContacts);
+    public const string CanReadAccessionContacts = nameof(CanReadAccessionContacts);
     public const string CanDeleteHealthcareOrganizationContacts = nameof(CanDeleteHealthcareOrganizationContacts);
     public const string CanUpdateHealthcareOrganizationContacts = nameof(CanUpdateHealthcareOrganizationContacts);
     public const string CanAddHealthcareOrganizationContacts = nameof(CanAddHealthcareOrganizationContacts);

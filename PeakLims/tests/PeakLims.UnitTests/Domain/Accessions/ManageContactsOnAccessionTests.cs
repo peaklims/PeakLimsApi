@@ -3,6 +3,7 @@ namespace PeakLims.UnitTests.Domain.Accessions;
 using Bogus;
 using FluentAssertions;
 using PeakLims.Domain.Accessions;
+using SharedTestHelpers.Fakes.AccessionContact;
 using SharedTestHelpers.Fakes.HealthcareOrganizationContact;
 using Xunit;
 
@@ -20,23 +21,25 @@ public class ManageContactsOnAccessionTests
     {
         // Arrange
         var fakeAccession = Accession.Create();
-        var contact = new FakeHealthcareOrganizationContactBuilder().Build();
+        var orgContact = new FakeHealthcareOrganizationContactBuilder().Build();
+        var accessionContact = new FakeAccessionContactBuilder().Build();
+        accessionContact.SetHealthcareOrganizationContact(orgContact);
         
         // Act - Can add idempotently
-        fakeAccession.AddContact(contact)
-            .AddContact(contact)
-            .AddContact(contact);
+        fakeAccession.AddContact(accessionContact)
+            .AddContact(accessionContact)
+            .AddContact(accessionContact);
 
         // Assert - Add
-        fakeAccession.HealthcareOrganizationContacts.Count.Should().Be(1);
-        fakeAccession.HealthcareOrganizationContacts.Should().ContainEquivalentOf(contact);
+        fakeAccession.AccessionContacts.Count.Should().Be(1);
+        fakeAccession.AccessionContacts.Should().ContainEquivalentOf(accessionContact);
         
         // Act - Can remove idempotently
-        fakeAccession.RemoveContact(contact)
-            .RemoveContact(contact)
-            .RemoveContact(contact);
+        fakeAccession.RemoveContact(accessionContact)
+            .RemoveContact(accessionContact)
+            .RemoveContact(accessionContact);
 
         // Assert - Remove
-        fakeAccession.HealthcareOrganizationContacts.Count.Should().Be(0);
+        fakeAccession.AccessionContacts.Count.Should().Be(0);
     }
 }

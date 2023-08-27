@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.Accessions;
 
 using SharedKernel.Exceptions;
+using PeakLims.Domain.AccessionContacts;
 using PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.Accessions.DomainEvents;
 using AccessionStatuses;
@@ -8,9 +9,6 @@ using Panels;
 using PeakLims.Domain.Patients;
 using PeakLims.Domain.Patients.Models;
 using PeakLims.Domain.HealthcareOrganizations;
-using PeakLims.Domain.HealthcareOrganizations.Models;
-using PeakLims.Domain.HealthcareOrganizationContacts;
-using PeakLims.Domain.HealthcareOrganizationContacts.Models;
 using PeakLims.Domain.TestOrders;
 using Tests;
 
@@ -24,13 +22,13 @@ public class Accession : BaseEntity
 
     public HealthcareOrganization HealthcareOrganization { get; private set; }
 
-    private readonly List<HealthcareOrganizationContact> _healthcareOrganizationContacts = new();
-    public IReadOnlyCollection<HealthcareOrganizationContact> HealthcareOrganizationContacts => _healthcareOrganizationContacts.AsReadOnly();
-
     private readonly List<TestOrder> _testOrders = new();
     public IReadOnlyCollection<TestOrder> TestOrders => _testOrders.AsReadOnly();
 
     public IReadOnlyCollection<AccessionComment> Comments { get; } = new List<AccessionComment>();
+
+    private readonly List<AccessionContact> _accessionContacts = new();
+    public IReadOnlyCollection<AccessionContact> AccessionContacts => _accessionContacts.AsReadOnly();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
@@ -45,18 +43,6 @@ public class Accession : BaseEntity
         
         return newAccession;
     }
-
-    public Accession AddHealthcareOrganizationContact(HealthcareOrganizationContact healthcareOrganizationContact)
-    {
-        _healthcareOrganizationContacts.Add(healthcareOrganizationContact);
-        return this;
-    }
-    
-    public Accession RemoveHealthcareOrganizationContact(HealthcareOrganizationContact healthcareOrganizationContact)
-    {
-        _healthcareOrganizationContacts.Remove(healthcareOrganizationContact);
-        return this;
-    }
     
     public Accession SetStatusToReadyForTesting()
     {
@@ -66,7 +52,7 @@ public class Accession : BaseEntity
                 $"An organization is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
         ValidationException.MustNot(TestOrders.Count <= 0,
                 $"At least 1 panel or test is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
-        ValidationException.MustNot(HealthcareOrganizationContacts.Count <= 0,
+        ValidationException.MustNot(AccessionContacts.Count <= 0,
                 $"At least 1 organization contact is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
         
         // TODO unit test
@@ -173,24 +159,24 @@ public class Accession : BaseEntity
         return this;
     }
 
-    public Accession AddContact(HealthcareOrganizationContact contact)
+    public Accession AddContact(AccessionContact contact)
     {
-        var alreadyExists = HealthcareOrganizationContactAlreadyExists(contact);
+        var alreadyExists = AccessionContactAlreadyExists(contact);
         if (alreadyExists)
             return this;
         
-        _healthcareOrganizationContacts.Add(contact);
+        _accessionContacts.Add(contact);
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
         return this;
     }
 
-    public Accession RemoveContact(HealthcareOrganizationContact contact)
+    public Accession RemoveContact(AccessionContact contact)
     {
-        var alreadyExists = HealthcareOrganizationContactAlreadyExists(contact);
+        var alreadyExists = AccessionContactAlreadyExists(contact);
         if (!alreadyExists)
             return this;
         
-        _healthcareOrganizationContacts.Remove(contact);
+        _accessionContacts.RemoveAll(x => x.Id == contact.Id);
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
         return this;
     }
@@ -229,8 +215,10 @@ public class Accession : BaseEntity
         return this;
     }
 
-    private bool HealthcareOrganizationContactAlreadyExists(HealthcareOrganizationContact contact) 
-        => _healthcareOrganizationContacts.Any(x => contact.Id == x.Id);
+    private bool AccessionContactAlreadyExists(AccessionContact contact) 
+        => _accessionContacts.Any(x => contact.Id == x.Id 
+                                       && contact.TargetType == x.TargetType 
+                                       && contact.TargetValue == x.TargetValue);
 
     private void GuardIfInFinalState(string subject)
     {
