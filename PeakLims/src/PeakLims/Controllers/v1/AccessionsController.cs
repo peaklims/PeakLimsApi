@@ -139,6 +139,18 @@ public sealed class AccessionsController: ControllerBase
     }
 
     /// <summary>
+    /// Sets the organzation on an accession.
+    /// </summary>
+    [Authorize]
+    [HttpPut("{accessionId:guid}/setOrganization/{orgId:guid}", Name = "SetAccessionHealthcareOrganization")]
+    public async Task<IActionResult> SetAccessionHealthcareOrganization(Guid accessionId, Guid orgId)
+    {
+        var command = new SetAccessionHealthcareOrganization.Command(accessionId, orgId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    /// <summary>
     /// Removes the patient from a given accession.
     /// </summary>
     [Authorize]

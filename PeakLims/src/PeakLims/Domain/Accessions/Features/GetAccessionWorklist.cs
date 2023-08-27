@@ -47,6 +47,7 @@ public static class GetAccessionWorklist
             var collection = _accessionRepository.Query()
                 .Include(x => x.Patient)
                 .Include(x => x.TestOrders)
+                .Include(x => x.HealthcareOrganization)
                 .AsNoTracking();
             var appliedCollection = collection.ApplyQueryKit(queryKitData);
             var dtoCollection = appliedCollection.ToAccessionWorklistDtoQueryable();

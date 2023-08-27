@@ -30,6 +30,7 @@ public static class GetEditableAccessionAggregate
 
             var accession = await _accessionRepository.Query()
                 .Include(x => x.Patient)
+                .Include(x => x.HealthcareOrganization)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);
             

@@ -6,6 +6,7 @@ public sealed record EditableAccessionDto
     public string AccessionNumber { get; set; }
     public string Status { get; set; }
     public PatientDto Patient { get; set; } = null!;
+    public Guid? OrganizationId { get; set; }
 
     public sealed record PatientDto
     {

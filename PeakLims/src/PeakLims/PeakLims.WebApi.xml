@@ -54,6 +54,11 @@
             Sets the patient on an accession.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.SetAccessionHealthcareOrganization(System.Guid,System.Guid)">
+            <summary>
+            Sets the organzation on an accession.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.RemoveAccessionPatient(System.Guid)">
             <summary>
             Removes the patient from a given accession.
@@ -115,6 +120,11 @@
             </summary>
         </member>
         <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.GetHealthcareOrganizations(PeakLims.Domain.HealthcareOrganizations.Dtos.HealthcareOrganizationParametersDto)">
+            <summary>
+            Gets a paginated list of all HealthcareOrganizations.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.GetAllHealthcareOrganizations">
             <summary>
             Gets a list of all HealthcareOrganizations.
             </summary>

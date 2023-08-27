@@ -31,8 +31,10 @@ public static partial class AccessionMapper
                 { 
                     FirstName = x.Patient.FirstName, 
                     LastName = x.Patient.LastName, 
-                    Age = x.Patient.Lifespan.Age 
+                    Age = x.Patient.Lifespan.Age,
+                    Sex = x.Patient.Sex.Value
                 },
+                OrganizationName = x.HealthcareOrganization.Name,
                 TestOrders = x.TestOrders.Select(x => new AccessionWorklistDto.TestOrderDto()
                 {
                     TestName = x.Test.TestName, 
@@ -48,6 +50,7 @@ public static partial class AccessionMapper
             Id = accession.Id,
             AccessionNumber = accession.AccessionNumber,
             Status = accession.Status != null ? accession.Status.Value : default,
+            OrganizationId = accession?.HealthcareOrganization?.Id,
             Patient = accession?.Patient == null ? null : new EditableAccessionDto.PatientDto()
             {
                 Id = accession.Patient.Id,

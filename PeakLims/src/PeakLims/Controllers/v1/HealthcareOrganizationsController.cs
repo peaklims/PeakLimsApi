@@ -27,7 +27,7 @@ public sealed class HealthcareOrganizationsController: ControllerBase
     
 
     /// <summary>
-    /// Gets a list of all HealthcareOrganizations.
+    /// Gets a paginated list of all HealthcareOrganizations.
     /// </summary>
     [Authorize]
     [HttpGet(Name = "GetHealthcareOrganizations")]
@@ -52,6 +52,19 @@ public sealed class HealthcareOrganizationsController: ControllerBase
         Response.Headers.Add("X-Pagination",
             JsonSerializer.Serialize(paginationMetadata));
 
+        return Ok(queryResponse);
+    }
+    
+
+    /// <summary>
+    /// Gets a list of all HealthcareOrganizations.
+    /// </summary>
+    [Authorize]
+    [HttpGet("all", Name = "GetAllHealthcareOrganizations")]
+    public async Task<IActionResult> GetAllHealthcareOrganizations()
+    {
+        var query = new GetAllHealthcareOrganizations.Query();
+        var queryResponse = await _mediator.Send(query);
         return Ok(queryResponse);
     }
 
