@@ -21,13 +21,10 @@ public class HealthcareOrganizationContact : BaseEntity
     public string Email { get; private set; }
 
     public string Npi { get; private set; }
+    
+    public HealthcareOrganization HealthcareOrganization { get; }
 
-    private readonly List<HealthcareOrganization> _healthcareOrganization = new();
-    public IReadOnlyCollection<HealthcareOrganization> HealthcareOrganizations => _healthcareOrganization.AsReadOnly();
-
-    public Accession Accession { get; }
-
-    public IReadOnlyCollection<AccessionContact> AccessionContacts { get; } = new List<AccessionContact>();
+    public IReadOnlyCollection<AccessionContact> Accessions { get; } = new List<AccessionContact>();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
@@ -52,18 +49,6 @@ public class HealthcareOrganizationContact : BaseEntity
         Npi = healthcareOrganizationContactForUpdate.Npi;
 
         QueueDomainEvent(new HealthcareOrganizationContactUpdated(){ Id = Id });
-        return this;
-    }
-
-    public HealthcareOrganizationContact AddHealthcareOrganization(HealthcareOrganization healthcareOrganization)
-    {
-        _healthcareOrganization.Add(healthcareOrganization);
-        return this;
-    }
-    
-    public HealthcareOrganizationContact RemoveHealthcareOrganization(HealthcareOrganization healthcareOrganization)
-    {
-        _healthcareOrganization.Remove(healthcareOrganization);
         return this;
     }
 

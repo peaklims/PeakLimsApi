@@ -9,6 +9,7 @@ using Xunit;
 using System.Threading.Tasks;
 using PeakLims.Domain.HealthcareOrganizationContacts.Features;
 using SharedKernel.Exceptions;
+using SharedTestHelpers.Fakes.HealthcareOrganization;
 
 public class AddHealthcareOrganizationContactCommandTests : TestBase
 {
@@ -17,22 +18,29 @@ public class AddHealthcareOrganizationContactCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeHealthcareOrganizationContactOne = new FakeHealthcareOrganizationContactForCreationDto().Generate();
+        var healthcareOrganization = new FakeHealthcareOrganizationBuilder().Build();
+        await testingServiceScope.InsertAsync(healthcareOrganization);
+        var fakeHealthcareOrganizationContactOne = new FakeHealthcareOrganizationContactForCreationDto()
+            .RuleFor(x => x.HealthcareOrganizationId, healthcareOrganization.Id)
+            .Generate();
 
         // Act
         var command = new AddHealthcareOrganizationContact.Command(fakeHealthcareOrganizationContactOne);
         var healthcareOrganizationContactReturned = await testingServiceScope.SendAsync(command);
         var healthcareOrganizationContactCreated = await testingServiceScope.ExecuteDbContextAsync(db => db.HealthcareOrganizationContacts
+            .Include(x => x.HealthcareOrganization)
             .FirstOrDefaultAsync(h => h.Id == healthcareOrganizationContactReturned.Id));
 
         // Assert
         healthcareOrganizationContactReturned.Name.Should().Be(fakeHealthcareOrganizationContactOne.Name);
         healthcareOrganizationContactReturned.Email.Should().Be(fakeHealthcareOrganizationContactOne.Email);
         healthcareOrganizationContactReturned.Npi.Should().Be(fakeHealthcareOrganizationContactOne.Npi);
+        healthcareOrganizationContactReturned.HealthcareOrganizationId.Should().Be(fakeHealthcareOrganizationContactOne.HealthcareOrganizationId);
 
         healthcareOrganizationContactCreated.Name.Should().Be(fakeHealthcareOrganizationContactOne.Name);
         healthcareOrganizationContactCreated.Email.Should().Be(fakeHealthcareOrganizationContactOne.Email);
         healthcareOrganizationContactCreated.Npi.Should().Be(fakeHealthcareOrganizationContactOne.Npi);
+        healthcareOrganizationContactCreated.HealthcareOrganization.Id.Should().Be(fakeHealthcareOrganizationContactOne.HealthcareOrganizationId);
     }
 
     [Fact]

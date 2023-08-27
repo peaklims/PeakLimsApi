@@ -12,7 +12,7 @@ public sealed class HealthcareOrganizationContactConfiguration : IEntityTypeConf
     public void Configure(EntityTypeBuilder<HealthcareOrganizationContact> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
-        builder.HasMany(x => x.HealthcareOrganizations)
+        builder.HasOne(x => x.HealthcareOrganization)
             .WithMany(x => x.HealthcareOrganizationContacts);
 
         // example for a simple 1:1 value object

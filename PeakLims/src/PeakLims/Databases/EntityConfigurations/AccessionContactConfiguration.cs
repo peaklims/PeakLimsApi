@@ -13,7 +13,7 @@ public sealed class AccessionContactConfiguration : IEntityTypeConfiguration<Acc
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
         builder.HasOne(x => x.HealthcareOrganizationContact)
-            .WithMany(x => x.AccessionContacts);
+            .WithMany(x => x.Accessions);
 
         // example for a simple 1:1 value object
         // builder.Property(x => x.Percent)

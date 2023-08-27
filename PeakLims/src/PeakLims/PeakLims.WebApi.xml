@@ -64,14 +64,24 @@
             Sets the patient on an accession.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.AccessionsController.SetAccessionHealthcareOrganization(System.Guid,System.Guid)">
-            <summary>
-            Sets the organzation on an accession.
-            </summary>
-        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.RemoveAccessionPatient(System.Guid)">
             <summary>
             Removes the patient from a given accession.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.AddContactToAccession(System.Guid,System.Guid)">
+            <summary>
+            Adds the contact to an accession.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.RemoveContactFromAccession(System.Guid,System.Guid)">
+            <summary>
+            Removes the contact from a given accession.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.SetAccessionHealthcareOrganization(System.Guid,System.Guid)">
+            <summary>
+            Sets the organzation on an accession.
             </summary>
         </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.DeleteAccession(System.Guid)">
@@ -534,6 +544,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.AddAccessionContact.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.SingleOrgPerOrgContact">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.SingleOrgPerOrgContact.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.SingleOrgPerOrgContact.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.SingleOrgPerOrgContact.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

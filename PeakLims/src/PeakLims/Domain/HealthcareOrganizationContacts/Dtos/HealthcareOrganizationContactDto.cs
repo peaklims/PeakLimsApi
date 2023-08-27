@@ -6,5 +6,5 @@ public sealed class HealthcareOrganizationContactDto
     public string Name { get; set; }
     public string Email { get; set; }
     public string Npi { get; set; }
-
+    public Guid HealthcareOrganizationId { get; set; }
 }

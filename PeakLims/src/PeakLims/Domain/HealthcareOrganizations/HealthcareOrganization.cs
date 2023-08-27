@@ -22,7 +22,9 @@ public class HealthcareOrganization : BaseEntity
 
     public IReadOnlyCollection<Accession> Accessions { get; }
 
-    public IReadOnlyCollection<HealthcareOrganizationContact> HealthcareOrganizationContacts { get; }
+
+    private readonly List<HealthcareOrganizationContact> _organizationContacts = new();
+    public IReadOnlyCollection<HealthcareOrganizationContact> HealthcareOrganizationContacts => _organizationContacts.AsReadOnly();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
@@ -68,6 +70,31 @@ public class HealthcareOrganization : BaseEntity
         QueueDomainEvent(new HealthcareOrganizationUpdated(){ Id = Id });
         return this;
     }
+
+    public HealthcareOrganization AddContact(HealthcareOrganizationContact contact)
+    {
+        var alreadyExists = HealthcareOrganizationContactAlreadyExists(contact);
+        if (alreadyExists)
+            return this;
+        
+        _organizationContacts.Add(contact);
+        QueueDomainEvent(new HealthcareOrganizationUpdated(){ Id = Id });
+        return this;
+    }
+
+    public HealthcareOrganization RemoveContact(HealthcareOrganizationContact contact)
+    {
+        var alreadyExists = HealthcareOrganizationContactAlreadyExists(contact);
+        if (!alreadyExists)
+            return this;
+        
+        _organizationContacts.RemoveAll(x => x.Id == contact.Id);
+        QueueDomainEvent(new HealthcareOrganizationUpdated(){ Id = Id });
+        return this;
+    }
+
+    private bool HealthcareOrganizationContactAlreadyExists(HealthcareOrganizationContact contact) 
+        => _organizationContacts.Any(x => contact.Id == x.Id);
 
     // Add Prop Methods Marker -- Deleting this comment will cause the add props utility to be incomplete
     
