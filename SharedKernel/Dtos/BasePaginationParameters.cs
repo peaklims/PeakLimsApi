@@ -2,7 +2,7 @@ namespace SharedKernel.Dtos
 {
     public abstract class BasePaginationParameters
     {
-        internal virtual int MaxPageSize { get; } = 20;
+        internal virtual int MaxPageSize { get; } = 500;
         internal virtual int DefaultPageSize { get; set; } = 10;
 
         public virtual int PageNumber { get; set; } = 1;
