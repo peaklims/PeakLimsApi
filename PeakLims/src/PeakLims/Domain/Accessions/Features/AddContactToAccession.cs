@@ -1,6 +1,8 @@
 namespace PeakLims.Domain.Accessions.Features;
 
 using AccessionContacts;
+using AccessionContacts.Dtos;
+using AccessionContacts.Mappings;
 using AccessionContacts.Services;
 using HealthcareOrganizationContacts.Services;
 using HeimGuard;
@@ -13,9 +15,9 @@ using SharedKernel.Exceptions;
 
 public static class AddContactToAccession
 {
-    public sealed record Command(Guid AccessionId, Guid HeathcareOrganizationContactId) : IRequest;
+    public sealed record Command(Guid AccessionId, Guid HeathcareOrganizationContactId) : IRequest<AccessionContactDto>;
 
-    public sealed class Handler : IRequestHandler<Command>
+    public sealed class Handler : IRequestHandler<Command, AccessionContactDto>
     {
         private readonly IHealthcareOrganizationContactRepository _healthcareOrganizationContactRepository;
         private readonly IAccessionContactRepository _accessionContactRepository;
@@ -32,7 +34,7 @@ public static class AddContactToAccession
             _heimGuard = heimGuard;
         }
 
-        public async Task Handle(Command request, CancellationToken cancellationToken)
+        public async Task<AccessionContactDto> Handle(Command request, CancellationToken cancellationToken)
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddAccessionContacts);
 
@@ -51,6 +53,8 @@ public static class AddContactToAccession
             
             accession.AddContact(accessionContact);
             await _unitOfWork.CommitChanges(cancellationToken);
+
+            return accessionContact.ToAccessionContactDto();
         }
     }
 }
