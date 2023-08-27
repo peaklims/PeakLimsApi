@@ -1,29 +1,26 @@
 namespace PeakLims.SharedTestHelpers.Fakes.AccessionContact;
 
+using Domain.HealthcareOrganizationContacts;
+using HealthcareOrganizationContact;
 using PeakLims.Domain.AccessionContacts;
 using PeakLims.Domain.AccessionContacts.Models;
 
 public class FakeAccessionContactBuilder
 {
-    private AccessionContactForCreation _creationData = new FakeAccessionContactForCreation().Generate();
+    private HealthcareOrganizationContact _creationData = new FakeHealthcareOrganizationContactBuilder().Build();
 
-    public FakeAccessionContactBuilder WithModel(AccessionContactForCreation model)
-    {
-        _creationData = model;
-        return this;
-    }
     
-    public FakeAccessionContactBuilder WithTargetType(string targetType)
-    {
-        _creationData.TargetType = targetType;
-        return this;
-    }
-    
-    public FakeAccessionContactBuilder WithTargetValue(string targetValue)
-    {
-        _creationData.TargetValue = targetValue;
-        return this;
-    }
+    // public FakeAccessionContactBuilder WithTargetType(string targetType)
+    // {
+    //     _creationData.TargetType = targetType;
+    //     return this;
+    // }
+    //
+    // public FakeAccessionContactBuilder WithTargetValue(string targetValue)
+    // {
+    //     _creationData.TargetValue = targetValue;
+    //     return this;
+    // }
     
     public AccessionContact Build()
     {

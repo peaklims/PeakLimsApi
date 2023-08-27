@@ -6,6 +6,7 @@ using PeakLims.Domain.AccessionContacts.DomainEvents;
 using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using SharedTestHelpers.Fakes.HealthcareOrganizationContact;
 using Xunit;
 
 public class CreateAccessionContactTests
@@ -21,14 +22,14 @@ public class CreateAccessionContactTests
     public void can_create_valid_accessionContact()
     {
         // Arrange
-        var accessionContactToCreate = new FakeAccessionContactForCreation().Generate();
+        var orgContact = new FakeHealthcareOrganizationContactBuilder().Build();
         
         // Act
-        var fakeAccessionContact = AccessionContact.Create(accessionContactToCreate);
+        var accessionContact = AccessionContact.Create(orgContact);
 
         // Assert
-        fakeAccessionContact.TargetType.Should().Be(accessionContactToCreate.TargetType);
-        fakeAccessionContact.TargetValue.Should().Be(accessionContactToCreate.TargetValue);
+        accessionContact.TargetType.Should().Be(TargetTypeEnum.Email.Name);
+        accessionContact.TargetValue.Should().Be(orgContact.Email);
     }
 
     [Fact]
@@ -36,9 +37,10 @@ public class CreateAccessionContactTests
     {
         // Arrange
         var accessionContactToCreate = new FakeAccessionContactForCreation().Generate();
+        var orgContact = new FakeHealthcareOrganizationContactBuilder().Build();
         
         // Act
-        var fakeAccessionContact = AccessionContact.Create(accessionContactToCreate);
+        var fakeAccessionContact = AccessionContact.Create(orgContact);
 
         // Assert
         fakeAccessionContact.DomainEvents.Count.Should().Be(1);

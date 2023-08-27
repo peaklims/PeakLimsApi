@@ -34,21 +34,6 @@
             Gets a single AccessionContact by ID.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.AccessionContactsController.AddAccessionContact(PeakLims.Domain.AccessionContacts.Dtos.AccessionContactForCreationDto)">
-            <summary>
-            Creates a new AccessionContact record.
-            </summary>
-        </member>
-        <member name="M:PeakLims.Controllers.v1.AccessionContactsController.UpdateAccessionContact(System.Guid,PeakLims.Domain.AccessionContacts.Dtos.AccessionContactForUpdateDto)">
-            <summary>
-            Updates an entire existing AccessionContact.
-            </summary>
-        </member>
-        <member name="M:PeakLims.Controllers.v1.AccessionContactsController.DeleteAccessionContact(System.Guid)">
-            <summary>
-            Deletes an existing AccessionContact record.
-            </summary>
-        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.GetAccessions(PeakLims.Domain.Accessions.Dtos.AccessionParametersDto)">
             <summary>
             Gets a list of all Accessions.

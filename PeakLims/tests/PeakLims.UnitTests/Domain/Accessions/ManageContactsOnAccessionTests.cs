@@ -2,6 +2,7 @@ namespace PeakLims.UnitTests.Domain.Accessions;
 
 using Bogus;
 using FluentAssertions;
+using PeakLims.Domain.AccessionContacts;
 using PeakLims.Domain.Accessions;
 using SharedTestHelpers.Fakes.AccessionContact;
 using SharedTestHelpers.Fakes.HealthcareOrganizationContact;
@@ -22,8 +23,7 @@ public class ManageContactsOnAccessionTests
         // Arrange
         var fakeAccession = Accession.Create();
         var orgContact = new FakeHealthcareOrganizationContactBuilder().Build();
-        var accessionContact = new FakeAccessionContactBuilder().Build();
-        accessionContact.SetHealthcareOrganizationContact(orgContact);
+        var accessionContact = AccessionContact.Create(orgContact);
         
         // Act - Can add idempotently
         fakeAccession.AddContact(accessionContact)

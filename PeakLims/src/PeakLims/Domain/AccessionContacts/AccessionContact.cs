@@ -30,31 +30,17 @@ public class AccessionContact : BaseEntity
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
 
-    public static AccessionContact Create(AccessionContactForCreation accessionContactForCreation)
+    public static AccessionContact Create(HealthcareOrganizationContact healthcareOrganizationContact)
     {
         var newAccessionContact = new AccessionContact();
 
-        newAccessionContact.TargetType = accessionContactForCreation.TargetType;
-        newAccessionContact.TargetValue = accessionContactForCreation.TargetValue;
+        newAccessionContact.TargetType = TargetTypeEnum.Email.Name;
+        newAccessionContact.TargetValue = healthcareOrganizationContact.Email;
+        newAccessionContact.HealthcareOrganizationContact = healthcareOrganizationContact;
 
         newAccessionContact.QueueDomainEvent(new AccessionContactCreated(){ AccessionContact = newAccessionContact });
         
         return newAccessionContact;
-    }
-
-    public AccessionContact Update(AccessionContactForUpdate accessionContactForUpdate)
-    {
-        TargetType = accessionContactForUpdate.TargetType;
-        TargetValue = accessionContactForUpdate.TargetValue;
-
-        QueueDomainEvent(new AccessionContactUpdated(){ Id = Id });
-        return this;
-    }
-
-    public AccessionContact SetHealthcareOrganizationContact(HealthcareOrganizationContact healthcareOrganizationContact)
-    {
-        HealthcareOrganizationContact = healthcareOrganizationContact;
-        return this;
     }
 
     // Add Prop Methods Marker -- Deleting this comment will cause the add props utility to be incomplete

@@ -68,47 +68,5 @@ public sealed class AccessionContactsController: ControllerBase
         return Ok(queryResponse);
     }
 
-
-    /// <summary>
-    /// Creates a new AccessionContact record.
-    /// </summary>
-    [Authorize]
-    [HttpPost(Name = "AddAccessionContact")]
-    public async Task<ActionResult<AccessionContactDto>> AddAccessionContact([FromBody]AccessionContactForCreationDto accessionContactForCreation)
-    {
-        var command = new AddAccessionContact.Command(accessionContactForCreation);
-        var commandResponse = await _mediator.Send(command);
-
-        return CreatedAtRoute("GetAccessionContact",
-            new { commandResponse.Id },
-            commandResponse);
-    }
-
-
-    /// <summary>
-    /// Updates an entire existing AccessionContact.
-    /// </summary>
-    [Authorize]
-    [HttpPut("{id:guid}", Name = "UpdateAccessionContact")]
-    public async Task<IActionResult> UpdateAccessionContact(Guid id, AccessionContactForUpdateDto accessionContact)
-    {
-        var command = new UpdateAccessionContact.Command(id, accessionContact);
-        await _mediator.Send(command);
-        return NoContent();
-    }
-
-
-    /// <summary>
-    /// Deletes an existing AccessionContact record.
-    /// </summary>
-    [Authorize]
-    [HttpDelete("{id:guid}", Name = "DeleteAccessionContact")]
-    public async Task<ActionResult> DeleteAccessionContact(Guid id)
-    {
-        var command = new DeleteAccessionContact.Command(id);
-        await _mediator.Send(command);
-        return NoContent();
-    }
-
     // endpoint marker - do not delete this comment
 }
