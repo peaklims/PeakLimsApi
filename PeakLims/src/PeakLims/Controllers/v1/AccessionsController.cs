@@ -139,18 +139,6 @@ public sealed class AccessionsController: ControllerBase
     }
 
     /// <summary>
-    /// Sets the organzation on an accession.
-    /// </summary>
-    [Authorize]
-    [HttpPut("{accessionId:guid}/setOrganization/{orgId:guid}", Name = "SetAccessionHealthcareOrganization")]
-    public async Task<IActionResult> SetAccessionHealthcareOrganization(Guid accessionId, Guid orgId)
-    {
-        var command = new SetAccessionHealthcareOrganization.Command(accessionId, orgId);
-        await _mediator.Send(command);
-        return NoContent();
-    }
-
-    /// <summary>
     /// Removes the patient from a given accession.
     /// </summary>
     [Authorize]
@@ -158,6 +146,45 @@ public sealed class AccessionsController: ControllerBase
     public async Task<IActionResult> RemoveAccessionPatient(Guid id)
     {
         var command = new RemoveAccessionPatient.Command(id);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Adds the contact to an accession.
+    /// </summary>
+    [Authorize]
+    [HttpPost("{accessionId:guid}/addContact/{orgContactId:guid}", Name = "AddContactToAccession")]
+    public async Task<IActionResult> AddContactToAccession(Guid accessionId, Guid orgContactId)
+    {
+        var command = new AddContactToAccession.Command(accessionId, orgContactId);
+        var commandResponse = await _mediator.Send(command);
+
+        return CreatedAtRoute("GetAccessionContact",
+            new { commandResponse.Id },
+            commandResponse);
+    }
+
+    /// <summary>
+    /// Removes the contact from a given accession.
+    /// </summary>
+    [Authorize]
+    [HttpPut("{accessionId:guid}/removeContact/{accessionContactId:guid}", Name= "RemoveContactFromAccession")]
+    public async Task<IActionResult> RemoveContactFromAccession(Guid accessionId, Guid accessionContactId)
+    {
+        var command = new RemoveContactFromAccession.Command(accessionId, accessionContactId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Sets the organzation on an accession.
+    /// </summary>
+    [Authorize]
+    [HttpPut("{accessionId:guid}/setOrganization/{orgId:guid}", Name = "SetAccessionHealthcareOrganization")]
+    public async Task<IActionResult> SetAccessionHealthcareOrganization(Guid accessionId, Guid orgId)
+    {
+        var command = new SetAccessionHealthcareOrganization.Command(accessionId, orgId);
         await _mediator.Send(command);
         return NoContent();
     }
