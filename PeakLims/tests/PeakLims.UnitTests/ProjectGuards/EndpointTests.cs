@@ -13,7 +13,7 @@ public sealed class EndpointTests
     /// <summary>
     /// Turn on this test to check that all endpoints are protected by an Authorize attribute.
     /// </summary>
-    // [Fact]
+    [Fact]
     public void can_protect_all_endpoints_except_opt_outs()
     {
         // Arrange
