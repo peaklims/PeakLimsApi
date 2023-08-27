@@ -60,10 +60,12 @@ public class DeleteAccessionCommandTests : TestBase
         await testingServiceScope.SendAsync(command);
         var deletedAccession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .IgnoreQueryFilters()
-            .FirstOrDefaultAsync(x => x.Id == accession.Id));
+            .Where(x => x.Id == accession.Id)
+            .Select(x => x.IsDeleted)
+            .FirstOrDefaultAsync());
 
         // Assert
-        deletedAccession?.IsDeleted.Should().BeTrue();
+        deletedAccession.Should().BeTrue();
     }
 
     [Fact]
