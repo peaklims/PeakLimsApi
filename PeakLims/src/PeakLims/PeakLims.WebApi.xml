@@ -144,9 +144,14 @@
             Updates an entire existing HealthcareOrganization.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.DeleteHealthcareOrganization(System.Guid)">
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.ActivateHealthcareOrganization(System.Guid)">
             <summary>
-            Deletes an existing HealthcareOrganization record.
+            Activates a HealthcareOrganization.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationsController.DeactivateHealthcareOrganization(System.Guid)">
+            <summary>
+            Deactivates a HealthcareOrganization.
             </summary>
         </member>
         <member name="M:PeakLims.Controllers.v1.PanelsController.GetPanels(PeakLims.Domain.Panels.Dtos.PanelParametersDto)">

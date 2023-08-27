@@ -112,13 +112,26 @@ public sealed class HealthcareOrganizationsController: ControllerBase
 
 
     /// <summary>
-    /// Deletes an existing HealthcareOrganization record.
+    /// Activates a HealthcareOrganization.
     /// </summary>
     [Authorize]
-    [HttpDelete("{id:guid}", Name = "DeleteHealthcareOrganization")]
-    public async Task<ActionResult> DeleteHealthcareOrganization(Guid id)
+    [HttpPut("{organizationId:guid}/activate", Name = "ActivateHealthcareOrganization")]
+    public async Task<IActionResult> ActivateHealthcareOrganization(Guid organizationId)
     {
-        var command = new DeleteHealthcareOrganization.Command(id);
+        var command = new ActivateHealthcareOrganization.Command(organizationId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
+    /// Deactivates a HealthcareOrganization.
+    /// </summary>
+    [Authorize]
+    [HttpPut("{organizationId:guid}/deactivate", Name = "DeactivateHealthcareOrganization")]
+    public async Task<IActionResult> DeactivateHealthcareOrganization(Guid organizationId)
+    {
+        var command = new DeactivateHealthcareOrganization.Command(organizationId);
         await _mediator.Send(command);
         return NoContent();
     }
