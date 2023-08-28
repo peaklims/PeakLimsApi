@@ -54,6 +54,19 @@ public sealed class HealthcareOrganizationContactsController: ControllerBase
 
         return Ok(queryResponse);
     }
+    
+
+    /// <summary>
+    /// Gets a list of contacts for a given organization.
+    /// </summary>
+    [Authorize]
+    [HttpGet("byOrganization/{organizationId:guid}", Name = "GetContactsForAnOrganization")]
+    public async Task<IActionResult> GetContactsForAnOrganization(Guid organizationId)
+    {
+        var query = new GetContactsForAnOrganization.Query(organizationId);
+        var queryResponse = await _mediator.Send(query);
+        return Ok(queryResponse);
+    }
 
 
     /// <summary>

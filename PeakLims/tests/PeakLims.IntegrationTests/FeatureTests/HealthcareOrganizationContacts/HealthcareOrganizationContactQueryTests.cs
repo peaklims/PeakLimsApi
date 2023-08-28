@@ -25,7 +25,8 @@ public class HealthcareOrganizationContactQueryTests : TestBase
         var healthcareOrganizationContact = await testingServiceScope.SendAsync(query);
 
         // Assert
-        healthcareOrganizationContact.Name.Should().Be(fakeHealthcareOrganizationContactOne.Name);
+        healthcareOrganizationContact.FirstName.Should().Be(fakeHealthcareOrganizationContactOne.FirstName);
+        healthcareOrganizationContact.LastName.Should().Be(fakeHealthcareOrganizationContactOne.LastName);
         healthcareOrganizationContact.Email.Should().Be(fakeHealthcareOrganizationContactOne.Email);
         healthcareOrganizationContact.Npi.Should().Be(fakeHealthcareOrganizationContactOne.Npi);
     }

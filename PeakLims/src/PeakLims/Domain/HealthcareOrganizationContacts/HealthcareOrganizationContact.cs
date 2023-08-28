@@ -16,9 +16,9 @@ using PeakLims.Domain.HealthcareOrganizations.Models;
 
 public class HealthcareOrganizationContact : BaseEntity
 {
-    public string Name { get; private set; }
-
     public string Email { get; private set; }
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
 
     public string Npi { get; private set; }
     
@@ -33,7 +33,8 @@ public class HealthcareOrganizationContact : BaseEntity
     {
         var newHealthcareOrganizationContact = new HealthcareOrganizationContact();
 
-        newHealthcareOrganizationContact.Name = healthcareOrganizationContactForCreation.Name;
+        newHealthcareOrganizationContact.FirstName = healthcareOrganizationContactForCreation.FirstName;
+        newHealthcareOrganizationContact.LastName = healthcareOrganizationContactForCreation.LastName;
         newHealthcareOrganizationContact.Email = healthcareOrganizationContactForCreation.Email;
         newHealthcareOrganizationContact.Npi = healthcareOrganizationContactForCreation.Npi;
 
@@ -44,7 +45,8 @@ public class HealthcareOrganizationContact : BaseEntity
 
     public HealthcareOrganizationContact Update(HealthcareOrganizationContactForUpdate healthcareOrganizationContactForUpdate)
     {
-        Name = healthcareOrganizationContactForUpdate.Name;
+        FirstName = healthcareOrganizationContactForUpdate.FirstName;
+        LastName =healthcareOrganizationContactForUpdate.LastName;
         Email = healthcareOrganizationContactForUpdate.Email;
         Npi = healthcareOrganizationContactForUpdate.Npi;
 

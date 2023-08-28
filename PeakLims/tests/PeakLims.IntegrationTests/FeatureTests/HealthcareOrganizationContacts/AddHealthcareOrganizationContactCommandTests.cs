@@ -32,12 +32,14 @@ public class AddHealthcareOrganizationContactCommandTests : TestBase
             .FirstOrDefaultAsync(h => h.Id == healthcareOrganizationContactReturned.Id));
 
         // Assert
-        healthcareOrganizationContactReturned.Name.Should().Be(fakeHealthcareOrganizationContactOne.Name);
+        healthcareOrganizationContactReturned.FirstName.Should().Be(fakeHealthcareOrganizationContactOne.FirstName);
+        healthcareOrganizationContactReturned.LastName.Should().Be(fakeHealthcareOrganizationContactOne.LastName);
         healthcareOrganizationContactReturned.Email.Should().Be(fakeHealthcareOrganizationContactOne.Email);
         healthcareOrganizationContactReturned.Npi.Should().Be(fakeHealthcareOrganizationContactOne.Npi);
         healthcareOrganizationContactReturned.HealthcareOrganizationId.Should().Be(fakeHealthcareOrganizationContactOne.HealthcareOrganizationId);
 
-        healthcareOrganizationContactCreated.Name.Should().Be(fakeHealthcareOrganizationContactOne.Name);
+        healthcareOrganizationContactCreated.FirstName.Should().Be(fakeHealthcareOrganizationContactOne.FirstName);
+        healthcareOrganizationContactCreated.LastName.Should().Be(fakeHealthcareOrganizationContactOne.LastName);
         healthcareOrganizationContactCreated.Email.Should().Be(fakeHealthcareOrganizationContactOne.Email);
         healthcareOrganizationContactCreated.Npi.Should().Be(fakeHealthcareOrganizationContactOne.Npi);
         healthcareOrganizationContactCreated.HealthcareOrganization.Id.Should().Be(fakeHealthcareOrganizationContactOne.HealthcareOrganizationId);

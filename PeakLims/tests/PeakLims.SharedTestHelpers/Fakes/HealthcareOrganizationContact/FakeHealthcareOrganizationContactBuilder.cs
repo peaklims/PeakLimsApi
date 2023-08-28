@@ -13,9 +13,15 @@ public class FakeHealthcareOrganizationContactBuilder
         return this;
     }
     
-    public FakeHealthcareOrganizationContactBuilder WithName(string name)
+    public FakeHealthcareOrganizationContactBuilder WithFirstName(string name)
     {
-        _creationData.Name = name;
+        _creationData.FirstName = name;
+        return this;
+    }
+    
+    public FakeHealthcareOrganizationContactBuilder WithLastName(string name)
+    {
+        _creationData.LastName = name;
         return this;
     }
     

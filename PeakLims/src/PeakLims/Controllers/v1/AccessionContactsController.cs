@@ -55,6 +55,18 @@ public sealed class AccessionContactsController: ControllerBase
         return Ok(queryResponse);
     }
 
+    /// <summary>
+    /// Gets a list of contacts for a particular accession
+    /// </summary>
+    [Authorize]
+    [HttpGet("byAccession/{accessionId:guid}", Name = "GetContactsForAnAccession")]
+    public async Task<IActionResult> GetContactsForAnAccession(Guid accessionId)
+    {
+        var query = new GetContactsForAnAccession.Query(accessionId);
+        var queryResponse = await _mediator.Send(query);
+        return Ok(queryResponse);
+    }
+
 
     /// <summary>
     /// Gets a single AccessionContact by ID.

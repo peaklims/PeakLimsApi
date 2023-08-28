@@ -62,7 +62,17 @@ public static partial class AccessionMapper
                 Ethnicity = accession.Patient.Ethnicity.Value,
                 Sex = accession.Patient.Sex.Value,
                 InternalId = accession.Patient.InternalId
-            }
+            },
+            AccessionContacts = accession.AccessionContacts.Select(x => new EditableAccessionDto.AccessionContactDto()
+            {
+                Id = x.Id,
+                TargetType = x.TargetType,
+                TargetValue = x.TargetValue,
+                FirstName = x.HealthcareOrganizationContact.FirstName,
+                LastName = x.HealthcareOrganizationContact.LastName,
+                Npi = x.HealthcareOrganizationContact.Npi,
+                OrganizationContactId = x.HealthcareOrganizationContact.Id
+            }).ToList() ?? new List<EditableAccessionDto.AccessionContactDto>()
         };
     }
 }

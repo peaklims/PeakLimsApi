@@ -27,7 +27,8 @@ public class CreateHealthcareOrganizationContactTests
         var fakeHealthcareOrganizationContact = HealthcareOrganizationContact.Create(healthcareOrganizationContactToCreate);
 
         // Assert
-        fakeHealthcareOrganizationContact.Name.Should().Be(healthcareOrganizationContactToCreate.Name);
+        fakeHealthcareOrganizationContact.FirstName.Should().Be(healthcareOrganizationContactToCreate.FirstName);
+        fakeHealthcareOrganizationContact.LastName.Should().Be(healthcareOrganizationContactToCreate.LastName);
         fakeHealthcareOrganizationContact.Email.Should().Be(healthcareOrganizationContactToCreate.Email);
         fakeHealthcareOrganizationContact.Npi.Should().Be(healthcareOrganizationContactToCreate.Npi);
     }
