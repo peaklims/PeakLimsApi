@@ -1,5 +1,6 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
+using Domain.SampleStatuses;
 using Domain.SampleTypes;
 using PeakLims.Domain.Samples;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +23,17 @@ public sealed class SampleConfiguration : IEntityTypeConfiguration<Sample>
             .HasDefaultValueSql($"concat('{Consts.DatabaseSequences.SampleNumberPrefix}', nextval('\"{Consts.DatabaseSequences.SampleNumberPrefix}\"'))")
             .IsRequired();
 
-        builder.Property(x => x.Type)
-            .HasConversion(x => x.Value, x => new SampleType(x));
+        builder.OwnsOne(x => x.Type, opts =>
+            {
+                opts.Property(x => x.Value).HasColumnName("type");
+            }).Navigation(x => x.Type)
+            .IsRequired();
+
+        builder.OwnsOne(x => x.Status, opts =>
+            {
+                opts.Property(x => x.Value).HasColumnName("status");
+            }).Navigation(x => x.Status)
+            .IsRequired();
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

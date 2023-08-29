@@ -23,10 +23,6 @@ public class AccessionStatus : ValueObject
     {
         Value = value;
     }
-    public AccessionStatus(AccessionStatusEnum value)
-    {
-        Value = value.Name;
-    }
     
     public static AccessionStatus Of(string value) => new AccessionStatus(value);
     public static implicit operator string(AccessionStatus value) => value.Value;
@@ -46,114 +42,114 @@ public class AccessionStatus : ValueObject
     public bool IsProcessing() => Draft().Value != Value;
 
     protected AccessionStatus() { } // EF Core
-}
 
-public abstract class AccessionStatusEnum : SmartEnum<AccessionStatusEnum>
-{
-    public static readonly AccessionStatusEnum Draft = new DraftType();
-    public static readonly AccessionStatusEnum ReadyForTesting = new ReadyForTestingType();
-    public static readonly AccessionStatusEnum Testing = new TestingType();
-    public static readonly AccessionStatusEnum TestingComplete = new TestingCompleteType();
-    public static readonly AccessionStatusEnum ReportPending = new ReportPendingType();
-    public static readonly AccessionStatusEnum ReportComplete = new ReportCompleteType();
-    public static readonly AccessionStatusEnum Completed = new CompletedType();
-    public static readonly AccessionStatusEnum Abandoned = new AbandonedType();
-    public static readonly AccessionStatusEnum Cancelled = new CancelledType();
-    public static readonly AccessionStatusEnum Qns = new QnsType();
-
-    protected AccessionStatusEnum(string name, int value) : base(name, value)
+    private abstract class AccessionStatusEnum : SmartEnum<AccessionStatusEnum>
     {
-    }
+        public static readonly AccessionStatusEnum Draft = new DraftType();
+        public static readonly AccessionStatusEnum ReadyForTesting = new ReadyForTestingType();
+        public static readonly AccessionStatusEnum Testing = new TestingType();
+        public static readonly AccessionStatusEnum TestingComplete = new TestingCompleteType();
+        public static readonly AccessionStatusEnum ReportPending = new ReportPendingType();
+        public static readonly AccessionStatusEnum ReportComplete = new ReportCompleteType();
+        public static readonly AccessionStatusEnum Completed = new CompletedType();
+        public static readonly AccessionStatusEnum Abandoned = new AbandonedType();
+        public static readonly AccessionStatusEnum Cancelled = new CancelledType();
+        public static readonly AccessionStatusEnum Qns = new QnsType();
 
-    public abstract bool IsFinalState();
-
-    private class DraftType : AccessionStatusEnum
-    {
-        public DraftType() : base("Draft", 0)
+        protected AccessionStatusEnum(string name, int value) : base(name, value)
         {
         }
 
-        public override bool IsFinalState() => false;
-    }
+        public abstract bool IsFinalState();
 
-    private class ReadyForTestingType : AccessionStatusEnum
-    {
-        public ReadyForTestingType() : base("Ready For Testing", 1)
+        private class DraftType : AccessionStatusEnum
         {
+            public DraftType() : base("Draft", 0)
+            {
+            }
+
+            public override bool IsFinalState() => false;
         }
 
-        public override bool IsFinalState() => false;
-    }
-
-    private class TestingType : AccessionStatusEnum
-    {
-        public TestingType() : base("Testing", 2)
+        private class ReadyForTestingType : AccessionStatusEnum
         {
+            public ReadyForTestingType() : base("Ready For Testing", 1)
+            {
+            }
+
+            public override bool IsFinalState() => false;
         }
 
-        public override bool IsFinalState() => false;
-    }
-
-    private class TestingCompleteType : AccessionStatusEnum
-    {
-        public TestingCompleteType() : base("Testing Complete", 3)
+        private class TestingType : AccessionStatusEnum
         {
+            public TestingType() : base("Testing", 2)
+            {
+            }
+
+            public override bool IsFinalState() => false;
         }
 
-        public override bool IsFinalState() => false;
-    }
-
-    private class ReportPendingType : AccessionStatusEnum
-    {
-        public ReportPendingType() : base("Report Pending", 4)
+        private class TestingCompleteType : AccessionStatusEnum
         {
+            public TestingCompleteType() : base("Testing Complete", 3)
+            {
+            }
+
+            public override bool IsFinalState() => false;
         }
 
-        public override bool IsFinalState() => false;
-    }
-
-    private class ReportCompleteType : AccessionStatusEnum
-    {
-        public ReportCompleteType() : base("Report Complete", 5)
+        private class ReportPendingType : AccessionStatusEnum
         {
+            public ReportPendingType() : base("Report Pending", 4)
+            {
+            }
+
+            public override bool IsFinalState() => false;
         }
 
-        public override bool IsFinalState() => false;
-    }
-
-    private class CompletedType : AccessionStatusEnum
-    {
-        public CompletedType() : base("Completed", 6)
+        private class ReportCompleteType : AccessionStatusEnum
         {
+            public ReportCompleteType() : base("Report Complete", 5)
+            {
+            }
+
+            public override bool IsFinalState() => false;
         }
 
-        public override bool IsFinalState() => true;
-    }
-
-    private class AbandonedType : AccessionStatusEnum
-    {
-        public AbandonedType() : base("Abandoned", 7)
+        private class CompletedType : AccessionStatusEnum
         {
+            public CompletedType() : base("Completed", 6)
+            {
+            }
+
+            public override bool IsFinalState() => true;
         }
 
-        public override bool IsFinalState() => true;
-    }
-
-    private class CancelledType : AccessionStatusEnum
-    {
-        public CancelledType() : base("Cancelled", 8)
+        private class AbandonedType : AccessionStatusEnum
         {
+            public AbandonedType() : base("Abandoned", 7)
+            {
+            }
+
+            public override bool IsFinalState() => true;
         }
 
-        public override bool IsFinalState() => true;
-    }
-
-    private class QnsType : AccessionStatusEnum
-    {
-        public QnsType() : base("QNS", 9)
+        private class CancelledType : AccessionStatusEnum
         {
+            public CancelledType() : base("Cancelled", 8)
+            {
+            }
+
+            public override bool IsFinalState() => true;
         }
 
-        public override bool IsFinalState() => true;
+        private class QnsType : AccessionStatusEnum
+        {
+            public QnsType() : base("QNS", 9)
+            {
+            }
+
+            public override bool IsFinalState() => true;
+        }
     }
 }

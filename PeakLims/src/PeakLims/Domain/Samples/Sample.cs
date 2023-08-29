@@ -10,13 +10,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using PeakLims.Domain.Containers;
 using PeakLims.Domain.Containers.Models;
+using SampleStatuses;
 using SampleTypes;
 
 public class Sample : BaseEntity
 {
     public string SampleNumber { get; }
 
-    public string Status { get; private set; }
+    public SampleStatus Status { get; private set; }
 
     public SampleType Type { get; private set; }
 
@@ -43,7 +44,7 @@ public class Sample : BaseEntity
     {
         var newSample = new Sample();
 
-        newSample.Status = sampleForCreation.Status;
+        newSample.Status = SampleStatus.Received();
         newSample.Type = SampleType.Of(sampleForCreation.Type);
         newSample.Quantity = sampleForCreation.Quantity;
         newSample.CollectionDate = sampleForCreation.CollectionDate;
@@ -57,13 +58,28 @@ public class Sample : BaseEntity
 
     public Sample Update(SampleForUpdate sampleForUpdate)
     {
-        Status = sampleForUpdate.Status;
         Type = SampleType.Of(sampleForUpdate.Type);
         Quantity = sampleForUpdate.Quantity;
         CollectionDate = sampleForUpdate.CollectionDate;
         ReceivedDate = sampleForUpdate.ReceivedDate;
         CollectionSite = sampleForUpdate.CollectionSite;
 
+        QueueDomainEvent(new SampleUpdated(){ Id = Id });
+        return this;
+    }
+    
+    public Sample Reject()
+    {
+        Status = SampleStatus.Rejected();
+        
+        QueueDomainEvent(new SampleUpdated(){ Id = Id });
+        return this;
+    }
+    
+    public Sample Dispose()
+    {
+        Status = SampleStatus.Disposed();
+        
         QueueDomainEvent(new SampleUpdated(){ Id = Id });
         return this;
     }

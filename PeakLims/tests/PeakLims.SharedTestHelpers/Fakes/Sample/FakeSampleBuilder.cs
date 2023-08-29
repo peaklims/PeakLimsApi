@@ -15,12 +15,6 @@ public class FakeSampleBuilder
         return this;
     }
     
-    public FakeSampleBuilder WithStatus(string status)
-    {
-        _creationData.Status = status;
-        return this;
-    }
-    
     public FakeSampleBuilder WithType(string type)
     {
         _creationData.Type = type;

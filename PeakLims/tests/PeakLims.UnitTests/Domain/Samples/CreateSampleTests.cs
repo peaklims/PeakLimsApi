@@ -6,6 +6,7 @@ using PeakLims.Domain.Samples.DomainEvents;
 using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using PeakLims.Domain.SampleStatuses;
 using Xunit;
 
 public class CreateSampleTests
@@ -27,7 +28,7 @@ public class CreateSampleTests
         var fakeSample = Sample.Create(sampleToCreate);
 
         // Assert
-        fakeSample.Status.Should().Be(sampleToCreate.Status);
+        fakeSample.Status.Should().Be(SampleStatus.Received());
         fakeSample.Type.Value.Should().Be(sampleToCreate.Type);
         fakeSample.Quantity.Should().Be(sampleToCreate.Quantity);
         fakeSample.CollectionDate.Should().Be(sampleToCreate.CollectionDate);

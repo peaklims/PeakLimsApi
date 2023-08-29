@@ -7,6 +7,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using Domain.SampleStatuses;
 using PeakLims.Domain.Samples.Features;
 using SharedKernel.Exceptions;
 using SharedTestHelpers.Fakes.Container;
@@ -29,14 +30,14 @@ public class AddSampleCommandTests : TestBase
         // Assert
         sampleReturned.Type.Should().Be(fakeSampleOne.Type);
         sampleReturned.Quantity.Should().Be(fakeSampleOne.Quantity);
-        sampleReturned.Status.Should().Be(fakeSampleOne.Status);
+        sampleReturned.Status.Should().Be(SampleStatus.Received().Value);
         sampleReturned.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
         sampleReturned.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleReturned.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
 
         sampleCreated.Type.Value.Should().Be(fakeSampleOne.Type);
         sampleCreated.Quantity.Should().Be(fakeSampleOne.Quantity);
-        sampleCreated.Status.Should().Be(fakeSampleOne.Status);
+        sampleCreated.Status.Should().Be(SampleStatus.Received());
         sampleCreated.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
         sampleCreated.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleCreated.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
@@ -62,7 +63,7 @@ public class AddSampleCommandTests : TestBase
         // Assert
         sampleReturned.Type.Should().Be(fakeSampleOne.Type);
         sampleReturned.Quantity.Should().Be(fakeSampleOne.Quantity);
-        sampleReturned.Status.Should().Be(fakeSampleOne.Status);
+        sampleReturned.Status.Should().Be(SampleStatus.Received().Value);
         sampleReturned.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
         sampleReturned.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleReturned.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
@@ -71,7 +72,7 @@ public class AddSampleCommandTests : TestBase
 
         sampleCreated.Type.Value.Should().Be(fakeSampleOne.Type);
         sampleCreated.Quantity.Should().Be(fakeSampleOne.Quantity);
-        sampleCreated.Status.Should().Be(fakeSampleOne.Status);
+        sampleCreated.Status.Should().Be(SampleStatus.Received());
         sampleCreated.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
         sampleCreated.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleCreated.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);

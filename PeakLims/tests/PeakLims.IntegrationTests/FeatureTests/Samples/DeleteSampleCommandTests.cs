@@ -58,12 +58,14 @@ public class DeleteSampleCommandTests : TestBase
         // Act
         var command = new DeleteSample.Command(sample.Id);
         await testingServiceScope.SendAsync(command);
-        var deletedSample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
+        var isDeleted = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
             .IgnoreQueryFilters()
-            .FirstOrDefaultAsync(x => x.Id == sample.Id));
+            .Where(x => x.Id == sample.Id)
+            .Select(x => x.IsDeleted)
+            .FirstOrDefaultAsync());
 
         // Assert
-        deletedSample?.IsDeleted.Should().BeTrue();
+        isDeleted.Should().BeTrue();
     }
 
     [Fact]

@@ -10,6 +10,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using Domain.SampleStatuses;
 using SharedTestHelpers.Fakes.Container;
 
 public class UpdateSampleCommandTests : TestBase
@@ -33,7 +34,7 @@ public class UpdateSampleCommandTests : TestBase
 
         // Assert
         updatedSample.Type.Value.Should().Be(updatedSampleDto.Type);
-        updatedSample.Status.Should().Be(updatedSampleDto.Status);
+        updatedSample.Status.Should().Be(SampleStatus.Received());
         updatedSample.Quantity.Should().Be(updatedSampleDto.Quantity);
         updatedSample.CollectionDate.Should().Be(updatedSampleDto.CollectionDate);
         updatedSample.ReceivedDate.Should().Be(updatedSampleDto.ReceivedDate);
