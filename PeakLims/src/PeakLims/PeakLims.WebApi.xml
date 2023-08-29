@@ -284,6 +284,11 @@
             Gets a list of all Samples.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.SamplesController.GetSamplesByPatient(System.Guid)">
+            <summary>
+            Gets a list of all Samples for a given patient
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.SamplesController.GetSample(System.Guid)">
             <summary>
             Gets a single Sample by ID.

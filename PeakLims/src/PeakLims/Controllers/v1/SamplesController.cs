@@ -54,6 +54,19 @@ public sealed class SamplesController: ControllerBase
 
         return Ok(queryResponse);
     }
+    
+
+    /// <summary>
+    /// Gets a list of all Samples for a given patient
+    /// </summary>
+    [Authorize]
+    [HttpGet("byPatient/{patientId:guid}", Name = "GetSamplesByPatient")]
+    public async Task<IActionResult> GetSamplesByPatient(Guid patientId)
+    {
+        var query = new GetSamplesByPatient.Query(patientId);
+        var queryResponse = await _mediator.Send(query);
+        return Ok(queryResponse);
+    }
 
 
     /// <summary>

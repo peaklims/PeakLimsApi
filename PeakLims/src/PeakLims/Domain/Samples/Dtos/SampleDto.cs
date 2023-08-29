@@ -11,4 +11,5 @@ public sealed class SampleDto
     public DateOnly? ReceivedDate { get; set; }
     public string CollectionSite { get; set; }
     public Guid? ContainerId { get; set; }
+    public Guid? PatientId { get; set; }
 }
