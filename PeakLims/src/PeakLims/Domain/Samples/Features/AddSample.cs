@@ -12,18 +12,11 @@ using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
+using Patients.Services;
 
 public static class AddSample
 {
-    public sealed class Command : IRequest<SampleDto>
-    {
-        public readonly SampleForCreationDto SampleToAdd;
-
-        public Command(SampleForCreationDto sampleToAdd)
-        {
-            SampleToAdd = sampleToAdd;
-        }
-    }
+    public sealed record Command(SampleForCreationDto SampleToAdd) : IRequest<SampleDto>;
 
     public sealed class Handler : IRequestHandler<Command, SampleDto>
     {
@@ -31,21 +24,26 @@ public static class AddSample
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHeimGuardClient _heimGuard;
         private readonly IContainerRepository _containerRepository;
+        private readonly IPatientRepository _patientRepository;
 
-        public Handler(ISampleRepository sampleRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard, IContainerRepository containerRepository)
+        public Handler(ISampleRepository sampleRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard, IContainerRepository containerRepository, IPatientRepository patientRepository)
         {
             _sampleRepository = sampleRepository;
             _unitOfWork = unitOfWork;
             _heimGuard = heimGuard;
             _containerRepository = containerRepository;
+            _patientRepository = patientRepository;
         }
 
         public async Task<SampleDto> Handle(Command request, CancellationToken cancellationToken)
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddSamples);
 
+            var patient = await _patientRepository.GetById(request.SampleToAdd.PatientId, true, cancellationToken);
+
             var sampleToAdd = request.SampleToAdd.ToSampleForCreation();
             var sample = Sample.Create(sampleToAdd);
+            patient.AddSample(sample);
 
             if (request.SampleToAdd.ContainerId != null)
             {

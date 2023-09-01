@@ -11,6 +11,7 @@ using Domain.SampleStatuses;
 using PeakLims.Domain.Samples.Features;
 using SharedKernel.Exceptions;
 using SharedTestHelpers.Fakes.Container;
+using SharedTestHelpers.Fakes.Patient;
 
 public class AddSampleCommandTests : TestBase
 {
@@ -19,12 +20,18 @@ public class AddSampleCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeSampleOne = new FakeSampleForCreationDto().Generate();
+        var patient = new FakePatientBuilder().Build();
+        await testingServiceScope.InsertAsync(patient);
+        
+        var fakeSampleOne = new FakeSampleForCreationDto()
+            .RuleFor(x => x.PatientId, f => patient.Id)
+            .Generate();
 
         // Act
         var command = new AddSample.Command(fakeSampleOne);
         var sampleReturned = await testingServiceScope.SendAsync(command);
         var sampleCreated = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
+            .Include(x => x.Patient)
             .FirstOrDefaultAsync(s => s.Id == sampleReturned.Id));
 
         // Assert
@@ -41,6 +48,7 @@ public class AddSampleCommandTests : TestBase
         sampleCreated.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
         sampleCreated.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleCreated.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
+        sampleCreated.Patient.Id.Should().Be(patient.Id);
     }
     
     [Fact]
@@ -50,7 +58,13 @@ public class AddSampleCommandTests : TestBase
         var testingServiceScope = new TestingServiceScope();
         var container = new FakeContainerBuilder().Build();
         await testingServiceScope.InsertAsync(container);
-        var fakeSampleOne = new FakeSampleForCreationDto().Generate();
+        
+        var patient = new FakePatientBuilder().Build();
+        await testingServiceScope.InsertAsync(patient);
+        
+        var fakeSampleOne = new FakeSampleForCreationDto()
+            .RuleFor(x => x.PatientId, f => patient.Id)
+            .Generate();
         fakeSampleOne.ContainerId = container.Id;
         fakeSampleOne.Type = container.UsedFor.Value;
 

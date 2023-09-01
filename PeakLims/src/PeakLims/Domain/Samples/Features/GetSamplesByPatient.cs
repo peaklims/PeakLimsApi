@@ -40,6 +40,7 @@ public static class GetSamplesByPatient
             
             return await _sampleRepository.Query()
                 .Where(x => x.Patient.Id == request.PatientId)
+                .OrderByDescending(x => x.SampleNumber)
                 .AsNoTracking()
                 .ToSampleDtoQueryable()
                 .ToListAsync(cancellationToken);
