@@ -31,6 +31,7 @@ public class UpdateSampleTests
         // Assert
         fakeSample.Status.Should().Be(SampleStatus.Received());
         fakeSample.Type.Value.Should().Be(updatedSample.Type);
+        fakeSample.ExternalId.Should().Be(updatedSample.ExternalId);
         fakeSample.Quantity.Should().Be(updatedSample.Quantity);
         fakeSample.CollectionDate.Should().Be(updatedSample.CollectionDate);
         fakeSample.ReceivedDate.Should().Be(updatedSample.ReceivedDate);

@@ -597,5 +597,17 @@
         <member name="M:PeakLims.Migrations.AddSampleStatus.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:PeakLims.Migrations.AddExternalIdToSample">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddExternalIdToSample.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddExternalIdToSample.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddExternalIdToSample.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

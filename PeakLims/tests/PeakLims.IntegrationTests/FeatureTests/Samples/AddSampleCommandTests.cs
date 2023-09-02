@@ -41,6 +41,7 @@ public class AddSampleCommandTests : TestBase
         sampleReturned.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
         sampleReturned.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleReturned.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
+        sampleReturned.ExternalId.Should().Be(fakeSampleOne.ExternalId);
 
         sampleCreated.Type.Value.Should().Be(fakeSampleOne.Type);
         sampleCreated.Quantity.Should().Be(fakeSampleOne.Quantity);
@@ -48,6 +49,7 @@ public class AddSampleCommandTests : TestBase
         sampleCreated.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
         sampleCreated.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
         sampleCreated.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
+        sampleCreated.ExternalId.Should().Be(fakeSampleOne.ExternalId);
         sampleCreated.Patient.Id.Should().Be(patient.Id);
     }
     

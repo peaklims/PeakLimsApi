@@ -7,5 +7,5 @@ public sealed class SampleForUpdate
     public DateOnly? CollectionDate { get; set; }
     public DateOnly? ReceivedDate { get; set; }
     public string CollectionSite { get; set; }
-
+    public string ExternalId { get; set; }
 }

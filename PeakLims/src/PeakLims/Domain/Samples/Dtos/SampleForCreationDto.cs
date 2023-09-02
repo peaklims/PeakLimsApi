@@ -9,5 +9,5 @@ public sealed class SampleForCreationDto
     public string CollectionSite { get; set; }
     public Guid PatientId { get; set; }
     public Guid? ContainerId { get; set; }
-
+    public string ExternalId { get; set; }
 }

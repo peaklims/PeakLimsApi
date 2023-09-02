@@ -16,6 +16,8 @@ using SampleTypes;
 public class Sample : BaseEntity
 {
     public string SampleNumber { get; }
+    
+    public string ExternalId { get; private set; }
 
     public SampleStatus Status { get; private set; }
 
@@ -50,6 +52,7 @@ public class Sample : BaseEntity
         newSample.CollectionDate = sampleForCreation.CollectionDate;
         newSample.ReceivedDate = sampleForCreation.ReceivedDate;
         newSample.CollectionSite = sampleForCreation.CollectionSite;
+        newSample.ExternalId = sampleForCreation.ExternalId;
 
         newSample.QueueDomainEvent(new SampleCreated(){ Sample = newSample });
         
@@ -63,6 +66,7 @@ public class Sample : BaseEntity
         CollectionDate = sampleForUpdate.CollectionDate;
         ReceivedDate = sampleForUpdate.ReceivedDate;
         CollectionSite = sampleForUpdate.CollectionSite;
+        ExternalId = sampleForUpdate.ExternalId;
 
         QueueDomainEvent(new SampleUpdated(){ Id = Id });
         return this;

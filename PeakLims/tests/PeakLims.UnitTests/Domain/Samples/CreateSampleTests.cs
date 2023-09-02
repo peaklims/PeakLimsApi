@@ -30,6 +30,7 @@ public class CreateSampleTests
         // Assert
         fakeSample.Status.Should().Be(SampleStatus.Received());
         fakeSample.Type.Value.Should().Be(sampleToCreate.Type);
+        fakeSample.ExternalId.Should().Be(sampleToCreate.ExternalId);
         fakeSample.Quantity.Should().Be(sampleToCreate.Quantity);
         fakeSample.CollectionDate.Should().Be(sampleToCreate.CollectionDate);
         fakeSample.ReceivedDate.Should().Be(sampleToCreate.ReceivedDate);

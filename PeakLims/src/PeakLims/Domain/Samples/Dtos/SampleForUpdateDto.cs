@@ -8,4 +8,5 @@ public sealed class SampleForUpdateDto
     public DateOnly? ReceivedDate { get; set; }
     public string CollectionSite { get; set; }
     public Guid? ContainerId { get; set; }
+    public string ExternalId { get; set; }
 }

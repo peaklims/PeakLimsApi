@@ -34,6 +34,7 @@ public class UpdateSampleCommandTests : TestBase
 
         // Assert
         updatedSample.Type.Value.Should().Be(updatedSampleDto.Type);
+        updatedSample.ExternalId.Should().Be(updatedSampleDto.ExternalId);
         updatedSample.Status.Should().Be(SampleStatus.Received());
         updatedSample.Quantity.Should().Be(updatedSampleDto.Quantity);
         updatedSample.CollectionDate.Should().Be(updatedSampleDto.CollectionDate);
