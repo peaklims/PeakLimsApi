@@ -96,6 +96,11 @@
         </member>
         <member name="M:PeakLims.Controllers.v1.ContainersController.GetContainers(PeakLims.Domain.Containers.Dtos.ContainerParametersDto)">
             <summary>
+            Gets a paginated list of all Containers.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.ContainersController.GetAllContainers">
+            <summary>
             Gets a list of all Containers.
             </summary>
         </member>

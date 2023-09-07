@@ -27,7 +27,7 @@ public sealed class ContainersController: ControllerBase
     
 
     /// <summary>
-    /// Gets a list of all Containers.
+    /// Gets a paginated list of all Containers.
     /// </summary>
     [Authorize]
     [HttpGet(Name = "GetContainers")]
@@ -52,6 +52,19 @@ public sealed class ContainersController: ControllerBase
         Response.Headers.Add("X-Pagination",
             JsonSerializer.Serialize(paginationMetadata));
 
+        return Ok(queryResponse);
+    }
+    
+
+    /// <summary>
+    /// Gets a list of all Containers.
+    /// </summary>
+    [Authorize]
+    [HttpGet("all", Name = "GetAllContainers")]
+    public async Task<IActionResult> GetAllContainers()
+    {
+        var query = new GetAllContainers.Query();
+        var queryResponse = await _mediator.Send(query);
         return Ok(queryResponse);
     }
 
