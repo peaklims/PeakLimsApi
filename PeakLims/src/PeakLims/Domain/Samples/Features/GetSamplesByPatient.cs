@@ -39,6 +39,7 @@ public static class GetSamplesByPatient
             await _patientRepository.GetById(request.PatientId, false, cancellationToken);
             
             return await _sampleRepository.Query()
+                .Include(x => x.Container)
                 .Where(x => x.Patient.Id == request.PatientId)
                 .OrderByDescending(x => x.SampleNumber)
                 .AsNoTracking()

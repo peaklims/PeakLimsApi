@@ -11,8 +11,10 @@ public static partial class SampleMapper
     public static partial SampleForUpdate ToSampleForUpdate(this SampleForUpdateDto sampleForUpdateDto);
     
     [MapProperty(new[] { nameof(Sample.Patient), nameof(Sample.Patient.Id) }, new[] { nameof(SampleDto.PatientId) })]
+    [MapProperty(new[] { nameof(Sample.Container), nameof(Sample.Container.Type) }, new[] { nameof(SampleDto.ContainerType) })]
     public static partial SampleDto ToSampleDto(this Sample sample);
     
     [MapProperty(new[] { nameof(Sample.Patient), nameof(Sample.Patient.Id) }, new[] { nameof(SampleDto.PatientId) })]
+    [MapProperty(new[] { nameof(Sample.Container), nameof(Sample.Container.Type) }, new[] { nameof(SampleDto.ContainerType) })]
     public static partial IQueryable<SampleDto> ToSampleDtoQueryable(this IQueryable<Sample> sample);
 }
