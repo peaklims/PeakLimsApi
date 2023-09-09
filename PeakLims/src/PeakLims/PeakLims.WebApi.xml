@@ -309,6 +309,11 @@
             Updates an entire existing Sample.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.SamplesController.DisposeSample(System.Guid)">
+            <summary>
+            Disposes a sample.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.SamplesController.DeleteSample(System.Guid)">
             <summary>
             Deletes an existing Sample record.

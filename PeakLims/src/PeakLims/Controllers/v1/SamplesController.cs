@@ -112,6 +112,19 @@ public sealed class SamplesController: ControllerBase
 
 
     /// <summary>
+    /// Disposes a sample.
+    /// </summary>
+    [Authorize]
+    [HttpPut("{sampleId:guid}/dispose", Name = "DisposeSample")]
+    public async Task<IActionResult> DisposeSample(Guid sampleId)
+    {
+        var command = new DisposeSample.Command(sampleId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
     /// Deletes an existing Sample record.
     /// </summary>
     [Authorize]
