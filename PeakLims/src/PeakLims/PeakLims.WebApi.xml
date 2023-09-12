@@ -209,6 +209,26 @@
             Updates an entire existing Panel.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.AddTestToPanel(System.Guid,System.Guid)">
+            <summary>
+            Adds a test to a panel
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.RemoveTestToPanel(System.Guid,System.Guid)">
+            <summary>
+            Removes a test from a panel
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.ActivatePanel(System.Guid)">
+            <summary>
+            Activates a panel
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.DeactivatePanel(System.Guid)">
+            <summary>
+            Deactivates a panel
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PanelsController.DeletePanel(System.Guid)">
             <summary>
             Deletes an existing Panel record.

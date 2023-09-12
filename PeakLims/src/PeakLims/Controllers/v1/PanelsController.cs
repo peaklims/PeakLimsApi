@@ -99,6 +99,58 @@ public sealed class PanelsController: ControllerBase
 
 
     /// <summary>
+    /// Adds a test to a panel
+    /// </summary>
+    [Authorize]
+    [HttpPut("{panelId:guid}/addTest/{testId:guid}", Name = "AddTestToPanel")]
+    public async Task<IActionResult> AddTestToPanel(Guid panelId, Guid testId)
+    {
+        var command = new AddTestToPanel.Command(panelId, testId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+    
+
+    /// <summary>
+    /// Removes a test from a panel
+    /// </summary>
+    [Authorize]
+    [HttpPut("{panelId:guid}/removeTest/{testId:guid}", Name = "RemoveTestToPanel")]
+    public async Task<IActionResult> RemoveTestToPanel(Guid panelId, Guid testId)
+    {
+        var command = new RemoveTestFromPanel.Command(panelId, testId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
+    /// Activates a panel
+    /// </summary>
+    [Authorize]
+    [HttpPut("{panelId:guid}/activate", Name = "ActivatePanel")]
+    public async Task<IActionResult> ActivatePanel(Guid panelId)
+    {
+        var command = new ActivatePanel.Command(panelId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
+    /// Deactivates a panel
+    /// </summary>
+    [Authorize]
+    [HttpPut("{panelId:guid}/deactivate", Name = "DeactivatePanel")]
+    public async Task<IActionResult> DeactivatePanel(Guid panelId)
+    {
+        var command = new DeactivatePanel.Command(panelId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+    
+
+    /// <summary>
     /// Deletes an existing Panel record.
     /// </summary>
     [Authorize]

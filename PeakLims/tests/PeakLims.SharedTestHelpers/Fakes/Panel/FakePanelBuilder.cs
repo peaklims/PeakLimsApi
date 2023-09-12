@@ -3,6 +3,7 @@ namespace PeakLims.SharedTestHelpers.Fakes.Panel;
 using Domain.Tests;
 using PeakLims.Domain.Panels;
 using PeakLims.Domain.Panels.Models;
+using Test;
 
 public class FakePanelBuilder
 {
@@ -36,6 +37,12 @@ public class FakePanelBuilder
     public FakePanelBuilder WithTest(Test test)
     {
         _tests.Add(test);
+        return this;
+    }
+    
+    public FakePanelBuilder ClearTests()
+    {
+        _tests.Clear();
         return this;
     }
 

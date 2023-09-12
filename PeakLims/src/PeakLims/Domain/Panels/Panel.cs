@@ -11,6 +11,7 @@ using PeakLims.Domain.Tests;
 using PeakLims.Domain.Tests.Models;
 using Services;
 using TestOrders.Services;
+using TestStatuses;
 
 public class Panel : BaseEntity
 {
@@ -66,6 +67,9 @@ public class Panel : BaseEntity
     {
         if (Status == PanelStatus.Active())
             return this;
+        
+        ValidationException.Must(_tests.Count > 0, $"A panel must have at least one test assigned to it before it can be activated.");
+        ValidationException.Must(_tests.All(t => t.Status.IsActive()), $"All tests assigned to a panel must be active before the panel can be activated.");
         
         Status = PanelStatus.Active();
         QueueDomainEvent(new PanelUpdated(){ Id = Id });
