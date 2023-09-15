@@ -110,5 +110,31 @@ public sealed class TestsController: ControllerBase
         return NoContent();
     }
 
+
+    /// <summary>
+    /// Activates a test
+    /// </summary>
+    [Authorize]
+    [HttpPut("{testId:guid}/activate", Name = "ActivateTest")]
+    public async Task<IActionResult> ActivateTest(Guid testId)
+    {
+        var command = new ActivateTest.Command(testId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
+    /// Deactivates a test
+    /// </summary>
+    [Authorize]
+    [HttpPut("{testId:guid}/deactivate", Name = "DeactivateTest")]
+    public async Task<IActionResult> DeactivateTest(Guid testId)
+    {
+        var command = new DeactivateTest.Command(testId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
     // endpoint marker - do not delete this comment
 }

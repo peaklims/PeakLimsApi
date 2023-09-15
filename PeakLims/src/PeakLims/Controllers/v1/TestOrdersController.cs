@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
+using Domain.Panels.Features;
 using MediatR;
 
 [ApiController]
@@ -82,6 +83,19 @@ public sealed class TestOrdersController: ControllerBase
         return CreatedAtRoute("GetTestOrder",
             new { commandResponse.Id },
             commandResponse);
+    }
+
+
+    /// <summary>
+    /// Gets all orderable panels and tests
+    /// </summary>
+    [Authorize]
+    [HttpGet("orderablePanelsAndTests", Name = "GetOrderablePanelsAndTests")]
+    public async Task<IActionResult> GetOrderablePanelsAndTests()
+    {
+        var query = new GetOrderablePanelsAndTests.Query();
+        var queryResponse = await _mediator.Send(query);
+        return Ok(queryResponse);
     }
 
     // endpoint marker - do not delete this comment

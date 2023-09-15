@@ -354,6 +354,11 @@
             Creates a new TestOrder record.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.GetOrderablePanelsAndTests">
+            <summary>
+            Gets all orderable panels and tests
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.TestsController.GetTests(PeakLims.Domain.Tests.Dtos.TestParametersDto)">
             <summary>
             Gets a list of all Tests.
@@ -377,6 +382,16 @@
         <member name="M:PeakLims.Controllers.v1.TestsController.DeleteTest(System.Guid)">
             <summary>
             Deletes an existing Test record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestsController.ActivateTest(System.Guid)">
+            <summary>
+            Activates a test
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestsController.DeactivateTest(System.Guid)">
+            <summary>
+            Deactivates a test
             </summary>
         </member>
         <member name="M:PeakLims.Controllers.v1.UsersController.AddRole(System.Guid,System.String)">
