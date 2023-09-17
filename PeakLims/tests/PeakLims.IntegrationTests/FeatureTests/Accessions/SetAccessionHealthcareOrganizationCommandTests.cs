@@ -7,7 +7,7 @@ using PeakLims.Domain.Accessions.Features;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using System.Threading.Tasks;
 using Domain.Accessions;
 using static TestFixture;

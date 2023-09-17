@@ -8,7 +8,7 @@ using PeakLims.Domain.Panels.Features;
 using PeakLims.Domain.Panels.Services;
 using PeakLims.Domain.PanelStatuses;
 using PeakLims.SharedTestHelpers.Fakes.Panel;
-using Xunit;
+
 using static TestFixture;
 
 public class DeactivatePanelTests : TestBase

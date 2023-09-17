@@ -6,7 +6,7 @@ using SharedKernel.Exceptions;
 using PeakLims.Domain.Users.Features;
 using FluentAssertions;
 using Domain;
-using Xunit;
+
 using System.Threading.Tasks;
 
 public class UserListQueryTests : TestBase

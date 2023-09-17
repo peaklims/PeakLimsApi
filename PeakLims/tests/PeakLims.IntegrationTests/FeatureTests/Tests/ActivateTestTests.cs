@@ -7,7 +7,7 @@ using Domain.TestStatuses;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SharedTestHelpers.Fakes.Test;
-using Xunit;
+
 using static TestFixture;
 
 public class ActivateTestTests : TestBase

@@ -6,7 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SharedTestHelpers.Fakes.Accession;
 using SharedTestHelpers.Fakes.AccessionComment;
-using Xunit;
+
 
 public class GetAccessionCommentViewTests : TestBase
 {

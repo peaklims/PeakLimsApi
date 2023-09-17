@@ -6,7 +6,7 @@ using SharedKernel.Exceptions;
 using PeakLims.Domain.RolePermissions.Features;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using System.Threading.Tasks;
 
 public class UpdateRolePermissionCommandTests : TestBase

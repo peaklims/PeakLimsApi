@@ -4,7 +4,7 @@ using PeakLims.SharedTestHelpers.Fakes.RolePermission;
 using PeakLims.Domain.RolePermissions.Features;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using SharedKernel.Exceptions;
 using System.Threading.Tasks;
 

@@ -5,7 +5,7 @@ using Domain;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using System.Threading.Tasks;
 using PeakLims.Domain.HealthcareOrganizations.Features;
 using SharedKernel.Exceptions;

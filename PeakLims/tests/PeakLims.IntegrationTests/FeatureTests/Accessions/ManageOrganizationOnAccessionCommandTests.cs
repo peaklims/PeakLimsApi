@@ -5,7 +5,7 @@ using Bogus;
 using Domain.Accessions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using PeakLims.Domain.Accessions.Features;
 using PeakLims.SharedTestHelpers.Fakes.HealthcareOrganization;
 using static TestFixture;

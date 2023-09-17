@@ -15,7 +15,7 @@ using SharedTestHelpers.Fakes.Accession;
 using SharedTestHelpers.Fakes.HealthcareOrganization;
 using SharedTestHelpers.Fakes.Patient;
 using SharedTestHelpers.Fakes.Test;
-using Xunit;
+
 using static TestFixture;
 
 public class RemoveTestFromPanelCommandTests : TestBase

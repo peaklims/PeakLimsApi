@@ -6,7 +6,7 @@ using PeakLims.Domain.Users.Features;
 using Bogus;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using System.Threading.Tasks;
 
 public class AddRemoveUserRoleTests : TestBase

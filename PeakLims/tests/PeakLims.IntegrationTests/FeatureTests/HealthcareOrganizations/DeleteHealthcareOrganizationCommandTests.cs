@@ -4,7 +4,7 @@ using PeakLims.SharedTestHelpers.Fakes.HealthcareOrganization;
 using PeakLims.Domain.HealthcareOrganizations.Features;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using Domain;
 using SharedKernel.Exceptions;
 using System.Threading.Tasks;

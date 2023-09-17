@@ -8,7 +8,7 @@ using Domain;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using System.Threading.Tasks;
 using Bogus;
 using Domain.AccessionCommentStatuses;

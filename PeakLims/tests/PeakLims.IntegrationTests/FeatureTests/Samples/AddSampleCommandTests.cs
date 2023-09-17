@@ -5,7 +5,7 @@ using Domain;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+
 using System.Threading.Tasks;
 using Domain.SampleStatuses;
 using PeakLims.Domain.Samples.Features;
