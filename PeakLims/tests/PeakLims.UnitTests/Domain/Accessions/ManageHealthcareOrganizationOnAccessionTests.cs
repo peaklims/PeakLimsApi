@@ -2,7 +2,7 @@ namespace PeakLims.UnitTests.Domain.Accessions;
 
 using Bogus;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using PeakLims.Domain.Accessions;
 using PeakLims.Services;
 using PeakLims.SharedTestHelpers.Fakes.Accession;

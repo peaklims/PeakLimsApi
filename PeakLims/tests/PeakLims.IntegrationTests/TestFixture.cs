@@ -8,7 +8,7 @@ using Configurations;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using HeimGuard;
-using Moq;
+using NSubstitute;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
 using Microsoft.AspNetCore.Builder;
@@ -100,7 +100,7 @@ public static class ServiceCollectionServiceExtensions
         where TService : class
     {
         services.RemoveAll(typeof(TService));
-        services.AddSingleton(_ => Mock.Of<TService>());
+        services.AddSingleton(_ => Substitute.For<TService>());
         return services;
     }
 }

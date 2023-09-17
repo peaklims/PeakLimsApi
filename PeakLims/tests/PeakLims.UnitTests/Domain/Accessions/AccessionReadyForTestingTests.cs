@@ -3,7 +3,7 @@ namespace PeakLims.UnitTests.Domain.Accessions;
 using Bogus;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using Moq;
+using NSubstitute;
 using PeakLims.Domain.Accessions.DomainEvents;
 using PeakLims.Domain.AccessionStatuses;
 using PeakLims.Domain.TestOrderStatuses;

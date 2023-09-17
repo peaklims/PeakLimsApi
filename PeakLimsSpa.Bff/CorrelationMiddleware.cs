@@ -17,13 +17,9 @@ public class CorrelationMiddleware
         }
         catch (Exception ex)
         {
-            if (IsCorrelationFailedException(ex))
-            {
-                context.Response.Redirect("/bff/login");
-                return;
-            }
-
-            throw; 
+            if (!IsCorrelationFailedException(ex)) throw;
+            
+            context.Response.Redirect("/bff/login");
         }
     }
 

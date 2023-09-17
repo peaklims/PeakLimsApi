@@ -13,7 +13,7 @@ using Bogus;
 using FluentAssertions;
 using MediatR;
 using MockQueryable.Moq;
-using Moq;
+using NSubstitute;
 using Xunit;
 using System.Threading.Tasks;
 using System.Security.Claims;
@@ -35,15 +35,13 @@ public class UserPolicyHandlerTests
         var claimsPrincipal = new ClaimsPrincipal(identity);
         
         // Act
-        var currentUserService = new Mock<ICurrentUserService>();
-        currentUserService
-            .Setup(c => c.User)
-            .Returns(claimsPrincipal);
-        var rolePermissionsRepo = new Mock<IRolePermissionRepository>();
-        var userRepo = new Mock<IUserRepository>();
-        var mediator = new Mock<IMediator>();
+        var currentUserService = Substitute.For<ICurrentUserService>();
+        currentUserService.User.Returns(claimsPrincipal);
+        var rolePermissionsRepo = Substitute.For<IRolePermissionRepository>();
+        var userRepo = Substitute.For<IUserRepository>();
+        var mediator = Substitute.For<IMediator>();
 
-        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo.Object, currentUserService.Object, userRepo.Object, mediator.Object);
+        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo, currentUserService, userRepo, mediator);
         
         Func<Task> permissions = () => userPolicyHandler.GetUserPermissions();
         
@@ -55,17 +53,17 @@ public class UserPolicyHandlerTests
     public async Task superadmin_user_gets_all_permissions()
     {
         // Arrange
-        var mediator = new Mock<IMediator>();
-        var userRepo = new Mock<IUserRepository>();
+        var mediator = Substitute.For<IMediator>();
+        var userRepo = Substitute.For<IUserRepository>();
         userRepo.UsersExist();
         userRepo.SetRole(Role.SuperAdmin().Value);
         
-        var currentUserService = new Mock<ICurrentUserService>();
+        var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.SetCurrentUser();
-        var rolePermissionsRepo = new Mock<IRolePermissionRepository>();
+        var rolePermissionsRepo = Substitute.For<IRolePermissionRepository>();
 
         // Act
-        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo.Object, currentUserService.Object, userRepo.Object, mediator.Object);
+        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo, currentUserService, userRepo, mediator);
         var permissions = await userPolicyHandler.GetUserPermissions();
         
         // Assert
@@ -76,17 +74,17 @@ public class UserPolicyHandlerTests
     public async Task superadmin_machine_gets_all_permissions()
     {
         // Arrange
-        var mediator = new Mock<IMediator>();
-        var userRepo = new Mock<IUserRepository>();
+        var mediator = Substitute.For<IMediator>();
+        var userRepo = Substitute.For<IUserRepository>();
         userRepo.UsersExist();
-        var currentUserService = new Mock<ICurrentUserService>();
+        var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.SetMachine();
-        var rolePermissionsRepo = new Mock<IRolePermissionRepository>();
+        var rolePermissionsRepo = Substitute.For<IRolePermissionRepository>();
         
         userRepo.SetRole(Role.SuperAdmin().Value);
     
         // Act
-        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo.Object, currentUserService.Object, userRepo.Object, mediator.Object);
+        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo, currentUserService, userRepo, mediator);
         var permissions = await userPolicyHandler.GetUserPermissions();
         
         // Assert
@@ -101,11 +99,11 @@ public class UserPolicyHandlerTests
         var randomOtherPermission = _faker.PickRandom(Permissions.List().Where(p => p != permissionToAssign));
         var nonSuperAdminRole = _faker.PickRandom(Role.ListNames().Where(p => p != Role.SuperAdmin().Value));
         
-        var currentUserService = new Mock<ICurrentUserService>();
+        var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.SetCurrentUser();
         
-        var mediator = new Mock<IMediator>();
-        var userRepo = new Mock<IUserRepository>();
+        var mediator = Substitute.For<IMediator>();
+        var userRepo = Substitute.For<IUserRepository>();
         userRepo.UsersExist();
         userRepo.SetRole(nonSuperAdminRole);
     
@@ -116,13 +114,11 @@ public class UserPolicyHandlerTests
         });
         var rolePermissions = new List<RolePermission>() {{rolePermission}};
         var mockData = rolePermissions.AsQueryable().BuildMock();
-        var rolePermissionsRepo = new Mock<IRolePermissionRepository>();
-        rolePermissionsRepo
-            .Setup(c => c.Query())
-            .Returns(mockData);
+        var rolePermissionsRepo = Substitute.For<IRolePermissionRepository>();
+        rolePermissionsRepo.Query().Returns(mockData);
         
         // Act
-        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo.Object, currentUserService.Object, userRepo.Object, mediator.Object);
+        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo, currentUserService, userRepo, mediator);
         var permissions = await userPolicyHandler.GetUserPermissions();
         
         // Assert
@@ -137,11 +133,11 @@ public class UserPolicyHandlerTests
         var permissionToAssign = _faker.PickRandom(Permissions.List());
         var nonSuperAdminRole = _faker.PickRandom(Role.ListNames().Where(p => p != Role.SuperAdmin().Value));
         
-        var currentUserService = new Mock<ICurrentUserService>();
+        var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.SetCurrentUser();
         
-        var mediator = new Mock<IMediator>();
-        var userRepo = new Mock<IUserRepository>();
+        var mediator = Substitute.For<IMediator>();
+        var userRepo = Substitute.For<IUserRepository>();
         userRepo.UsersExist();
         userRepo.SetRole(nonSuperAdminRole);
     
@@ -152,13 +148,11 @@ public class UserPolicyHandlerTests
         });
         var rolePermissions = new List<RolePermission>() {rolePermission, rolePermission};
         var mockData = rolePermissions.AsQueryable().BuildMock();
-        var rolePermissionsRepo = new Mock<IRolePermissionRepository>();
-        rolePermissionsRepo
-            .Setup(c => c.Query())
-            .Returns(mockData);
+        var rolePermissionsRepo = Substitute.For<IRolePermissionRepository>();
+        rolePermissionsRepo.Query().Returns(mockData);
         
         // Act
-        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo.Object, currentUserService.Object, userRepo.Object, mediator.Object);
+        var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo, currentUserService, userRepo, mediator);
         var permissions = await userPolicyHandler.GetUserPermissions();
         
         // Assert
@@ -169,52 +163,37 @@ public class UserPolicyHandlerTests
 
 public static class UserExtensions
 {
-    public static void SetRole(this Mock<IUserRepository> repo, string role)
+    public static void SetRole(this IUserRepository repo, string role)
     {
-        repo
-            .Setup(x => x.GetRolesByUserIdentifier(It.IsAny<string>()))
+        repo.GetRolesByUserIdentifier(Arg.Any<string>())
             .Returns(new List<string> { role });
     }
 
-    public static void UsersExist(this Mock<IUserRepository> repo)
+    public static void UsersExist(this IUserRepository repo)
     {
         var user = new FakeUserBuilder().Build();
         var users = new List<User>() {{user}};
         var mockData = users.AsQueryable().BuildMock();
         
-        repo
-            .Setup(c => c.Query())
-            .Returns(mockData);
+        repo.Query().Returns(mockData);
     }
 }
 public static class CurrentUserServiceExtensions
 {
-    public static void SetCurrentUser(this Mock<ICurrentUserService> repo, string nameIdentifier = null)
+    public static void SetCurrentUser(this ICurrentUserService repo, string nameIdentifier = null)
     {
         var user = SetUserClaim(nameIdentifier);
-        repo
-            .Setup(c => c.User)
-            .Returns(user);
-        repo
-            .Setup(c => c.UserId)
-            .Returns(user?.FindFirstValue(ClaimTypes.NameIdentifier));
-        repo
-            .Setup(c => c.IsMachine)
-            .Returns(false);
+        repo.User.Returns(user);
+        repo.UserId.Returns(user?.FindFirstValue(ClaimTypes.NameIdentifier));
+        repo.IsMachine.Returns(false);
     }
     
-    public static void SetMachine(this Mock<ICurrentUserService> repo, string nameIdentifier = null, string clientId = null)
+    public static void SetMachine(this ICurrentUserService repo, string nameIdentifier = null, string clientId = null)
     {
         var machine = SetMachineClaim(nameIdentifier, clientId);
-        repo
-            .Setup(c => c.User)
-            .Returns(machine);
-        repo
-            .Setup(c => c.UserId)
-            .Returns(machine?.FindFirstValue(ClaimTypes.NameIdentifier));
-        repo
-            .Setup(c => c.IsMachine)
-            .Returns(true);
+        repo.User.Returns(machine);
+        repo.UserId.Returns(machine?.FindFirstValue(ClaimTypes.NameIdentifier));
+        repo.IsMachine.Returns(true);
     }
     
     private static ClaimsPrincipal SetUserClaim(string nameIdentifier = null)

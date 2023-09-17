@@ -5,10 +5,11 @@ using Databases;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Moq;
+using NSubstitute;
 using SharedKernel.Exceptions;
 using static TestFixture;
 using HeimGuard;
+using NSubstitute.ExceptionExtensions;
 
 public class TestingServiceScope 
 {
@@ -94,22 +95,18 @@ public class TestingServiceScope
     public void SetUserNotPermitted(string permission)
     {
         var userPolicyHandler = GetService<IHeimGuardClient>();
-        Mock.Get(userPolicyHandler)
-            .Setup(x => x.MustHavePermission<ForbiddenAccessException>(permission))
+        userPolicyHandler.MustHavePermission<ForbiddenAccessException>(permission)
             .ThrowsAsync(new ForbiddenAccessException());
-        Mock.Get(userPolicyHandler)
-            .Setup(x => x.HasPermissionAsync(permission))
-            .ReturnsAsync(false);
+        userPolicyHandler.HasPermissionAsync(permission)
+            .Returns(false);
     }
 
     public void SetUserIsPermitted()
     {
         var userPolicyHandler = GetService<IHeimGuardClient>();
-        Mock.Get(userPolicyHandler)
-            .Setup(x => x.MustHavePermission<ForbiddenAccessException>(It.IsAny<string>()))
+        userPolicyHandler.MustHavePermission<ForbiddenAccessException>(Arg.Any<string>())
             .Returns(Task.CompletedTask);
-        Mock.Get(userPolicyHandler)
-            .Setup(x => x.HasPermissionAsync(It.IsAny<string>()))
-            .ReturnsAsync(true);
+        userPolicyHandler.HasPermissionAsync(Arg.Any<string>())
+            .Returns(true);
     }
 }

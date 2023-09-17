@@ -2,7 +2,8 @@ namespace PeakLims.UnitTests.Domain.Accessions.Features;
 
 using FluentAssertions;
 using HeimGuard;
-using Moq;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using PeakLims.Domain;
 using PeakLims.Domain.Accessions.Features;
 using PeakLims.Domain.Accessions.Services;
@@ -12,31 +13,29 @@ using Xunit;
 
 public class SetAccessionStatusToReadyForTestingTests
 {
-    private Mock<IUnitOfWork> UnitOfWork { get; set; }
-    private Mock<IAccessionRepository> AccessionRepository { get; set; }
-    private Mock<IHeimGuardClient> HeimGuard { get; set; }
+    private IUnitOfWork UnitOfWork { get; set; } 
+    private IAccessionRepository AccessionRepository { get; set; } 
+    private IHeimGuardClient HeimGuard { get; set; } 
 
     public SetAccessionStatusToReadyForTestingTests()
     {
-        UnitOfWork = new Mock<IUnitOfWork>();
-        AccessionRepository = new Mock<IAccessionRepository>();
-        HeimGuard = new Mock<IHeimGuardClient>();
+        UnitOfWork = Substitute.For<IUnitOfWork>();
+        AccessionRepository = Substitute.For<IAccessionRepository>();
+        HeimGuard = Substitute.For<IHeimGuardClient>();
     }
     
     [Fact]
     public async Task must_have_permission()
     {
         //Arrange
-        HeimGuard
-            .Setup(x =>
-                x.MustHavePermission<ForbiddenAccessException>(Permissions.CanSetAccessionStatusToReadyForTesting))
-            .Throws<ForbiddenAccessException>();
+        HeimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanSetAccessionStatusToReadyForTesting)
+            .ThrowsAsync<ForbiddenAccessException>();
         
         //Act
         var query = new SetAccessionStatusToReadyForTesting.Command(Guid.NewGuid());
-        var handler = new SetAccessionStatusToReadyForTesting.Handler(AccessionRepository.Object, 
-            UnitOfWork.Object, 
-            HeimGuard.Object);
+        var handler = new SetAccessionStatusToReadyForTesting.Handler(AccessionRepository, 
+            UnitOfWork, 
+            HeimGuard);
         var act = () => handler.Handle(query, CancellationToken.None);
 
         // Assert

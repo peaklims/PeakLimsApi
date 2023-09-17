@@ -2,7 +2,7 @@ namespace PeakLims.UnitTests.Domain.TestOrders;
 
 using Bogus;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using PeakLims.Domain.TestOrders;
 using PeakLims.Domain.TestOrderStatuses;
 using PeakLims.Services;
