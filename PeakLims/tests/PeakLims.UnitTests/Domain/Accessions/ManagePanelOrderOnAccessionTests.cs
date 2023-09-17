@@ -27,8 +27,8 @@ public class ManagePanelOrderOnAccessionTests
             .Activate();
         var panel = new FakePanelBuilder()
             .Build()
-            .Activate()
-            .AddTest(test);
+            .AddTest(test)
+            .Activate();
         
         // Act - Add
         fakeAccession.AddPanel(panel);
@@ -79,11 +79,13 @@ public class ManagePanelOrderOnAccessionTests
 
         var test = new FakeTestBuilder()
             .Build()
-            .Deactivate();
+            .Activate();
         var panel = new FakePanelBuilder()
             .Build()
-            .Activate()
-            .AddTest(test);
+            .AddTest(test)
+            .Activate();
+        
+        test.Deactivate();
         
         // Act
         var act = () => fakeAccession.AddPanel(panel);

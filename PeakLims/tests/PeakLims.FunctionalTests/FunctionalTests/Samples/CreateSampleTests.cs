@@ -8,6 +8,7 @@ using FluentAssertions;
 using Xunit;
 using System.Net;
 using System.Threading.Tasks;
+using SharedTestHelpers.Fakes.Patient;
 
 public class CreateSampleTests : TestBase
 {
@@ -15,7 +16,11 @@ public class CreateSampleTests : TestBase
     public async Task create_sample_returns_created_using_valid_dto_and_valid_auth_credentials()
     {
         // Arrange
-        var fakeSample = new FakeSampleForCreationDto().Generate();
+        var patient = new FakePatientBuilder().Build();
+        await InsertAsync(patient);
+        var fakeSample = new FakeSampleForCreationDto()
+            .RuleFor(x => x.PatientId, _ => patient.Id)
+            .Generate();
 
         var user = await AddNewSuperAdmin();
         FactoryClient.AddAuth(user.Identifier);

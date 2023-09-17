@@ -8,6 +8,7 @@ using FluentAssertions;
 using Xunit;
 using System.Net;
 using System.Threading.Tasks;
+using SharedTestHelpers.Fakes.HealthcareOrganization;
 
 public class CreateHealthcareOrganizationContactTests : TestBase
 {
@@ -15,7 +16,11 @@ public class CreateHealthcareOrganizationContactTests : TestBase
     public async Task create_healthcareorganizationcontact_returns_created_using_valid_dto_and_valid_auth_credentials()
     {
         // Arrange
-        var fakeHealthcareOrganizationContact = new FakeHealthcareOrganizationContactForCreationDto().Generate();
+        var org = new FakeHealthcareOrganizationBuilder().Build();
+        await InsertAsync(org);
+        var fakeHealthcareOrganizationContact = new FakeHealthcareOrganizationContactForCreationDto()
+            .RuleFor(x => x.HealthcareOrganizationId, _ => org.Id)
+            .Generate();
 
         var user = await AddNewSuperAdmin();
         FactoryClient.AddAuth(user.Identifier);

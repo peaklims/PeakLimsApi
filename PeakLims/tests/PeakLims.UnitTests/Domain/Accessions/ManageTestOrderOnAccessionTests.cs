@@ -73,8 +73,8 @@ public class ManageTestOrderOnAccessionTests
             .Activate();
         var panel = new FakePanelBuilder()
             .Build()
-            .Activate()
-            .AddTest(test);
+            .AddTest(test)
+            .Activate();
         fakeAccession.AddPanel(panel);
         var testOrder = fakeAccession.TestOrders.First();
         
