@@ -1,0 +1,23 @@
+version: 2
+
+registries:
+  # myCustomFeed:
+  #   type: nuget-feed
+  #   url: https://mycustomurl.com
+  #   username: ${{secrets.NUGET_USERNAME}}
+  #   password: ${{secrets.NUGET_PASSWORD}}
+
+updates:
+  - package-ecosystem: "nuget"
+    # Targeted directory, it will look for any csProj file recursively.
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      # wednesday so we can get the latest .net release from tuesday on the weeks it does drop
+      day: "wednesday"
+    commit-message:
+      prefix: "Package Dependencies"
+    # Temporarily disable PR limit, till initial dependency update goes through
+    open-pull-requests-limit: 1000
+    # registries:
+    #   - myCustomFeed
