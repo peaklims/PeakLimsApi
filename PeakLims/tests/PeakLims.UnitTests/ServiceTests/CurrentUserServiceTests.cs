@@ -6,6 +6,7 @@ using Bogus;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
+using Resources.HangfireUtilities;
 using Xunit;
 
 public class CurrentUserServiceTests
@@ -24,8 +25,29 @@ public class CurrentUserServiceTests
         var sub = Substitute.For<IHttpContextAccessor>();
         sub.HttpContext.Returns(context);
         
-        var currentUserService = new CurrentUserService(sub);
+        var currentUserService = new CurrentUserService(sub, null);
 
+        currentUserService.UserId.Should().Be(name);
+    }
+    
+    [Fact]
+    public void can_fallback_to_user_in_job_context()
+    {
+        // Arrange
+        var name = new Faker().Person.UserName;
+
+        var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        httpContextAccessor.HttpContext.Returns((HttpContext)null);
+
+        var jobContextAccessor = new JobContextAccessor();
+        jobContextAccessor.UserContext = new JobWithUserContext()
+        {
+            User = name
+        };
+
+        var currentUserService = new CurrentUserService(httpContextAccessor, jobContextAccessor);
+
+        // Act & Assert
         currentUserService.UserId.Should().Be(name);
     }
     
@@ -36,7 +58,7 @@ public class CurrentUserServiceTests
         var sub = Substitute.For<IHttpContextAccessor>();
         sub.HttpContext.Returns(context);
         
-        var currentUserService = new CurrentUserService(sub);
+        var currentUserService = new CurrentUserService(sub, null);
 
         currentUserService.UserId.Should().BeNullOrEmpty();
     }

@@ -1,9 +1,13 @@
+using Hangfire;
+using HeimGuard;
 using Serilog;
 using Hellang.Middleware.ProblemDetails;
 using PeakLims.Extensions.Application;
 using PeakLims.Extensions.Host;
 using PeakLims.Extensions.Services;
 using PeakLims.Databases;
+using PeakLims.Domain.Patients.Features;
+using PeakLims.Resources.HangfireUtilities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddLoggingConfiguration(builder.Environment);
@@ -38,6 +42,12 @@ app.UseAuthorization();
 
 app.MapHealthChecks("api/health");
 app.MapControllers();
+
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    AsyncAuthorization = new[] { new HangfireAuthorizationFilter(scope.ServiceProvider) },
+    IgnoreAntiforgeryToken = true
+});
 
 app.UseSwaggerExtension(builder.Configuration, builder.Environment);
 

@@ -1,5 +1,7 @@
 namespace PeakLims.Resources;
 
+using System.Reflection;
+
 public static class Consts
 {
     public static class Testing
@@ -13,5 +15,19 @@ public static class Consts
         public const string PatientInternalIdPrefix = "PAT";
         public const string AccessionNumberPrefix = "ACC";
         public const string SampleNumberPrefix = "SAM";
+    }
+
+    public static class HangfireQueues
+    {
+        // public const string MyFirstQueue = "my-first-queue";
+        
+        public static string[] List()
+        {
+            return typeof(HangfireQueues)
+                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                .Where(fi => fi.IsLiteral && !fi.IsInitOnly && fi.FieldType == typeof(string))
+                .Select(x => (string)x.GetRawConstantValue())
+                .ToArray();
+        }
     }
 }

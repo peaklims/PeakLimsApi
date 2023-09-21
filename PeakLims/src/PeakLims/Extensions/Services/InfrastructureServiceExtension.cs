@@ -6,7 +6,10 @@ using HeimGuard;
 using PeakLims.Resources;
 using PeakLims.Services;
 using Configurations;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.EntityFrameworkCore;
+using Resources.HangfireUtilities;
 
 public static class ServiceRegistration
 {
@@ -28,6 +31,7 @@ public static class ServiceRegistration
                             .UseSnakeCaseNamingConvention());
 
         services.AddHostedService<MigrationHostedService<PeakLimsDbContext>>();
+        services.SetupHangfire(env);
 
         // Auth -- Do Not Delete
         var authOptions = configuration.GetAuthOptions();
@@ -49,5 +53,42 @@ public static class ServiceRegistration
         services.AddHeimGuard<UserPolicyHandler>()
             .MapAuthorizationPolicies()
             .AutomaticallyCheckPermissions();
+    }
+}
+    
+public static class HangfireConfig
+{
+    public static void SetupHangfire(this IServiceCollection services, IWebHostEnvironment env)
+    {
+        services.AddScoped<IJobContextAccessor, JobContextAccessor>();
+        services.AddScoped<IJobWithUserContext, JobWithUserContext>();
+        // if you want tags with sql server
+        // var tagOptions = new TagsOptions() { TagsListStyle = TagsListStyle.Dropdown };
+        
+        // var hangfireConfig = new MemoryStorageOptions() { };
+        services.AddHangfire(config =>
+        {
+            config
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseMemoryStorage()
+                .UseColouredConsoleLogProvider()
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                // if you want tags with sql server
+                // .UseTagsWithSql(tagOptions, hangfireConfig)
+                .UseActivator(new JobWithUserContextActivator(services.BuildServiceProvider()
+                    .GetRequiredService<IServiceScopeFactory>()));
+        });
+        services.AddHangfireServer(options =>
+        {
+            options.WorkerCount = 10;
+            options.ServerName = $"PeakLims-{env.EnvironmentName}";
+
+            if (Consts.HangfireQueues.List().Length > 0)
+            {
+                options.Queues = Consts.HangfireQueues.List();
+            }
+        });
+
     }
 }

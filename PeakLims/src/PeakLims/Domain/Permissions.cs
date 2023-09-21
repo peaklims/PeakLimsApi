@@ -5,6 +5,7 @@ using System.Reflection;
 public static class Permissions
 {
     // Permissions marker - do not delete this comment
+    public const string HangfireAccess = nameof(HangfireAccess);
     public const string CanDeleteAccessionContacts = nameof(CanDeleteAccessionContacts);
     public const string CanUpdateAccessionContacts = nameof(CanUpdateAccessionContacts);
     public const string CanAddAccessionContacts = nameof(CanAddAccessionContacts);

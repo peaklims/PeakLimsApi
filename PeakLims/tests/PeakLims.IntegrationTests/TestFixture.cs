@@ -7,6 +7,7 @@ using PeakLims.SharedTestHelpers.Utilities;
 using Configurations;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using Hangfire;
 using HeimGuard;
 using NSubstitute;
 using Testcontainers.PostgreSql;
@@ -56,6 +57,7 @@ public class TestFixture : IAsyncLifetime
         // add any mock services here
         services.ReplaceServiceWithSingletonMock<IHttpContextAccessor>();
         services.ReplaceServiceWithSingletonMock<IHeimGuardClient>();
+        services.ReplaceServiceWithSingletonMock<IBackgroundJobClient>();
 
         var provider = services.BuildServiceProvider();
         BaseScopeFactory = provider.GetService<IServiceScopeFactory>();
