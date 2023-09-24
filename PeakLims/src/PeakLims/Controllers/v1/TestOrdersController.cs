@@ -74,7 +74,7 @@ public sealed class TestOrdersController: ControllerBase
     /// Creates a new TestOrder record.
     /// </summary>
     [Authorize]
-    [HttpPost("accessionId:guid", Name = "AddTestOrder")]
+    [HttpPost("{accessionId:guid}", Name = "AddTestOrder")]
     public async Task<IActionResult> AddTestOrder([FromRoute] Guid accessionId, [FromBody]TestOrderForCreationDto testOrderForCreation)
     {
         var command = new AddTestOrder.Command(accessionId, testOrderForCreation.TestId, testOrderForCreation.PanelId);
