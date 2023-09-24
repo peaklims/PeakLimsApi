@@ -32,11 +32,8 @@ public class RemovePanelFromAccessionCommandTests : TestBase
         var fakeTest = new FakeTestBuilder().Build().Activate();
         var fakePanel = new FakePanelBuilder().WithTest(fakeTest).Build().Activate();
 
-        var fakeAccessionOne = new FakeAccessionBuilder()
-            // .WithPatient(fakePatientOne)
-            // .WithHealthcareOrganization(fakeHealthcareOrganizationOne)
-            .Build()
-            .AddPanel(fakePanel);
+        var fakeAccessionOne = new FakeAccessionBuilder().Build();
+        fakeAccessionOne.AddPanel(fakePanel);
         await testingServiceScope.InsertAsync(fakeAccessionOne);
 
         var testOrder = fakeAccessionOne.TestOrders.First();

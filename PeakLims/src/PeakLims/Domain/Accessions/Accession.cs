@@ -71,7 +71,7 @@ public class Accession : BaseEntity
         return this;
     }
 
-    public Accession AddTest(Test test)
+    public TestOrder AddTest(Test test)
     {
         // TODO unit test
         GuardIfInFinalState("Tests");
@@ -84,7 +84,7 @@ public class Accession : BaseEntity
         var testOrder = TestOrder.Create(test);
         _testOrders.Add(testOrder);
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
-        return this;
+        return testOrder;
     }
 
     public Accession RemoveTestOrder(TestOrder testOrder)
@@ -111,7 +111,7 @@ public class Accession : BaseEntity
         _testOrders.Remove(testOrder);
     }
 
-    public Accession AddPanel(Panel panel)
+    public List<TestOrder> AddPanel(Panel panel)
     {
         // TODO unit test
         GuardIfInFinalState("Panels");
@@ -130,14 +130,16 @@ public class Accession : BaseEntity
             throw new ValidationException(nameof(Accession),
                 $"This panel has no tests to assign.");
         
+        var testOrdersToAdd = new List<TestOrder>();
         foreach (var test in panel.Tests)
         {
             var testOrder = TestOrder.Create(test, panel);
-            _testOrders.Add(testOrder);
+            testOrdersToAdd.Add(testOrder);
         }
+        _testOrders.AddRange(testOrdersToAdd);
         
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
-        return this;
+        return testOrdersToAdd;
     }
 
     public Accession RemovePanel(Panel panel)

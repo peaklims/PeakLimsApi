@@ -74,15 +74,12 @@ public sealed class TestOrdersController: ControllerBase
     /// Creates a new TestOrder record.
     /// </summary>
     [Authorize]
-    [HttpPost(Name = "AddTestOrder")]
-    public async Task<ActionResult<TestOrderDto>> AddTestOrder([FromBody]TestOrderForCreationDto testOrderForCreation)
+    [HttpPost("accessionId:guid", Name = "AddTestOrder")]
+    public async Task<IActionResult> AddTestOrder([FromRoute] Guid accessionId, [FromBody]TestOrderForCreationDto testOrderForCreation)
     {
-        var command = new AddTestOrder.Command(testOrderForCreation.TestId, testOrderForCreation.PanelId);
-        var commandResponse = await _mediator.Send(command);
-
-        return CreatedAtRoute("GetTestOrder",
-            new { commandResponse.Id },
-            commandResponse);
+        var command = new AddTestOrder.Command(accessionId, testOrderForCreation.TestId, testOrderForCreation.PanelId);
+        await _mediator.Send(command);
+        return NoContent();
     }
 
 

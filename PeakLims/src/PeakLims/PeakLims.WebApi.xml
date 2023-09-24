@@ -349,7 +349,7 @@
             Gets a single TestOrder by ID.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.TestOrdersController.AddTestOrder(PeakLims.Domain.TestOrders.Dtos.TestOrderForCreationDto)">
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.AddTestOrder(System.Guid,PeakLims.Domain.TestOrders.Dtos.TestOrderForCreationDto)">
             <summary>
             Creates a new TestOrder record.
             </summary>
