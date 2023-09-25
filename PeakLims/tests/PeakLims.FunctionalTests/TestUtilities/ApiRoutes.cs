@@ -62,7 +62,7 @@ public class ApiRoutes
         public static string GetRecord(Guid id) => $"{Base}/testOrders/{id}";
         public static string Delete(Guid id) => $"{Base}/testOrders/{id}";
         public static string Put(Guid id) => $"{Base}/testOrders/{id}";
-        public static string Create => $"{Base}/testOrders";
+        public static string Create(Guid accessionId) => $"{Base}/testOrders/{accessionId}";
         public static string CreateBatch => $"{Base}/testOrders/batch";
     }
 

@@ -9,6 +9,7 @@ using Xunit;
 using System.Net;
 using System.Threading.Tasks;
 using Domain.TestOrders.Dtos;
+using SharedTestHelpers.Fakes.Accession;
 using SharedTestHelpers.Fakes.Test;
 
 public class CreateTestOrderTests : TestBase
@@ -17,7 +18,10 @@ public class CreateTestOrderTests : TestBase
     public async Task create_testorder_returns_created_using_valid_dto_and_valid_auth_credentials()
     {
         // Arrange
-        var test = new FakeTestBuilder().Build();
+        var accession = new FakeAccessionBuilder().Build();
+        await InsertAsync(accession);
+        
+        var test = new FakeTestBuilder().Build().Activate();
         await InsertAsync(test);
         
         var fakeTestOrder = new TestOrderForCreationDto();
@@ -28,11 +32,11 @@ public class CreateTestOrderTests : TestBase
         FactoryClient.AddAuth(user.Identifier);
 
         // Act
-        var route = ApiRoutes.TestOrders.Create;
+        var route = ApiRoutes.TestOrders.Create(accession.Id);
         var result = await FactoryClient.PostJsonRequestAsync(route, fakeTestOrder);
 
         // Assert
-        result.StatusCode.Should().Be(HttpStatusCode.Created);
+        result.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
             
     [Fact]
@@ -42,7 +46,7 @@ public class CreateTestOrderTests : TestBase
         var fakeTestOrder = new FakeTestOrderForCreationDto { }.Generate();
 
         // Act
-        var route = ApiRoutes.TestOrders.Create;
+        var route = ApiRoutes.TestOrders.Create(Guid.NewGuid());
         var result = await FactoryClient.PostJsonRequestAsync(route, fakeTestOrder);
 
         // Assert
@@ -57,7 +61,7 @@ public class CreateTestOrderTests : TestBase
         FactoryClient.AddAuth();
 
         // Act
-        var route = ApiRoutes.TestOrders.Create;
+        var route = ApiRoutes.TestOrders.Create(Guid.NewGuid());
         var result = await FactoryClient.PostJsonRequestAsync(route, fakeTestOrder);
 
         // Assert
