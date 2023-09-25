@@ -33,6 +33,10 @@ public static class GetEditableAccessionAggregate
                 .Include(x => x.HealthcareOrganization)
                 .Include(x => x.AccessionContacts)
                     .ThenInclude(x => x.HealthcareOrganizationContact)
+                .Include(x => x.TestOrders)
+                    .ThenInclude(x => x.Test)
+                .Include(x => x.TestOrders)
+                    .ThenInclude(x => x.AssociatedPanel)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);
             
