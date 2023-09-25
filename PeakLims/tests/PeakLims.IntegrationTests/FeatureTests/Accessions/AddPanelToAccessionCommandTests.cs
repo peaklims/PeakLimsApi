@@ -32,9 +32,7 @@ public class AddPanelToAccessionCommandPanels : TestBase
         var fakePanel = new FakePanelBuilder().WithTest(fakeTest).Build().Activate();
         await testingServiceScope.InsertAsync(fakePanel);
 
-        var fakeAccessionOne = new FakeAccessionBuilder()
-            // .ExcludeTestOrders()
-            .Build();
+        var fakeAccessionOne = new FakeAccessionBuilder().Build();
         await testingServiceScope.InsertAsync(fakeAccessionOne);
 
         // Act
@@ -66,22 +64,20 @@ public class AddPanelToAccessionCommandPanels : TestBase
         var fakePanel = new FakePanelBuilder().WithTest(fakeTest).Build().Activate();
         await testingServiceScope.InsertAsync(fakePanel);
 
-        var fakeAccessionOne = new FakeAccessionBuilder()
-            // .WithPatient(fakePatientOne)
-            // .WithHealthcareOrganization(fakeHealthcareOrganizationOne)
-            .Build()
-            .AddTest(existingText);
-        await testingServiceScope.InsertAsync(fakeAccessionOne);
+        var accession = new FakeAccessionBuilder().Build();
+        accession.AddTest(existingText);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
-        var command = new AddPanelToAccession.Command(fakeAccessionOne.Id, fakePanel.Id);
+        var command = new AddPanelToAccession.Command(accession.Id, fakePanel.Id);
         await testingServiceScope.SendAsync(command);
-        var accession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
+        var accessionFromDb = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .Include(x => x.TestOrders)
             .ThenInclude(x => x.Test)
-            .ThenInclude(x => x.Panels)
-            .FirstOrDefaultAsync(a => a.Id == fakeAccessionOne.Id));
-        var testOrders = accession.TestOrders;
+            .Include(x => x.TestOrders)
+            .ThenInclude(x => x.AssociatedPanel)
+            .FirstOrDefaultAsync(a => a.Id == accession.Id));
+        var testOrders = accessionFromDb.TestOrders;
 
         // Assert
         testOrders.Count.Should().Be(2);

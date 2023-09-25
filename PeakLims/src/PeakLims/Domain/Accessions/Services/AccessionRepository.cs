@@ -8,7 +8,7 @@ using PeakLims.Services;
 public interface IAccessionRepository : IGenericRepository<Accession>
 {
     public Task<Accession> GetAccessionForStatusChange(Guid id, CancellationToken cancellationToken = default);
-    public Task<Accession> GetWithTestOrderWithChildren(Guid id, bool withTracking, CancellationToken cancellationToken = default);
+    public Task<Accession> GetWithTestOrderWithChildren(Guid accessionId, bool withTracking, CancellationToken cancellationToken = default);
 }
 
 public sealed class AccessionRepository : GenericRepository<Accession>, IAccessionRepository
@@ -30,21 +30,21 @@ public sealed class AccessionRepository : GenericRepository<Accession>, IAccessi
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<Accession> GetWithTestOrderWithChildren(Guid id, bool withTracking, CancellationToken cancellationToken = default)
+    public Task<Accession> GetWithTestOrderWithChildren(Guid accessionId, bool withTracking, CancellationToken cancellationToken = default)
     {
-        return withTracking 
+        return withTracking
             ? _dbContext.Accessions
                 .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Test)
-                .ThenInclude(x => x.Panels)
-                .Where(x => x.Id == id)
-                .FirstOrDefaultAsync(cancellationToken)
+                .Include(x => x.TestOrders)
+                .ThenInclude(x => x.AssociatedPanel)
+                .FirstOrDefaultAsync(x => x.Id == accessionId, cancellationToken)
             : _dbContext.Accessions
                 .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Test)
-                .ThenInclude(x => x.Panels)
-                .Where(x => x.Id == id)
+                .Include(x => x.TestOrders)
+                .ThenInclude(x => x.AssociatedPanel)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(cancellationToken);
+                .FirstOrDefaultAsync(x => x.Id == accessionId, cancellationToken);
     }
 }

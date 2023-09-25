@@ -45,6 +45,10 @@ public static class AddTestToAccession
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddTestToAccessions);
 
             var accession = await _accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
+            if (accession == null)
+            {
+                throw new NotFoundException($"Accession with id {request.AccessionId} not found.");
+            }
             var testToAdd = await _testRepository.GetById(request.TestId, true, cancellationToken);
             var existingTestOrders = accession.TestOrders.ToList();
             accession.AddTest(testToAdd);

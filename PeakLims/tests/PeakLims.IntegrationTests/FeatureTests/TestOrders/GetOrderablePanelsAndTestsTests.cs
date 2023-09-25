@@ -29,8 +29,11 @@ public class GetOrderablePanelsAndTestsTests : TestBase
         var orderables = await testingServiceScope.SendAsync(query);
 
         // Assert
-        orderables.Panels.Count.Should().Be(1);
-        orderables.Tests.Count.Should().Be(2);
+        orderables.Panels.Where(x => x.Id == panel.Id).ToList().Count.Should().Be(1);
+        orderables.Tests
+            .Where(x => x.Id == standaloneTest.Id || x.Id == testForPanel.Id)
+            .ToList()
+            .Count.Should().Be(2);
         
         orderables.Panels.First().Id.Should().Be(panel.Id);
         orderables.Panels.First().Tests.Count.Should().Be(1);

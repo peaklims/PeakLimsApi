@@ -29,11 +29,7 @@ public class AddTestToAccessionCommandTests : TestBase
         var fakeTest = new FakeTestBuilder().Build().Activate();
         await testingServiceScope.InsertAsync(fakeTest);
 
-        var fakeAccessionOne = new FakeAccessionBuilder()
-            // .WithPatient(fakePatientOne)
-            // .WithHealthcareOrganization(fakeHealthcareOrganizationOne)
-            // .ExcludeTestOrders()
-            .Build();
+        var fakeAccessionOne = new FakeAccessionBuilder().Build();
         await testingServiceScope.InsertAsync(fakeAccessionOne);
 
         // Act
@@ -62,20 +58,17 @@ public class AddTestToAccessionCommandTests : TestBase
         var fakeTest = new FakeTestBuilder().Build().Activate();
         await testingServiceScope.InsertAsync(fakeTest);
 
-        var fakeAccessionOne = new FakeAccessionBuilder()
-            // .WithPatient(fakePatientOne)
-            // .WithHealthcareOrganization(fakeHealthcareOrganizationOne)
-            .Build()
-            .AddTest(existingTest);
-        await testingServiceScope.InsertAsync(fakeAccessionOne);
+        var accessionOne = new FakeAccessionBuilder().Build();
+        accessionOne.AddTest(existingTest);
+        await testingServiceScope.InsertAsync(accessionOne);
 
         // Act
-        var command = new AddTestToAccession.Command(fakeAccessionOne.Id, fakeTest.Id);
+        var command = new AddTestToAccession.Command(accessionOne.Id, fakeTest.Id);
         await testingServiceScope.SendAsync(command);
         var accession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .Include(x => x.TestOrders)
             .ThenInclude(x => x.Test)
-            .FirstOrDefaultAsync(a => a.Id == fakeAccessionOne.Id));
+            .FirstOrDefaultAsync(a => a.Id == accessionOne.Id));
         var testOrders = accession.TestOrders;
 
         // Assert

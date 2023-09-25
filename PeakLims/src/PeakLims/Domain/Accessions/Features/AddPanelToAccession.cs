@@ -47,8 +47,12 @@ public static class AddPanelToAccession
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddPanelToAccession);
 
-            var panel = await _panelRepository.GetById(request.PanelId, true, cancellationToken);
             var accession = await _accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
+            if (accession == null)
+            {
+                throw new NotFoundException($"Accession with id {request.AccessionId} not found.");
+            }
+            var panel = await _panelRepository.GetById(request.PanelId, true, cancellationToken);
             var existingTestOrders = accession.TestOrders.ToList();
             accession.AddPanel(panel);
 

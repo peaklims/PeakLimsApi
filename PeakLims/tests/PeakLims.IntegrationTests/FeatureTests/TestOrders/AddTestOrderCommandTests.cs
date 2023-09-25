@@ -61,7 +61,7 @@ public class AddTestOrderCommandTests : TestBase
         await testingServiceScope.SendAsync(command);
         var testOrderCreated = await testingServiceScope.ExecuteDbContextAsync(db => db.TestOrders
             .Include(t => t.Test)
-            .FirstOrDefaultAsync(t => t.Accession.Id == accession.Id));
+            .FirstOrDefaultAsync(t => t.Accession.Id == accession.Id && t.Test.Id == testOne.Id));
         var testOrderCreatedTwo = await testingServiceScope.ExecuteDbContextAsync(db => db.TestOrders
             .Include(t => t.Test)
             .FirstOrDefaultAsync(t => t.Accession.Id == accession.Id && t.Test.Id == testTwo.Id));
