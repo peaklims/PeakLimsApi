@@ -1,3 +1,4 @@
+using Destructurama;
 using Hangfire;
 using HeimGuard;
 using Serilog;
@@ -11,6 +12,14 @@ using PeakLims.Resources.HangfireUtilities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddLoggingConfiguration(builder.Environment);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.WithProperty("ApplicationName", builder.Environment.ApplicationName)
+    .Destructure.UsingAttributes()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.ConfigureServices();
 var app = builder.Build();
@@ -34,13 +43,13 @@ app.UseHttpsRedirection();
 
 app.UseCors("PeakLimsCorsPolicy");
 
+app.MapHealthChecks("api/health");
 app.UseSerilogRequestLogging();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHealthChecks("api/health");
 app.MapControllers();
 
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
