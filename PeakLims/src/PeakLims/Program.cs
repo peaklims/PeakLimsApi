@@ -11,7 +11,6 @@ using PeakLims.Domain.Patients.Features;
 using PeakLims.Resources.HangfireUtilities;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.AddLoggingConfiguration(builder.Environment);
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
