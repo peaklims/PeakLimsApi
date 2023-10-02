@@ -5,7 +5,7 @@ namespace PeakLims.Middleware;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
-using SharedKernel.Exceptions;
+using Exceptions;
 using ProblemDetailsOptions = Hellang.Middleware.ProblemDetails.ProblemDetailsOptions;
 
 public static class ProblemDetailsConfigurationExtension

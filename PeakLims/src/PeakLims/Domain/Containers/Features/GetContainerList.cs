@@ -1,9 +1,9 @@
 namespace PeakLims.Domain.Containers.Features;
 
+using Exceptions;
 using PeakLims.Domain.Containers.Dtos;
 using PeakLims.Domain.Containers.Services;
 using PeakLims.Wrappers;
-using SharedKernel.Exceptions;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;

@@ -4,7 +4,7 @@ using Dtos;
 using DomainEvents;
 using Roles;
 using Domain;
-using SharedKernel.Exceptions;
+using Exceptions;
 using PeakLims.Domain.RolePermissions.Models;
 
 public class RolePermission : BaseEntity

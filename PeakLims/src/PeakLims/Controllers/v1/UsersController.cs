@@ -4,7 +4,6 @@ using PeakLims.Domain.Users.Features;
 using PeakLims.Domain.Users.Dtos;
 using PeakLims.Wrappers;
 using PeakLims.Domain;
-using SharedKernel.Domain;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;

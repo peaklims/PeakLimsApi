@@ -4,9 +4,8 @@ using PeakLims.SharedTestHelpers.Fakes.RolePermission;
 using PeakLims.Domain.RolePermissions.Features;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-
-using SharedKernel.Exceptions;
 using System.Threading.Tasks;
+using Exceptions;
 
 public class RolePermissionQueryTests : TestBase
 {

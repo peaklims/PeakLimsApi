@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.Tests;
 
 using PeakLims.SharedTestHelpers.Fakes.Test;
 using PeakLims.Domain.Tests.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Tests.Features;
 using Domain;
 using FluentAssertions;
@@ -10,6 +9,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class UpdateTestCommandTests : TestBase
 {

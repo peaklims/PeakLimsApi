@@ -1,8 +1,7 @@
 namespace PeakLims.Domain.Roles;
 
-using SharedKernel.Exceptions;
-using SharedKernel.Domain;
 using Ardalis.SmartEnum;
+using Exceptions;
 
 public class Role : ValueObject
 {

@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.TestOrders;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Accessions;
 using PeakLims.Domain.TestOrders.DomainEvents;
 using Panels;
@@ -9,7 +8,7 @@ using PeakLims.Domain.Samples.Models;
 using TestOrderCancellationReasons;
 using TestOrderStatuses;
 using Tests;
-using ValidationException = SharedKernel.Exceptions.ValidationException;
+using ValidationException = Exceptions.ValidationException;
 
 public class TestOrder : BaseEntity
 {

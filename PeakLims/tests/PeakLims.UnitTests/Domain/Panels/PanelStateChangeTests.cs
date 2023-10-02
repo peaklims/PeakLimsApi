@@ -7,6 +7,7 @@ using PeakLims.Domain.PanelStatuses;
 using PeakLims.SharedTestHelpers.Fakes.Panel;
 using SharedTestHelpers.Fakes.Test;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class PanelStateChangeTests
 {
@@ -50,7 +51,7 @@ public class PanelStateChangeTests
         var act = () => fakePanel.Activate();
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        act.Should().Throw<ValidationException>()
             .WithMessage("All tests assigned to a panel must be active before the panel can be activated.");
     }
     
@@ -65,7 +66,7 @@ public class PanelStateChangeTests
         var act = () => fakePanel.Activate();
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        act.Should().Throw<ValidationException>()
             .WithMessage("A panel must have at least one test assigned to it before it can be activated.");
     }
     

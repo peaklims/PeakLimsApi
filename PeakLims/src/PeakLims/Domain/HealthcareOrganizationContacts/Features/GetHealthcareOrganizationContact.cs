@@ -1,8 +1,8 @@
 namespace PeakLims.Domain.HealthcareOrganizationContacts.Features;
 
+using Exceptions;
 using PeakLims.Domain.HealthcareOrganizationContacts.Dtos;
 using PeakLims.Domain.HealthcareOrganizationContacts.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

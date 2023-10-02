@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Tests;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Panels;
 using PeakLims.Domain.Tests.Models;
 using PeakLims.Domain.Tests.DomainEvents;

@@ -1,7 +1,6 @@
 namespace PeakLims.Domain.Ethnicities;
 
 using Ardalis.SmartEnum;
-using SharedKernel.Domain;
 
 public class Ethnicity : ValueObject
 {

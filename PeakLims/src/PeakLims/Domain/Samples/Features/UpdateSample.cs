@@ -1,12 +1,12 @@
 namespace PeakLims.Domain.Samples.Features;
 
 using Containers.Services;
+using Exceptions;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Dtos;
 using PeakLims.Domain.Samples.Services;
 using PeakLims.Services;
 using PeakLims.Domain.Samples.Models;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

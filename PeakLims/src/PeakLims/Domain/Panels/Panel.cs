@@ -1,11 +1,11 @@
 namespace PeakLims.Domain.Panels;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Panels.Models;
 using PeakLims.Domain.Panels.DomainEvents;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using Exceptions;
 using PanelStatuses;
 using PeakLims.Domain.Tests;
 using PeakLims.Domain.Tests.Models;

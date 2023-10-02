@@ -5,11 +5,11 @@ using PeakLims.Domain.RolePermissions;
 using PeakLims.Wrappers;
 using PeakLims.Domain.RolePermissions.Models;
 using PeakLims.Domain.Roles;
-using SharedKernel.Exceptions;
 using Bogus;
+using Exceptions;
 using FluentAssertions;
 using Xunit;
-using ValidationException = SharedKernel.Exceptions.ValidationException;
+using ValidationException = Exceptions.ValidationException;
 
 public class UpdateRolePermissionTests
 {

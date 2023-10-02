@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using Domain.SampleStatuses;
+using Exceptions;
 using PeakLims.Domain.Samples.Features;
-using SharedKernel.Exceptions;
 using SharedTestHelpers.Fakes.Container;
 using SharedTestHelpers.Fakes.Patient;
 

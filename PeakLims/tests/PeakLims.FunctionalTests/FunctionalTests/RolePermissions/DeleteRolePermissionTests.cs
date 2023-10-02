@@ -3,7 +3,6 @@ namespace PeakLims.FunctionalTests.FunctionalTests.RolePermissions;
 using PeakLims.SharedTestHelpers.Fakes.RolePermission;
 using PeakLims.FunctionalTests.TestUtilities;
 using PeakLims.Domain;
-using SharedKernel.Domain;
 using FluentAssertions;
 using Xunit;
 using System.Net;

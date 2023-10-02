@@ -2,12 +2,12 @@ namespace PeakLims.IntegrationTests.FeatureTests.Panels;
 
 using PeakLims.Domain.Panels.Dtos;
 using PeakLims.SharedTestHelpers.Fakes.Panel;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Panels.Features;
 using FluentAssertions;
 using Domain;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class PanelListQueryTests : TestBase
 {

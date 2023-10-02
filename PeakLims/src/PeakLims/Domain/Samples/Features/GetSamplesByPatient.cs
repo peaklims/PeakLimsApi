@@ -1,10 +1,10 @@
 namespace PeakLims.Domain.Samples.Features;
 
 using Databases;
+using Exceptions;
 using PeakLims.Domain.Samples.Dtos;
 using PeakLims.Domain.Samples.Services;
 using PeakLims.Wrappers;
-using SharedKernel.Exceptions;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;

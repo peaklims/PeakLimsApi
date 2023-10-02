@@ -2,12 +2,12 @@ namespace PeakLims.IntegrationTests.FeatureTests.HealthcareOrganizations;
 
 using PeakLims.Domain.HealthcareOrganizations.Dtos;
 using PeakLims.SharedTestHelpers.Fakes.HealthcareOrganization;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.HealthcareOrganizations.Features;
 using FluentAssertions;
 using Domain;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class HealthcareOrganizationListQueryTests : TestBase
 {

@@ -7,8 +7,8 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 using PeakLims.Domain.HealthcareOrganizationContacts.Features;
-using SharedKernel.Exceptions;
 using SharedTestHelpers.Fakes.HealthcareOrganization;
 
 public class AddHealthcareOrganizationContactCommandTests : TestBase

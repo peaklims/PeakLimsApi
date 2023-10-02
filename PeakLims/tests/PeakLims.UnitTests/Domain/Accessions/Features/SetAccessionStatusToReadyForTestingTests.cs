@@ -1,5 +1,6 @@
 namespace PeakLims.UnitTests.Domain.Accessions.Features;
 
+using Exceptions;
 using FluentAssertions;
 using HeimGuard;
 using NSubstitute;
@@ -8,7 +9,6 @@ using PeakLims.Domain;
 using PeakLims.Domain.Accessions.Features;
 using PeakLims.Domain.Accessions.Services;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 using Xunit;
 
 public class SetAccessionStatusToReadyForTestingTests

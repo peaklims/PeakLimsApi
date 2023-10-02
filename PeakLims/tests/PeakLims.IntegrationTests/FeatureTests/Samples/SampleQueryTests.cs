@@ -2,13 +2,13 @@ namespace PeakLims.IntegrationTests.FeatureTests.Samples;
 
 using PeakLims.SharedTestHelpers.Fakes.Sample;
 using PeakLims.Domain.Samples.Features;
-using SharedKernel.Exceptions;
 using Domain;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class SampleQueryTests : TestBase
 {

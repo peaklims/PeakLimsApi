@@ -1,11 +1,11 @@
 namespace PeakLims.Domain.Panels.Features;
 
+using Exceptions;
 using HeimGuard;
 using MediatR;
 using PeakLims.Domain;
 using PeakLims.Domain.Panels.Services;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 
 public static class DeactivatePanel
 {

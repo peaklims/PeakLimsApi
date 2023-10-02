@@ -4,6 +4,7 @@ using AccessionContacts;
 using AccessionContacts.Dtos;
 using AccessionContacts.Mappings;
 using AccessionContacts.Services;
+using Exceptions;
 using HealthcareOrganizationContacts.Services;
 using HeimGuard;
 using MediatR;
@@ -11,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using PeakLims.Domain;
 using PeakLims.Domain.Accessions.Services;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 
 public static class AddContactToAccession
 {

@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.Samples;
 
 using PeakLims.SharedTestHelpers.Fakes.Sample;
 using PeakLims.Domain.Samples.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Samples.Features;
 using Domain;
 using FluentAssertions;
@@ -11,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using Domain.SampleStatuses;
+using Exceptions;
 using SharedTestHelpers.Fakes.Container;
 
 public class UpdateSampleCommandTests : TestBase

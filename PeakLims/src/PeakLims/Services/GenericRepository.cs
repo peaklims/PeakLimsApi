@@ -1,8 +1,8 @@
 namespace PeakLims.Services;
 
+using Exceptions;
 using PeakLims.Domain;
 using PeakLims.Databases;
-using SharedKernel.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using QueryKit;
 using QueryKit.Configuration;

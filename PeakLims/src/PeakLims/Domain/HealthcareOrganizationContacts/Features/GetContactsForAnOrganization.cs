@@ -1,9 +1,9 @@
 namespace PeakLims.Domain.HealthcareOrganizationContacts.Features;
 
+using Exceptions;
 using PeakLims.Domain.HealthcareOrganizationContacts.Dtos;
 using PeakLims.Domain.HealthcareOrganizationContacts.Services;
 using PeakLims.Wrappers;
-using SharedKernel.Exceptions;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;

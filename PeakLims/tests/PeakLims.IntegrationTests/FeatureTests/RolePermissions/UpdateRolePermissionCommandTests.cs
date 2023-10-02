@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.RolePermissions;
 
 using PeakLims.SharedTestHelpers.Fakes.RolePermission;
 using PeakLims.Domain.RolePermissions.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.RolePermissions.Features;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

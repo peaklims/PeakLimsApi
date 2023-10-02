@@ -11,6 +11,7 @@ using SharedTestHelpers.Fakes.HealthcareOrganization;
 using SharedTestHelpers.Fakes.Patient;
 using SharedTestHelpers.Fakes.Sample;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class ManagePatientOnAccessionTests
 {
@@ -59,9 +60,9 @@ public class ManagePatientOnAccessionTests
         var actRemove = () => accession.RemovePatient();
 
         // Assert
-        actAdd.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actAdd.Should().Throw<ValidationException>()
             .WithMessage($"This accession is processing. The patient can not be modified.");
-        actRemove.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actRemove.Should().Throw<ValidationException>()
             .WithMessage($"This accession is processing. The patient can not be modified.");
     }
 
@@ -75,7 +76,7 @@ public class ManagePatientOnAccessionTests
         var actAdd = () => accession.SetPatient(null);
 
         // Assert
-        actAdd.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actAdd.Should().Throw<ValidationException>()
             .WithMessage($"Invalid Patient.");
     }
 }

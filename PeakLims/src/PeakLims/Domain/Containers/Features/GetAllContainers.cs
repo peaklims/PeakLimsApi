@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Containers.Features;
 
+using Exceptions;
 using HeimGuard;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,6 @@ using PeakLims.Domain;
 using PeakLims.Domain.Containers.Dtos;
 using PeakLims.Domain.Containers.Mappings;
 using PeakLims.Domain.Containers.Services;
-using SharedKernel.Exceptions;
 
 public static class GetAllContainers
 {

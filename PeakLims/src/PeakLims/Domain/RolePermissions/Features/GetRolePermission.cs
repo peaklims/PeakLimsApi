@@ -1,8 +1,8 @@
 namespace PeakLims.Domain.RolePermissions.Features;
 
+using Exceptions;
 using PeakLims.Domain.RolePermissions.Dtos;
 using PeakLims.Domain.RolePermissions.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

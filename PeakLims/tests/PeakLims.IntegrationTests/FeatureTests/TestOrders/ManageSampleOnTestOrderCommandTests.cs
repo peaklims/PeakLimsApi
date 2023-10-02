@@ -5,7 +5,6 @@ using PeakLims.Domain.TestOrders.Features;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
-using SharedKernel.Exceptions;
 using System.Threading.Tasks;
 using Bogus;
 using Domain.TestOrderCancellationReasons;

@@ -1,7 +1,6 @@
-namespace SharedKernel.Exceptions
+namespace PeakLims.Exceptions
 {
     using System;
-    using System.Globalization;
 
     public class NoRolesAssignedException : Exception
     {

@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Emails;
 
-using SharedKernel.Domain;
 using FluentValidation;
 
 public sealed class Email : ValueObject

@@ -1,7 +1,6 @@
-namespace SharedKernel.Exceptions
+namespace PeakLims.Exceptions
 {
     using System;
-    using System.Globalization;
 
     [Serializable]
     public class InvalidSmartEnumPropertyName : Exception

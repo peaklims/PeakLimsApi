@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using Domain.AccessionStatuses;
+using Exceptions;
 using PeakLims.Domain.Accessions.Features;
-using SharedKernel.Exceptions;
 
 public class AddAccessionCommandTests : TestBase
 {

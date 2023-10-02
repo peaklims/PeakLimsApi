@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.Containers;
 
 using PeakLims.SharedTestHelpers.Fakes.Container;
 using PeakLims.Domain.Containers.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Containers.Features;
 using Domain;
 using FluentAssertions;
@@ -10,6 +9,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class UpdateContainerCommandTests : TestBase
 {

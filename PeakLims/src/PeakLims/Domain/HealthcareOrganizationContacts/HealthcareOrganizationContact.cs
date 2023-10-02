@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.HealthcareOrganizationContacts;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.AccessionContacts;
 using PeakLims.Domain.Accessions;
 using PeakLims.Domain.HealthcareOrganizationContacts.Models;

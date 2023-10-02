@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Patients;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Accessions;
 using PeakLims.Domain.Patients.Models;
 using PeakLims.Domain.Patients.DomainEvents;
@@ -15,7 +14,7 @@ using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
 using Races;
 using Sexes;
-using ValidationException = SharedKernel.Exceptions.ValidationException;
+using ValidationException = Exceptions.ValidationException;
 
 public class Patient : BaseEntity
 {

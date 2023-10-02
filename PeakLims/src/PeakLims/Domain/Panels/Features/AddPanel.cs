@@ -1,11 +1,11 @@
 namespace PeakLims.Domain.Panels.Features;
 
+using Exceptions;
 using PeakLims.Domain.Panels.Services;
 using PeakLims.Domain.Panels;
 using PeakLims.Domain.Panels.Dtos;
 using PeakLims.Domain.Panels.Models;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

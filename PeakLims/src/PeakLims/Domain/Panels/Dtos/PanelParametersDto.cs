@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Panels.Dtos;
 
-using SharedKernel.Dtos;
+using PeakLims.Dtos;
 
 public sealed class PanelParametersDto : BasePaginationParameters
 {

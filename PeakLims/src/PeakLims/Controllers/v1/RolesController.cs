@@ -2,10 +2,10 @@ namespace PeakLims.Controllers.v1;
 
 using Domain;
 using Domain.Roles;
+using Exceptions;
 using HeimGuard;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Exceptions;
 
 [ApiController]
 [Route("api/roles")]

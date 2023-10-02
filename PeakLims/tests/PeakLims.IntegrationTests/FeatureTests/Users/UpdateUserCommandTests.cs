@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.Users;
 
 using PeakLims.SharedTestHelpers.Fakes.User;
 using PeakLims.Domain.Users.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Users.Features;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

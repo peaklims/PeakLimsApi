@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Patients.Dtos;
 
-using SharedKernel.Dtos;
+using PeakLims.Dtos;
 
 public sealed class PatientParametersDto : BasePaginationParameters
 {

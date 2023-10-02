@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Accessions.Features;
 
+using Exceptions;
 using HeimGuard;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,6 @@ using PeakLims.Domain.Accessions.Services;
 using PeakLims.Domain.Panels.Services;
 using PeakLims.Domain.TestOrders;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 using TestOrders.Services;
 using Tests.Services;
 

@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Addresses;
 
-using SharedKernel.Domain;
 using FluentValidation;
 
 public class Address : ValueObject

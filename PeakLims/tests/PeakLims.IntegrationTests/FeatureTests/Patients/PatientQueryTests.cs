@@ -2,13 +2,13 @@ namespace PeakLims.IntegrationTests.FeatureTests.Patients;
 
 using PeakLims.SharedTestHelpers.Fakes.Patient;
 using PeakLims.Domain.Patients.Features;
-using SharedKernel.Exceptions;
 using Domain;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class PatientQueryTests : TestBase
 {

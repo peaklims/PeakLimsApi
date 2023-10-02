@@ -2,11 +2,11 @@ namespace PeakLims.IntegrationTests;
 
 using System.Threading.Tasks;
 using Databases;
+using Exceptions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
-using SharedKernel.Exceptions;
 using static TestFixture;
 using HeimGuard;
 using NSubstitute.ExceptionExtensions;

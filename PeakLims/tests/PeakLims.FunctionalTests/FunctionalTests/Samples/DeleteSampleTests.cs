@@ -3,7 +3,6 @@ namespace PeakLims.FunctionalTests.FunctionalTests.Samples;
 using PeakLims.SharedTestHelpers.Fakes.Sample;
 using PeakLims.FunctionalTests.TestUtilities;
 using PeakLims.Domain;
-using SharedKernel.Domain;
 using FluentAssertions;
 using Xunit;
 using System.Net;

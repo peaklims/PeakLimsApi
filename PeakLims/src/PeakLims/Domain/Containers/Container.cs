@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Containers;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Containers.Models;
 using PeakLims.Domain.Containers.DomainEvents;

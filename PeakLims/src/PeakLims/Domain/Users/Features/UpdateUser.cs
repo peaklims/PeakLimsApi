@@ -1,11 +1,11 @@
 namespace PeakLims.Domain.Users.Features;
 
+using Exceptions;
 using PeakLims.Domain.Users;
 using PeakLims.Domain.Users.Dtos;
 using PeakLims.Domain.Users.Services;
 using PeakLims.Services;
 using PeakLims.Domain.Users.Models;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

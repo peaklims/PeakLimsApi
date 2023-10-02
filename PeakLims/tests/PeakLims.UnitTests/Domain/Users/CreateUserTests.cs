@@ -6,11 +6,10 @@ using PeakLims.Domain.Users;
 using PeakLims.Wrappers;
 using PeakLims.Domain.Users.Models;
 using PeakLims.SharedTestHelpers.Fakes.User;
-using SharedKernel.Exceptions;
 using Bogus;
 using FluentAssertions;
 using Xunit;
-using ValidationException = SharedKernel.Exceptions.ValidationException;
+using ValidationException = Exceptions.ValidationException;
 
 public class CreateUserTests
 {

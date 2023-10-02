@@ -1,8 +1,8 @@
 namespace PeakLims.Domain.Tests.Features;
 
+using Exceptions;
 using PeakLims.Domain.Tests.Dtos;
 using PeakLims.Domain.Tests.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

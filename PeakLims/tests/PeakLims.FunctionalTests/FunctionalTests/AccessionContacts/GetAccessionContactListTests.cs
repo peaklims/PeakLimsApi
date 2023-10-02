@@ -3,7 +3,6 @@ namespace PeakLims.FunctionalTests.FunctionalTests.AccessionContacts;
 using PeakLims.SharedTestHelpers.Fakes.AccessionContact;
 using PeakLims.FunctionalTests.TestUtilities;
 using PeakLims.Domain;
-using SharedKernel.Domain;
 using FluentAssertions;
 using Xunit;
 using System.Net;

@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Samples.Dtos;
 
-using SharedKernel.Dtos;
+using PeakLims.Dtos;
 
 public sealed class SampleParametersDto : BasePaginationParameters
 {

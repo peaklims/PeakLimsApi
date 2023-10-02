@@ -1,8 +1,7 @@
 namespace PeakLims.Domain.TestStatuses;
 
 using Ardalis.SmartEnum;
-using SharedKernel.Domain;
-using SharedKernel.Exceptions;
+using Exceptions;
 
 public class TestStatus : ValueObject
 {

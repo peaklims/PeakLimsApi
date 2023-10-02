@@ -1,7 +1,6 @@
 namespace PeakLims.Domain.MonetaryAmounts;
 
 using PeakLims.Domain.Percentages;
-using SharedKernel.Domain;
 using FluentValidation;
 
 // source: https://github.com/asc-lab/better-code-with-ddd/blob/ef_core/LoanApplication.TacticalDdd/LoanApplication.TacticalDdd/DomainModel/MonetaryAmount.cs

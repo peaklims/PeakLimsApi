@@ -2,12 +2,12 @@ namespace PeakLims.IntegrationTests.FeatureTests.Users;
 
 using PeakLims.Domain.Users.Dtos;
 using PeakLims.SharedTestHelpers.Fakes.User;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Users.Features;
 using FluentAssertions;
 using Domain;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class UserListQueryTests : TestBase
 {

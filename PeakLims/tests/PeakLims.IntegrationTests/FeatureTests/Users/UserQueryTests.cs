@@ -4,9 +4,8 @@ using PeakLims.SharedTestHelpers.Fakes.User;
 using PeakLims.Domain.Users.Features;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-
-using SharedKernel.Exceptions;
 using System.Threading.Tasks;
+using Exceptions;
 
 public class UserQueryTests : TestBase
 {

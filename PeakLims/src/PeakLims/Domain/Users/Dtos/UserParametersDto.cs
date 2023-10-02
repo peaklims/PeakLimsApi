@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Users.Dtos;
 
-using SharedKernel.Dtos;
+using PeakLims.Dtos;
 
 public sealed class UserParametersDto : BasePaginationParameters
 {

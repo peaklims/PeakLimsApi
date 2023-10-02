@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Samples;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.TestOrders;
 using PeakLims.Domain.Patients;
 using PeakLims.Domain.Samples.Models;
@@ -8,6 +7,7 @@ using PeakLims.Domain.Samples.DomainEvents;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using Exceptions;
 using PeakLims.Domain.Containers;
 using PeakLims.Domain.Containers.Models;
 using SampleStatuses;

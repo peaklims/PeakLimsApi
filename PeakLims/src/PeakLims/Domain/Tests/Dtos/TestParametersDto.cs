@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Tests.Dtos;
 
-using SharedKernel.Dtos;
+using PeakLims.Dtos;
 
 public sealed class TestParametersDto : BasePaginationParameters
 {

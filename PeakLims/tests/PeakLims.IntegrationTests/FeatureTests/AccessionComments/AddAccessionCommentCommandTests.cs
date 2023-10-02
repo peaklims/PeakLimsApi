@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Bogus;
 using Domain.AccessionCommentStatuses;
+using Exceptions;
 using PeakLims.Domain.AccessionComments.Features;
-using SharedKernel.Exceptions;
 using SharedTestHelpers.Fakes.Accession;
 
 public class AddAccessionCommentCommandTests : TestBase

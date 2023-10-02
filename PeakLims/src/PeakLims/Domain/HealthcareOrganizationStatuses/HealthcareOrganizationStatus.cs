@@ -1,8 +1,7 @@
 namespace PeakLims.Domain.HealthcareOrganizationStatuses;
 
 using Ardalis.SmartEnum;
-using SharedKernel.Domain;
-using SharedKernel.Exceptions;
+using Exceptions;
 
 public class HealthcareOrganizationStatus : ValueObject
 {

@@ -9,6 +9,7 @@ using PeakLims.SharedTestHelpers.Fakes.Test;
 using SharedTestHelpers.Fakes.Container;
 using SharedTestHelpers.Fakes.Sample;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class ManageTestOrderSampleTests
 {
@@ -61,9 +62,9 @@ public class ManageTestOrderSampleTests
         var actRemove = () => testOrder.RemoveSample();
 
         // Assert
-        actAdd.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actAdd.Should().Throw<ValidationException>()
             .WithMessage($"The assigned sample can not be updated once a test order has started processing.");
-        actRemove.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actRemove.Should().Throw<ValidationException>()
             .WithMessage($"The assigned sample can not be updated once a test order has started processing.");
     }
 
@@ -78,7 +79,7 @@ public class ManageTestOrderSampleTests
         var actAdd = () => testOrder.SetSample(null);
 
         // Assert
-        actAdd.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actAdd.Should().Throw<ValidationException>()
             .WithMessage($"A valid sample must be provided.");
     }
 }

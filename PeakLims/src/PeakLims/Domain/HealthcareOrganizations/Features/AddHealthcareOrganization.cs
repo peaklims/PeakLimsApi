@@ -1,11 +1,11 @@
 namespace PeakLims.Domain.HealthcareOrganizations.Features;
 
+using Exceptions;
 using PeakLims.Domain.HealthcareOrganizations.Services;
 using PeakLims.Domain.HealthcareOrganizations;
 using PeakLims.Domain.HealthcareOrganizations.Dtos;
 using PeakLims.Domain.HealthcareOrganizations.Models;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

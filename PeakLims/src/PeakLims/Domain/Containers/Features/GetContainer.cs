@@ -1,8 +1,8 @@
 namespace PeakLims.Domain.Containers.Features;
 
+using Exceptions;
 using PeakLims.Domain.Containers.Dtos;
 using PeakLims.Domain.Containers.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

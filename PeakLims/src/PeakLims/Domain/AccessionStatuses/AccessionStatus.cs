@@ -1,8 +1,7 @@
 namespace PeakLims.Domain.AccessionStatuses;
 
 using Ardalis.SmartEnum;
-using SharedKernel.Domain;
-using SharedKernel.Exceptions;
+using Exceptions;
 
 public class AccessionStatus : ValueObject
 {

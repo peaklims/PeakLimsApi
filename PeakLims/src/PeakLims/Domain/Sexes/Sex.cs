@@ -1,7 +1,6 @@
 namespace PeakLims.Domain.Sexes;
 
 using Ardalis.SmartEnum;
-using SharedKernel.Domain;
 
 public class Sex : ValueObject
 {

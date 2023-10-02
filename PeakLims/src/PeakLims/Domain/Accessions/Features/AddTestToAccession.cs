@@ -1,11 +1,11 @@
 namespace PeakLims.Domain.Accessions.Features;
 
+using Exceptions;
 using HeimGuard;
 using MediatR;
 using PeakLims.Domain;
 using PeakLims.Services;
 using Services;
-using SharedKernel.Exceptions;
 using TestOrders.Services;
 using Tests.Services;
 

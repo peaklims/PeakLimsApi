@@ -1,9 +1,9 @@
-namespace SharedKernel.Exceptions
+namespace PeakLims.Exceptions
 {
-    using FluentValidation.Results;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System;
+    using FluentValidation.Results;
 
     public class ValidationException : Exception
     {

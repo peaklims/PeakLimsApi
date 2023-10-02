@@ -1,8 +1,7 @@
 namespace PeakLims.Domain.Lifespans;
 
+using Exceptions;
 using Services;
-using SharedKernel.Domain;
-using SharedKernel.Exceptions;
 
 public sealed class Lifespan : ValueObject
 {

@@ -2,12 +2,12 @@ namespace PeakLims.IntegrationTests.FeatureTests.AccessionContacts;
 
 using PeakLims.Domain.AccessionContacts.Dtos;
 using PeakLims.SharedTestHelpers.Fakes.AccessionContact;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.AccessionContacts.Features;
 using FluentAssertions;
 using Domain;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class AccessionContactListQueryTests : TestBase
 {

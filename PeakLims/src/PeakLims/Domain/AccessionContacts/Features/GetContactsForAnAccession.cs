@@ -1,9 +1,9 @@
 namespace PeakLims.Domain.AccessionContacts.Features;
 
 using Accessions.Services;
+using Exceptions;
 using PeakLims.Domain.AccessionContacts.Dtos;
 using PeakLims.Domain.AccessionContacts.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

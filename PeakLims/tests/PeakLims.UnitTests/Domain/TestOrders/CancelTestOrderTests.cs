@@ -7,7 +7,7 @@ using PeakLims.Domain.TestOrders;
 using PeakLims.Domain.TestOrderStatuses;
 using PeakLims.SharedTestHelpers.Fakes.Test;
 using Xunit;
-using ValidationException = SharedKernel.Exceptions.ValidationException;
+using ValidationException = Exceptions.ValidationException;
 
 public class CancelTestOrderTests
 {

@@ -1,11 +1,11 @@
 namespace PeakLims.SharedTestHelpers.Fakes.HealthcareOrganization;
 
+using Exceptions;
 using HeimGuard;
 using MediatR;
 using PeakLims.Domain;
 using PeakLims.Domain.HealthcareOrganizations.Services;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 
 public static class ActivateHealthcareOrganization
 {

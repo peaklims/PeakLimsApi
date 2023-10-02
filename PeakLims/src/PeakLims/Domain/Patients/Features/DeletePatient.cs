@@ -1,8 +1,8 @@
 namespace PeakLims.Domain.Patients.Features;
 
+using Exceptions;
 using PeakLims.Domain.Patients.Services;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using MediatR;

@@ -7,8 +7,8 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 using PeakLims.Domain.Panels.Features;
-using SharedKernel.Exceptions;
 
 public class AddPanelCommandTests : TestBase
 {

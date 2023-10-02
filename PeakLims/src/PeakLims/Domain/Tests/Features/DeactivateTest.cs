@@ -1,12 +1,12 @@
 namespace PeakLims.Domain.Tests.Features;
 
+using Exceptions;
 using HeimGuard;
 using MediatR;
 using PeakLims.Domain;
 using PeakLims.Domain.Accessions.Services;
 using PeakLims.Services;
 using Services;
-using SharedKernel.Exceptions;
 
 public static class DeactivateTest
 {

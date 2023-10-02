@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Accessions.Features;
 
+using Exceptions;
 using HeimGuard;
 using MediatR;
 using PeakLims.Domain;
@@ -7,7 +8,6 @@ using PeakLims.Domain.Accessions.Services;
 using PeakLims.Domain.Panels.Services;
 using PeakLims.Domain.TestOrders;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 
 public static class RemovePanelOrder
 {

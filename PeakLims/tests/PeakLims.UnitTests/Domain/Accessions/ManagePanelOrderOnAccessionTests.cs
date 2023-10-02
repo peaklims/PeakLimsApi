@@ -6,6 +6,7 @@ using PeakLims.Domain.Accessions;
 using PeakLims.SharedTestHelpers.Fakes.Panel;
 using PeakLims.SharedTestHelpers.Fakes.Test;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class ManagePanelOrderOnAccessionTests
 {
@@ -67,7 +68,7 @@ public class ManagePanelOrderOnAccessionTests
         var act = () => fakeAccession.AddPanel(panel);
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        act.Should().Throw<ValidationException>()
             .WithMessage("This panel is not active. Only active panels can be added to an accession.");
     }
     
@@ -91,7 +92,7 @@ public class ManagePanelOrderOnAccessionTests
         var act = () => fakeAccession.AddPanel(panel);
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        act.Should().Throw<ValidationException>()
             .WithMessage("This panel has one or more tests that are not active. Only active tests can be added to an accession.");
     }
 }

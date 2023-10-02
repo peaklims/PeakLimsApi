@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using PeakLims.Domain.RolePermissions.Features;
-using SharedKernel.Exceptions;
 
 public class AddRolePermissionCommandTests : TestBase
 {

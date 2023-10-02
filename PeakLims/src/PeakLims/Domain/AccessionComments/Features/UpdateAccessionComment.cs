@@ -1,11 +1,11 @@
 namespace PeakLims.Domain.AccessionComments.Features;
 
+using Exceptions;
 using PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.AccessionComments.Dtos;
 using PeakLims.Domain.AccessionComments.Services;
 using PeakLims.Services;
 using PeakLims.Domain.AccessionComments.Models;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

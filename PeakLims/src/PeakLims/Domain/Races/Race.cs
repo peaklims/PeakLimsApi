@@ -1,7 +1,6 @@
 namespace PeakLims.Domain.Races;
 
 using Ardalis.SmartEnum;
-using SharedKernel.Domain;
 
 public class Race : ValueObject
 {

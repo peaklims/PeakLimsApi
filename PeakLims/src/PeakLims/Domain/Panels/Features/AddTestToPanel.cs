@@ -1,8 +1,8 @@
 namespace PeakLims.Domain.Panels.Features;
 
+using Exceptions;
 using PeakLims.Domain.Panels.Dtos;
 using PeakLims.Domain.Panels.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using MediatR;

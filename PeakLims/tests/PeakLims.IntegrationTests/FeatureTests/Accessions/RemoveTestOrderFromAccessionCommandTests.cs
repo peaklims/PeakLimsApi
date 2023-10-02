@@ -5,8 +5,6 @@ using PeakLims.Domain.Accessions.Features;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
-
-using SharedKernel.Exceptions;
 using System.Threading.Tasks;
 using Domain.Tests.Services;
 using static TestFixture;

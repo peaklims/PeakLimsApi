@@ -17,6 +17,7 @@ using SharedTestHelpers.Fakes.HealthcareOrganizationContact;
 using SharedTestHelpers.Fakes.Patient;
 using SharedTestHelpers.Fakes.Sample;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class AccessionReadyForTestingTests
 {
@@ -92,7 +93,7 @@ public class AccessionReadyForTestingTests
         var act = () => fakeAccession.SetStatusToReadyForTesting();
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>();
+        act.Should().Throw<ValidationException>();
     }
 
     [Fact]
@@ -108,7 +109,7 @@ public class AccessionReadyForTestingTests
         var act = () => fakeAccession.SetStatusToReadyForTesting();
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>();
+        act.Should().Throw<ValidationException>();
     }
 
     [Fact]
@@ -126,7 +127,7 @@ public class AccessionReadyForTestingTests
         var act = () => fakeAccession.SetStatusToReadyForTesting();
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>();
+        act.Should().Throw<ValidationException>();
     }
 
     [Fact]
@@ -144,6 +145,6 @@ public class AccessionReadyForTestingTests
         var act = () => fakeAccession.SetStatusToReadyForTesting();
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>();
+        act.Should().Throw<ValidationException>();
     }
 }

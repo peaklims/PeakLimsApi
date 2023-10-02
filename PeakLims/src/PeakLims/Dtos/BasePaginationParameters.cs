@@ -1,4 +1,4 @@
-namespace SharedKernel.Dtos
+namespace PeakLims.Dtos
 {
     public abstract class BasePaginationParameters
     {

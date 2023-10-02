@@ -1,11 +1,10 @@
 namespace PeakLims.Domain.AccessionComments;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.AccessionComments.DomainEvents;
 using System.ComponentModel.DataAnnotations;
 using AccessionCommentStatuses;
 using PeakLims.Domain.Accessions;
-using ValidationException = SharedKernel.Exceptions.ValidationException;
+using ValidationException = Exceptions.ValidationException;
 
 public class AccessionComment : BaseEntity
 {

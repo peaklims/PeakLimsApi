@@ -1,8 +1,8 @@
 namespace PeakLims.Domain.Tests.Features;
 
+using Exceptions;
 using PeakLims.Domain.Tests.Services;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using MediatR;

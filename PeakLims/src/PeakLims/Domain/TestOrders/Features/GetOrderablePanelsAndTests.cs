@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.TestOrders.Features;
 
 using Dtos;
+using Exceptions;
 using HeimGuard;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,6 @@ using PeakLims.Domain.Panels.Mappings;
 using PeakLims.Domain.Panels.Services;
 using PeakLims.Domain.Tests.Mappings;
 using PeakLims.Domain.Tests.Services;
-using SharedKernel.Exceptions;
 using TestStatuses;
 
 public static class GetOrderablePanelsAndTests

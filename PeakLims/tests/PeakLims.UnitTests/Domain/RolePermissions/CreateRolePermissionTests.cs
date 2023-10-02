@@ -1,15 +1,15 @@
 namespace PeakLims.UnitTests.Domain.RolePermissions;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using PeakLims.Domain.RolePermissions;
 using PeakLims.Wrappers;
 using PeakLims.Domain.RolePermissions.Models;
 using PeakLims.Domain.Roles;
 using Bogus;
+using Exceptions;
 using FluentAssertions;
 using Xunit;
-using ValidationException = SharedKernel.Exceptions.ValidationException;
+using ValidationException = Exceptions.ValidationException;
 
 public class CreateRolePermissionTests
 {

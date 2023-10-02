@@ -7,6 +7,7 @@ using PeakLims.Domain.TestOrders;
 using PeakLims.SharedTestHelpers.Fakes.Panel;
 using PeakLims.SharedTestHelpers.Fakes.Test;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class ManageTestOrderOnAccessionTests
 {
@@ -60,7 +61,7 @@ public class ManageTestOrderOnAccessionTests
         var act = () => fakeAccession.AddTest(test);
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>();
+        act.Should().Throw<ValidationException>();
     }
 
     [Fact]
@@ -82,7 +83,7 @@ public class ManageTestOrderOnAccessionTests
         var act = () => fakeAccession.RemoveTestOrder(testOrder);
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        act.Should().Throw<ValidationException>()
             .WithMessage("Test orders that are part of a panel can not be selectively removed.");
     }
 }

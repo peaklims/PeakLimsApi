@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.Panels;
 
 using PeakLims.SharedTestHelpers.Fakes.Panel;
 using PeakLims.Domain.Panels.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Panels.Features;
 using Domain;
 using FluentAssertions;
@@ -10,6 +9,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class UpdatePanelCommandTests : TestBase
 {

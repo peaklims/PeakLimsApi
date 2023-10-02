@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.AccessionComments;
 
 using PeakLims.SharedTestHelpers.Fakes.AccessionComment;
 using PeakLims.Domain.AccessionComments.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.AccessionComments.Features;
 using Domain;
 using FluentAssertions;
@@ -12,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Bogus;
 using Domain.AccessionCommentStatuses;
+using Exceptions;
 
 public class UpdateAccessionCommentCommandTests : TestBase
 {

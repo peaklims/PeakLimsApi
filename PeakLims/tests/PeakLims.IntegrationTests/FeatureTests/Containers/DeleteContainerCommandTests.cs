@@ -6,8 +6,8 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 using Domain;
-using SharedKernel.Exceptions;
 using System.Threading.Tasks;
+using Exceptions;
 
 public class DeleteContainerCommandTests : TestBase
 {

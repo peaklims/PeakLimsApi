@@ -11,6 +11,7 @@ using SharedTestHelpers.Fakes.HealthcareOrganization;
 using SharedTestHelpers.Fakes.Patient;
 using SharedTestHelpers.Fakes.Sample;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class ManageHealthcareOrganizationOnAccessionTests
 {
@@ -54,7 +55,7 @@ public class ManageHealthcareOrganizationOnAccessionTests
         var act = () => accession.SetHealthcareOrganization(healthcareOrganization);
 
         // Assert - Add
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        act.Should().Throw<ValidationException>()
             .WithMessage("Only active organizations can be set on an accession.");
     }
 
@@ -74,9 +75,9 @@ public class ManageHealthcareOrganizationOnAccessionTests
         var actRemove = () => accession.RemoveHealthcareOrganization();
 
         // Assert
-        actAdd.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actAdd.Should().Throw<ValidationException>()
             .WithMessage($"This accession is processing. The organization can not be modified.");
-        actRemove.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actRemove.Should().Throw<ValidationException>()
             .WithMessage($"This accession is processing. The organization can not be modified.");
     }
 
@@ -90,7 +91,7 @@ public class ManageHealthcareOrganizationOnAccessionTests
         var actAdd = () => accession.SetHealthcareOrganization(null);
 
         // Assert
-        actAdd.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actAdd.Should().Throw<ValidationException>()
             .WithMessage($"Invalid Healthcare Organization.");
     }
 }

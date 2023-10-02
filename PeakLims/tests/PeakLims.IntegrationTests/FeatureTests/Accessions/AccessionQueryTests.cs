@@ -2,13 +2,13 @@ namespace PeakLims.IntegrationTests.FeatureTests.Accessions;
 
 using PeakLims.SharedTestHelpers.Fakes.Accession;
 using PeakLims.Domain.Accessions.Features;
-using SharedKernel.Exceptions;
 using Domain;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class AccessionQueryTests : TestBase
 {

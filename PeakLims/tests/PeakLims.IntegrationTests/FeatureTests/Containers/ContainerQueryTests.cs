@@ -2,13 +2,13 @@ namespace PeakLims.IntegrationTests.FeatureTests.Containers;
 
 using PeakLims.SharedTestHelpers.Fakes.Container;
 using PeakLims.Domain.Containers.Features;
-using SharedKernel.Exceptions;
 using Domain;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class ContainerQueryTests : TestBase
 {

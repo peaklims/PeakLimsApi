@@ -1,8 +1,8 @@
 namespace PeakLims.Domain.Accessions.Features;
 
+using Exceptions;
 using PeakLims.Domain.Accessions.Dtos;
 using PeakLims.Domain.Accessions.Services;
-using SharedKernel.Exceptions;
 using PeakLims.Domain;
 using HeimGuard;
 using Mappings;

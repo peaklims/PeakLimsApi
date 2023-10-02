@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using PeakLims.Domain.Users.Features;
-using SharedKernel.Exceptions;
 
 public class AddUserCommandTests : TestBase
 {

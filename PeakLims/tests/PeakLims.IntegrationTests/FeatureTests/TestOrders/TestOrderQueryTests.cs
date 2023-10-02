@@ -2,13 +2,13 @@ namespace PeakLims.IntegrationTests.FeatureTests.TestOrders;
 
 using PeakLims.SharedTestHelpers.Fakes.TestOrder;
 using PeakLims.Domain.TestOrders.Features;
-using SharedKernel.Exceptions;
 using Domain;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class TestOrderQueryTests : TestBase
 {

@@ -1,4 +1,4 @@
-namespace SharedKernel.Exceptions
+namespace PeakLims.Exceptions
 {
     using System;
 

@@ -7,8 +7,8 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 using PeakLims.Domain.Patients.Features;
-using SharedKernel.Exceptions;
 
 public class AddPatientCommandTests : TestBase
 {

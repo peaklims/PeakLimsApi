@@ -1,10 +1,10 @@
 namespace PeakLims.Domain.Accessions;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.AccessionContacts;
 using PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.Accessions.DomainEvents;
 using AccessionStatuses;
+using Exceptions;
 using Panels;
 using PeakLims.Domain.Patients;
 using PeakLims.Domain.Patients.Models;

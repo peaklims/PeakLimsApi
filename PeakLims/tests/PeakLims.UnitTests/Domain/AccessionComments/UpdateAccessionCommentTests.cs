@@ -9,6 +9,7 @@ using FluentAssertions.Extensions;
 using PeakLims.Domain.AccessionCommentStatuses;
 using SharedTestHelpers.Fakes.Accession;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class UpdateAccessionCommentTests
 {
@@ -52,7 +53,7 @@ public class UpdateAccessionCommentTests
         var act = () => originalAccessionComment.Update( null, out _ , out _);
 
         // Assert
-        act.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        act.Should().Throw<ValidationException>()
             .WithMessage("Please provide a valid comment.");
     }
     

@@ -4,7 +4,6 @@ using PeakLims.Domain.AccessionComments.Features;
 using PeakLims.Domain.AccessionComments.Dtos;
 using PeakLims.Wrappers;
 using PeakLims.Domain;
-using SharedKernel.Domain;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;

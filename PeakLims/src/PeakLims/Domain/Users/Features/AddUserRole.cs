@@ -1,10 +1,10 @@
 namespace PeakLims.Domain.Users.Features;
 
+using Exceptions;
 using PeakLims.Domain.Users.Services;
 using PeakLims.Domain.Users;
 using PeakLims.Domain.Users.Dtos;
 using PeakLims.Services;
-using SharedKernel.Exceptions;
 using HeimGuard;
 using Mappings;
 using MediatR;

@@ -2,12 +2,12 @@ namespace PeakLims.IntegrationTests.FeatureTests.RolePermissions;
 
 using PeakLims.Domain.RolePermissions.Dtos;
 using PeakLims.SharedTestHelpers.Fakes.RolePermission;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.RolePermissions.Features;
 using FluentAssertions;
 using Domain;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class RolePermissionListQueryTests : TestBase
 {

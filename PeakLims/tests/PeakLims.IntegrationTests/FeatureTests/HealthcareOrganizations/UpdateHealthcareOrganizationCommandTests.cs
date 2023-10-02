@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.HealthcareOrganizations;
 
 using PeakLims.SharedTestHelpers.Fakes.HealthcareOrganization;
 using PeakLims.Domain.HealthcareOrganizations.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.HealthcareOrganizations.Features;
 using Domain;
 using FluentAssertions;
@@ -10,6 +9,7 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
+using Exceptions;
 
 public class UpdateHealthcareOrganizationCommandTests : TestBase
 {

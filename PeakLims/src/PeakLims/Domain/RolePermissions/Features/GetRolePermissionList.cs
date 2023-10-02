@@ -1,9 +1,9 @@
 namespace PeakLims.Domain.RolePermissions.Features;
 
+using Exceptions;
 using PeakLims.Domain.RolePermissions.Dtos;
 using PeakLims.Domain.RolePermissions.Services;
 using PeakLims.Wrappers;
-using SharedKernel.Exceptions;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;

@@ -1,11 +1,11 @@
-namespace SharedKernel.Domain
+namespace PeakLims.Domain
 {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
 
-    // source: https://github.com/jhewlett/ValueObject
+	// source: https://github.com/jhewlett/ValueObject
     public abstract class ValueObject : IEquatable<ValueObject>
     {
         private List<PropertyInfo>? _properties;

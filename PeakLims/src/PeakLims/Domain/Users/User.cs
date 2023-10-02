@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.Users;
 
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Users.Dtos;
 using PeakLims.Domain.Users.DomainEvents;
 using PeakLims.Domain.Emails;
@@ -8,6 +7,7 @@ using PeakLims.Domain.Users.Models;
 using Roles;
 using System.Text.Json.Serialization;
 using System.Runtime.Serialization;
+using Exceptions;
 
 public class User : BaseEntity
 {

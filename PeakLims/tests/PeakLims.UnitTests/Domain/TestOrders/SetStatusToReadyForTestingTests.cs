@@ -10,6 +10,7 @@ using PeakLims.SharedTestHelpers.Fakes.Test;
 using SharedTestHelpers.Fakes.Container;
 using SharedTestHelpers.Fakes.Sample;
 using Xunit;
+using ValidationException = Exceptions.ValidationException;
 
 public class SetStatusToReadyForTestingTests
 {
@@ -56,7 +57,7 @@ public class SetStatusToReadyForTestingTests
         var actAdd = () => fakeTestOrder.SetStatusToReadyForTesting();
 
         // Assert
-        actAdd.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actAdd.Should().Throw<ValidationException>()
             .WithMessage($"Test orders in a {TestOrderStatus.ReadyForTesting().Value} state can not be set to {TestOrderStatus.ReadyForTesting().Value}.");
     }
 
@@ -71,7 +72,7 @@ public class SetStatusToReadyForTestingTests
         var actAdd = () => fakeTestOrder.SetStatusToReadyForTesting();
 
         // Assert
-        actAdd.Should().Throw<SharedKernel.Exceptions.ValidationException>()
+        actAdd.Should().Throw<ValidationException>()
             .WithMessage($"A sample is required in order to set a test order to {TestOrderStatus.ReadyForTesting().Value}.");
     }
 }

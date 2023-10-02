@@ -2,7 +2,6 @@ namespace PeakLims.IntegrationTests.FeatureTests.Accessions;
 
 using PeakLims.SharedTestHelpers.Fakes.Accession;
 using PeakLims.Domain.Accessions.Dtos;
-using SharedKernel.Exceptions;
 using PeakLims.Domain.Accessions.Features;
 using FluentAssertions;
 using FluentAssertions.Extensions;
