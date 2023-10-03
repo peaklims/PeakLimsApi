@@ -1,5 +1,7 @@
 namespace PeakLims.Domain.Accessions.Dtos;
 
+using Destructurama.Attributed;
+
 public sealed record EditableAccessionDto
 {
     public Guid Id { get; set; }
@@ -9,14 +11,21 @@ public sealed record EditableAccessionDto
     public Guid? OrganizationId { get; set; }
     public List<AccessionContactDto> AccessionContacts { get; set; } = new();
     public List<TestOrderDto> TestOrders { get; set; }
+    public List<AccessionAttachmentDto> Attachments { get; set; } = new();
 
     public sealed record PatientDto
     {
         public Guid Id { get; set; }
+    
+        [LogMasked]
         public string FirstName { get; set; }
+    
+        [LogMasked]
         public string LastName { get; set; }
         public string Sex { get; set; }
         public int? Age { get; set; }
+    
+        [LogMasked]
         public DateOnly? DateOfBirth { get; set; }
         public string Race { get; set; }
         public string Ethnicity { get; set; }
@@ -47,5 +56,16 @@ public sealed record EditableAccessionDto
         public string CancellationReason { get; set; }
         public string CancellationComments { get; set; }
         public bool IsPartOfPanel { get; set; }
+    }
+    
+    public sealed record AccessionAttachmentDto
+    {
+        public Guid Id { get; set; }
+        public string Type { get; set; }
+    
+        [LogMasked]
+        public string Filename { get; set; }
+        public string Comments { get; set; }
+        public string PreSignedUrl { get; set; }
     }
 }

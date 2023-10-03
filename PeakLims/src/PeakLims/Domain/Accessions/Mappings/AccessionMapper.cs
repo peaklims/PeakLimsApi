@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.Accessions.Mappings;
 
 using PeakLims.Domain.Accessions.Dtos;
+using PeakLims.Services.External;
 using Riok.Mapperly.Abstractions;
 using TestOrders;
 
@@ -43,7 +44,7 @@ public static partial class AccessionMapper
             });
     }
     
-    public static EditableAccessionDto ToEditableAccessionDto(this Accession accession)
+    public static EditableAccessionDto ToEditableAccessionDto(this Accession accession, IFileStorage fileStorage)
     {
         return new EditableAccessionDto()
         {
@@ -77,6 +78,14 @@ public static partial class AccessionMapper
                 CancellationComments = x.CancellationComments,
                 IsPartOfPanel = x.IsPartOfPanel()
             }).ToList() ?? new List<EditableAccessionDto.TestOrderDto>(),
+            Attachments = accession.AccessionAttachments.Select(x => new EditableAccessionDto.AccessionAttachmentDto()
+            {
+                Id = x.Id,
+                Type = x.Type,
+                Filename = x.Filename,
+                Comments = x.Comments,
+                PreSignedUrl = x.GetPreSignedUrl(fileStorage)
+            }).ToList() ?? new List<EditableAccessionDto.AccessionAttachmentDto>(),
             AccessionContacts = accession.AccessionContacts.Select(x => new EditableAccessionDto.AccessionContactDto()
             {
                 Id = x.Id,

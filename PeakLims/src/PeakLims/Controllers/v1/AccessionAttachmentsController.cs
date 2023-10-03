@@ -72,6 +72,7 @@ public sealed class AccessionAttachmentsController: ControllerBase
     /// Uploads a file to an Accession
     /// </summary>
     [Authorize]
+    [Consumes("multipart/form-data")]
     [HttpPost("uploadTo/{accessionId:guid}", Name = "UploadAccessionAttachmentFile")]
     public async Task<IActionResult> UploadAccessionAttachmentFile(Guid accessionId, [FromForm] UploadAccessionAttachmentDto data)
     {

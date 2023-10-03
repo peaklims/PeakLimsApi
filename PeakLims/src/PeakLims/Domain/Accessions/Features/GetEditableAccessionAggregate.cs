@@ -8,6 +8,7 @@ using HeimGuard;
 using Mappings;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PeakLims.Services.External;
 
 public static class GetEditableAccessionAggregate
 {
@@ -17,11 +18,13 @@ public static class GetEditableAccessionAggregate
     {
         private readonly IAccessionRepository _accessionRepository;
         private readonly IHeimGuardClient _heimGuard;
+        private readonly IFileStorage _fileStorage;
 
-        public Handler(IAccessionRepository accessionRepository, IHeimGuardClient heimGuard)
+        public Handler(IAccessionRepository accessionRepository, IHeimGuardClient heimGuard, IFileStorage fileStorage)
         {
             _accessionRepository = accessionRepository;
             _heimGuard = heimGuard;
+            _fileStorage = fileStorage;
         }
 
         public async Task<EditableAccessionDto> Handle(Query request, CancellationToken cancellationToken)
@@ -37,13 +40,14 @@ public static class GetEditableAccessionAggregate
                     .ThenInclude(x => x.Test)
                 .Include(x => x.TestOrders)
                     .ThenInclude(x => x.AssociatedPanel)
+                .Include(x => x.AccessionAttachments)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);
             
             if (accession == null)
                 throw new NotFoundException(nameof(Accession), request.AccessionId);
 
-            return accession.ToEditableAccessionDto();
+            return accession.ToEditableAccessionDto(_fileStorage);
         }
     }
 }
