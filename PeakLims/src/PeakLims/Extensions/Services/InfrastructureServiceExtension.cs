@@ -1,5 +1,6 @@
 namespace PeakLims.Extensions.Services;
 
+using Amazon.S3;
 using PeakLims.Databases;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using HeimGuard;
@@ -53,6 +54,29 @@ public static class ServiceRegistration
         services.AddHeimGuard<UserPolicyHandler>()
             .MapAuthorizationPolicies()
             .AutomaticallyCheckPermissions();
+        
+        if(env.IsDevelopment() 
+           || env.IsEnvironment(Consts.Testing.IntegrationTestingEnvName)
+           || env.IsEnvironment(Consts.Testing.FunctionalTestingEnvName))
+        {
+            services.AddSingleton<IAmazonS3>(_ =>
+            {
+                var localstackPort = configuration["LocalstackPort"];
+                var config = new AmazonS3Config { ForcePathStyle = true, ServiceURL = $"http://localhost:{localstackPort}" };
+                var client = new AmazonS3Client("test", "test", config);
+
+                foreach (var bucket in Consts.S3Buckets.List())
+                {
+                    client.PutBucketAsync(bucket);
+                }
+            
+                return client;
+            });
+        }
+        else
+        {
+            throw new NotImplementedException("S3 is not configured for non-local environments.");
+        }
     }
 }
     

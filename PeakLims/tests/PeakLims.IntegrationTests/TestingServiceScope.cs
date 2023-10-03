@@ -1,6 +1,7 @@
 namespace PeakLims.IntegrationTests;
 
 using System.Threading.Tasks;
+using Amazon.S3;
 using Databases;
 using Exceptions;
 using MediatR;
@@ -54,6 +55,24 @@ public class TestingServiceScope
         context.Add(entity);
 
         await context.SaveChangesAsync();
+    }
+    
+    public async Task<bool> FileExistsInS3Async(string bucketName, string key)
+    {
+        var s3Client = _scope.ServiceProvider.GetService<IAmazonS3>();
+        try
+        {
+            await s3Client.GetObjectMetadataAsync(bucketName, key);
+            return true;
+        }
+        catch (AmazonS3Exception e)
+        {
+            if (e.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return false;
+            }
+            throw;
+        }
     }
 
     public async Task<T> ExecuteScopeAsync<T>(Func<IServiceProvider, Task<T>> action)

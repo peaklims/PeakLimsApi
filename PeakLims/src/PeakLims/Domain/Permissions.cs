@@ -4,7 +4,13 @@ using System.Reflection;
 
 public static class Permissions
 {
+
     // Permissions marker - do not delete this comment
+    public const string CanUploadAccessionAttachments = nameof(CanUploadAccessionAttachments);
+    public const string CanDeleteAccessionAttachments = nameof(CanDeleteAccessionAttachments);
+    public const string CanUpdateAccessionAttachments = nameof(CanUpdateAccessionAttachments);
+    public const string CanAddAccessionAttachments = nameof(CanAddAccessionAttachments);
+    public const string CanReadAccessionAttachments = nameof(CanReadAccessionAttachments);
     public const string HangfireAccess = nameof(HangfireAccess);
     public const string CanDeleteAccessionContacts = nameof(CanDeleteAccessionContacts);
     public const string CanUpdateAccessionContacts = nameof(CanUpdateAccessionContacts);

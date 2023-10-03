@@ -30,4 +30,18 @@ public static class Consts
                 .ToArray();
         }
     }
+
+    public static class S3Buckets
+    {
+        public const string AccessionAttachments = "accession-attachments";
+        
+        public static string[] List()
+        {
+            return typeof(S3Buckets)
+                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                .Where(fi => fi.IsLiteral && !fi.IsInitOnly && fi.FieldType == typeof(string))
+                .Select(x => (string)x.GetRawConstantValue())
+                .ToArray();
+        }
+    }
 }

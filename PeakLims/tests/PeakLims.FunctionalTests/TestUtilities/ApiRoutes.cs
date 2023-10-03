@@ -6,6 +6,17 @@ public class ApiRoutes
 
     // new api route marker - do not delete
 
+    public static class AccessionAttachments
+    {
+        public static string GetList => $"{Base}/accessionAttachments";
+        public static string GetAll => $"{Base}/accessionAttachments/all";
+        public static string GetRecord(Guid id) => $"{Base}/accessionAttachments/{id}";
+        public static string Delete(Guid id) => $"{Base}/accessionAttachments/{id}";
+        public static string Put(Guid id) => $"{Base}/accessionAttachments/{id}";
+        public static string Upload(Guid accessionId) => $"{Base}/accessionAttachments/uploadTo/{accessionId}";
+        public static string CreateBatch => $"{Base}/accessionAttachments/batch";
+    }
+
     public static class AccessionContacts
     {
         public static string GetList => $"{Base}/accessionContacts";

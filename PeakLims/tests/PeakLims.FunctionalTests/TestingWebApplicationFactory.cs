@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Amazon.S3;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
 using Microsoft.Extensions.Logging;
+using Testcontainers.LocalStack;
 using Xunit;
 
 [CollectionDefinition(nameof(TestBase))]
@@ -22,6 +24,7 @@ public class TestingWebApplicationFactory : WebApplicationFactory<Program>, IAsy
     
     private PostgreSqlContainer _dbContainer;
     private RabbitMqContainer _rmqContainer;
+    private LocalStackContainer _localStackContainer;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -49,7 +52,6 @@ public class TestingWebApplicationFactory : WebApplicationFactory<Program>, IAsy
                 options.DefaultAuthenticateScheme = FakeJwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = FakeJwtBearerDefaults.AuthenticationScheme;
             }).AddFakeJwtBearer();
-
         });
     }
 
@@ -70,6 +72,13 @@ public class TestingWebApplicationFactory : WebApplicationFactory<Program>, IAsy
         Environment.SetEnvironmentVariable($"{RabbitMqOptions.SectionName}__{RabbitMqOptions.UsernameKey}", "guest");
         Environment.SetEnvironmentVariable($"{RabbitMqOptions.SectionName}__{RabbitMqOptions.PasswordKey}", "guest");
         Environment.SetEnvironmentVariable($"{RabbitMqOptions.SectionName}__{RabbitMqOptions.PortKey}", _rmqContainer.GetConnectionString());
+        
+        var localstackPort = DockerUtilities.GetFreePort();
+        Environment.SetEnvironmentVariable($"LocalstackPort", localstackPort.ToString());
+        _localStackContainer = new LocalStackBuilder()
+            .WithPortBinding(localstackPort, 4566)
+            .Build();
+        await _localStackContainer.StartAsync();
     }
 
     public new async Task DisposeAsync() 

@@ -1,5 +1,6 @@
 namespace PeakLims.IntegrationTests;
 
+using Amazon.S3;
 using PeakLims.Extensions.Services;
 using PeakLims.Databases;
 using PeakLims.Resources;
@@ -17,7 +18,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-
+using Testcontainers.LocalStack;
 
 [CollectionDefinition(nameof(TestFixture))]
 public class TestFixtureCollection : ICollectionFixture<TestFixture> {}
@@ -27,6 +28,7 @@ public class TestFixture : IAsyncLifetime
     public static IServiceScopeFactory BaseScopeFactory;
     private PostgreSqlContainer _dbContainer;
     private RabbitMqContainer _rmqContainer;
+    private LocalStackContainer _localStackContainer;
 
     public async Task InitializeAsync()
     {
@@ -51,6 +53,13 @@ public class TestFixture : IAsyncLifetime
         builder.Configuration.GetSection(RabbitMqOptions.SectionName)[RabbitMqOptions.PasswordKey] = "guest";
         builder.Configuration.GetSection(RabbitMqOptions.SectionName)[RabbitMqOptions.PortKey] = _rmqContainer.GetConnectionString();
 
+        var localstackPort = DockerUtilities.GetFreePort();
+        builder.Configuration["LocalstackPort"] = localstackPort.ToString();
+        _localStackContainer = new LocalStackBuilder()
+            .WithPortBinding(localstackPort, 4566)
+            .Build();
+        await _localStackContainer.StartAsync();
+        
         builder.ConfigureServices();
         var services = builder.Services;
 
@@ -77,6 +86,7 @@ public class TestFixture : IAsyncLifetime
     {        
         await _dbContainer.DisposeAsync();
         await _rmqContainer.DisposeAsync();
+        await _localStackContainer.DisposeAsync();
     }
 
     private static void SetupDateAssertions()

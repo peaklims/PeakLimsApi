@@ -1,6 +1,15 @@
 version: '3.7'
 
 services:
+  aws:
+    image: localstack/localstack
+    ports:
+      - '48663:4566'
+    environment:
+      SERVICES: s3
+    volumes:
+      - aws-data:/var/lib/localstack/data
+  
   keycloakdb:
     image: postgres
     ports:
@@ -64,3 +73,4 @@ volumes:
   # compose volumes marker - do not delete
   keycloak-data:
   peaklims-data:
+  aws-data:

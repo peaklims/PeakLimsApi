@@ -4,6 +4,31 @@
         <name>PeakLims</name>
     </assembly>
     <members>
+        <member name="M:PeakLims.Controllers.v1.AccessionAttachmentsController.GetAccessionAttachments(PeakLims.Domain.AccessionAttachments.Dtos.AccessionAttachmentParametersDto)">
+            <summary>
+            Gets a list of all AccessionAttachments.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionAttachmentsController.GetAccessionAttachment(System.Guid)">
+            <summary>
+            Gets a single AccessionAttachment by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionAttachmentsController.UploadAccessionAttachmentFile(System.Guid,PeakLims.Domain.AccessionAttachments.Dtos.UploadAccessionAttachmentDto)">
+            <summary>
+            Uploads a file to an Accession
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionAttachmentsController.UpdateAccessionAttachment(System.Guid,PeakLims.Domain.AccessionAttachments.Dtos.AccessionAttachmentForUpdateDto)">
+            <summary>
+            Updates an entire existing AccessionAttachment.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionAttachmentsController.DeleteAccessionAttachment(System.Guid)">
+            <summary>
+            Deletes an existing AccessionAttachment record.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.GetAccessionComment(System.Guid)">
             <summary>
             Gets a single AccessionComment by ID.
@@ -429,6 +454,11 @@
             Deletes an existing User record.
             </summary>
         </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.AccessionAttachmentConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.AccessionAttachments.AccessionAttachment})">
+            <summary>
+            The database configuration for AccessionAttachments. 
+            </summary>
+        </member>
         <member name="M:PeakLims.Databases.EntityConfigurations.AccessionCommentConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.AccessionComments.AccessionComment})">
             <summary>
             The database configuration for AccessionComments. 
@@ -652,6 +682,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.AddExternalIdToSample.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.AddAccessionAttachments">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionAttachments.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionAttachments.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionAttachments.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

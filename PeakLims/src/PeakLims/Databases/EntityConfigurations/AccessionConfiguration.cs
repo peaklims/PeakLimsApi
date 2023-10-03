@@ -14,6 +14,8 @@ public sealed class AccessionConfiguration : IEntityTypeConfiguration<Accession>
     public void Configure(EntityTypeBuilder<Accession> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
+        builder.HasMany(x => x.AccessionAttachments)
+            .WithOne(x => x.Accession);
         builder.HasMany(x => x.AccessionContacts)
             .WithOne(x => x.Accession);
         builder.HasOne(x => x.Patient)

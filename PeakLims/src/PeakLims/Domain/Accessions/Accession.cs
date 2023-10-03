@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.Accessions;
 
 using PeakLims.Domain.AccessionContacts;
+using PeakLims.Domain.AccessionAttachments;
 using PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.Accessions.DomainEvents;
 using AccessionStatuses;
@@ -29,6 +30,9 @@ public class Accession : BaseEntity
 
     private readonly List<AccessionContact> _accessionContacts = new();
     public IReadOnlyCollection<AccessionContact> AccessionContacts => _accessionContacts.AsReadOnly();
+
+    private readonly List<AccessionAttachment> _accessionAttachments = new();
+    public IReadOnlyCollection<AccessionAttachment> AccessionAttachments => _accessionAttachments.AsReadOnly();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
@@ -234,6 +238,18 @@ public class Accession : BaseEntity
         if (Status.IsProcessing())
             throw new ValidationException(nameof(Accession),
                 $"This accession is processing. {subject} can not be modified.");
+    }
+
+    public Accession AddAccessionAttachment(AccessionAttachment accessionAttachment)
+    {
+        _accessionAttachments.Add(accessionAttachment);
+        return this;
+    }
+    
+    public Accession RemoveAccessionAttachment(AccessionAttachment accessionAttachment)
+    {
+        _accessionAttachments.RemoveAll(x => x.Id == accessionAttachment.Id);
+        return this;
     }
 
     // Add Prop Methods Marker -- Deleting this comment will cause the add props utility to be incomplete

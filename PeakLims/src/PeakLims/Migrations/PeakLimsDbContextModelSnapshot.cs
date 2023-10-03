@@ -17,7 +17,7 @@ namespace PeakLims.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -48,6 +48,62 @@ namespace PeakLims.Migrations
                         .HasDatabaseName("ix_panel_test_tests_id");
 
                     b.ToTable("panel_test", (string)null);
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.AccessionAttachments.AccessionAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("AccessionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("accession_id");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("text")
+                        .HasColumnName("comments");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("Filename")
+                        .HasColumnType("text")
+                        .HasColumnName("filename");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_modified_on");
+
+                    b.Property<string>("S3Bucket")
+                        .HasColumnType("text")
+                        .HasColumnName("s3bucket");
+
+                    b.Property<string>("S3Key")
+                        .HasColumnType("text")
+                        .HasColumnName("s3key");
+
+                    b.HasKey("Id")
+                        .HasName("pk_accession_attachments");
+
+                    b.HasIndex("AccessionId")
+                        .HasDatabaseName("ix_accession_attachments_accession_id");
+
+                    b.ToTable("accession_attachments", (string)null);
                 });
 
             modelBuilder.Entity("PeakLims.Domain.AccessionComments.AccessionComment", b =>
@@ -851,6 +907,38 @@ namespace PeakLims.Migrations
                         .HasConstraintName("fk_panel_test_tests_tests_id");
                 });
 
+            modelBuilder.Entity("PeakLims.Domain.AccessionAttachments.AccessionAttachment", b =>
+                {
+                    b.HasOne("PeakLims.Domain.Accessions.Accession", "Accession")
+                        .WithMany("AccessionAttachments")
+                        .HasForeignKey("AccessionId")
+                        .HasConstraintName("fk_accession_attachments_accessions_accession_id");
+
+                    b.OwnsOne("PeakLims.Domain.AccessionAttachments.AccessionAttachmentType", "Type", b1 =>
+                        {
+                            b1.Property<Guid>("AccessionAttachmentId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("text")
+                                .HasColumnName("type");
+
+                            b1.HasKey("AccessionAttachmentId");
+
+                            b1.ToTable("accession_attachments");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AccessionAttachmentId")
+                                .HasConstraintName("fk_accession_attachments_accession_attachments_id");
+                        });
+
+                    b.Navigation("Accession");
+
+                    b.Navigation("Type")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PeakLims.Domain.AccessionComments.AccessionComment", b =>
                 {
                     b.HasOne("PeakLims.Domain.Accessions.Accession", "Accession")
@@ -1074,6 +1162,8 @@ namespace PeakLims.Migrations
 
             modelBuilder.Entity("PeakLims.Domain.Accessions.Accession", b =>
                 {
+                    b.Navigation("AccessionAttachments");
+
                     b.Navigation("AccessionContacts");
 
                     b.Navigation("Comments");
