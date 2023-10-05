@@ -65,7 +65,7 @@ public static partial class AccessionMapper
                 InternalId = accession.Patient.InternalId
             },
             TestOrders = accession.TestOrders
-                .OrderByDescending(x => x.LastModifiedOn)
+                .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new EditableAccessionDto.TestOrderDto()
                 {
                     Id = x.Id,
@@ -81,7 +81,7 @@ public static partial class AccessionMapper
                     IsPartOfPanel = x.IsPartOfPanel()
                 }).ToList() ?? new List<EditableAccessionDto.TestOrderDto>(),
             Attachments = accession.AccessionAttachments
-                .OrderByDescending(x => x.LastModifiedOn)
+                .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new EditableAccessionDto.AccessionAttachmentDto()
                 {
                     Id = x.Id,
@@ -91,7 +91,7 @@ public static partial class AccessionMapper
                     PreSignedUrl = x.GetPreSignedUrl(fileStorage)
                 }).ToList() ?? new List<EditableAccessionDto.AccessionAttachmentDto>(),
             AccessionContacts = accession.AccessionContacts
-                .OrderByDescending(x => x.LastModifiedOn)
+                .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new EditableAccessionDto.AccessionContactDto()
                 {
                     Id = x.Id,
