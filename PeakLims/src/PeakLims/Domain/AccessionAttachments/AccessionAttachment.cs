@@ -20,6 +20,9 @@ public class AccessionAttachment : BaseEntity
 
     [LogMasked]
     public string Filename { get; private set; }
+    
+    [LogMasked]
+    public string DisplayName { get; private set; }
 
     public string Comments { get; private set; }
 
@@ -34,6 +37,7 @@ public class AccessionAttachment : BaseEntity
 
         newAccessionAttachment.Type = AccessionAttachmentType.Of(accessionAttachmentForCreation.Type);
         newAccessionAttachment.Comments = accessionAttachmentForCreation.Comments;
+        newAccessionAttachment.DisplayName = accessionAttachmentForCreation.DisplayName;
 
         newAccessionAttachment.QueueDomainEvent(new AccessionAttachmentCreated(){ AccessionAttachment = newAccessionAttachment });
         
@@ -44,6 +48,7 @@ public class AccessionAttachment : BaseEntity
     {
         Type = AccessionAttachmentType.Of(accessionAttachmentForUpdate.Type);
         Comments = accessionAttachmentForUpdate.Comments;
+        DisplayName = accessionAttachmentForUpdate.DisplayName ?? Filename;
 
         QueueDomainEvent(new AccessionAttachmentUpdated(){ Id = Id });
         return this;
@@ -61,6 +66,7 @@ public class AccessionAttachment : BaseEntity
         S3Bucket = Consts.S3Buckets.AccessionAttachments;
         S3Key = S3Key.Of(key);
         Filename = formFile.FileName;
+        DisplayName ??= Filename;
         
         await fileStorage.UploadFileAsync(S3Bucket, S3Key.Value, formFile);
 

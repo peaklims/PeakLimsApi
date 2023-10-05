@@ -88,6 +88,7 @@ public static partial class AccessionMapper
                     Type = x.Type,
                     Filename = x.Filename,
                     Comments = x.Comments,
+                    DisplayName = x.DisplayName,
                     PreSignedUrl = x.GetPreSignedUrl(fileStorage)
                 }).ToList() ?? new List<EditableAccessionDto.AccessionAttachmentDto>(),
             AccessionContacts = accession.AccessionContacts

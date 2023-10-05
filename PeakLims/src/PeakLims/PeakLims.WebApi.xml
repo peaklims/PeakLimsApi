@@ -696,5 +696,17 @@
         <member name="M:PeakLims.Migrations.AddAccessionAttachments.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:PeakLims.Migrations.AddAccessionAttachmentsDisplayName">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionAttachmentsDisplayName.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionAttachmentsDisplayName.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAccessionAttachmentsDisplayName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

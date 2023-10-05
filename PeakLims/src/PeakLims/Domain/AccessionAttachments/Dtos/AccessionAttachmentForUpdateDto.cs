@@ -11,5 +11,5 @@ public sealed record AccessionAttachmentForUpdateDto
     [LogMasked]
     public string Filename { get; set; }
     public string Comments { get; set; }
-
+    public string DisplayName { get; set; }
 }

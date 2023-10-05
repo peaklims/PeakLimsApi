@@ -67,5 +67,6 @@ public sealed record EditableAccessionDto
         public string Filename { get; set; }
         public string Comments { get; set; }
         public string PreSignedUrl { get; set; }
+        public string DisplayName { get; set; }
     }
 }

@@ -6,5 +6,5 @@ public sealed class AccessionAttachmentForUpdate
 {
     public string Type { get; set; }
     public string Comments { get; set; }
-
+    public string DisplayName { get; set; }
 }
