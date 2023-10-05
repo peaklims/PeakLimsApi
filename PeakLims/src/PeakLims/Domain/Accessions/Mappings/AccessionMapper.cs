@@ -64,38 +64,44 @@ public static partial class AccessionMapper
                 Sex = accession.Patient.Sex.Value,
                 InternalId = accession.Patient.InternalId
             },
-            TestOrders = accession.TestOrders.Select(x => new EditableAccessionDto.TestOrderDto()
-            {
-                Id = x.Id,
-                TestId = x.Test.Id,
-                TestName = x.Test.TestName,
-                PanelId = x.AssociatedPanel?.Id,
-                PanelName = x.AssociatedPanel?.PanelName,
-                Status = x.Status != null ? x.Status.Value : default,
-                DueDate = x.DueDate,
-                TAT = x.TatSnapshot,
-                CancellationReason = x.CancellationReason != null ? x.CancellationReason.Value : default,
-                CancellationComments = x.CancellationComments,
-                IsPartOfPanel = x.IsPartOfPanel()
-            }).ToList() ?? new List<EditableAccessionDto.TestOrderDto>(),
-            Attachments = accession.AccessionAttachments.Select(x => new EditableAccessionDto.AccessionAttachmentDto()
-            {
-                Id = x.Id,
-                Type = x.Type,
-                Filename = x.Filename,
-                Comments = x.Comments,
-                PreSignedUrl = x.GetPreSignedUrl(fileStorage)
-            }).ToList() ?? new List<EditableAccessionDto.AccessionAttachmentDto>(),
-            AccessionContacts = accession.AccessionContacts.Select(x => new EditableAccessionDto.AccessionContactDto()
-            {
-                Id = x.Id,
-                TargetType = x.TargetType,
-                TargetValue = x.TargetValue,
-                FirstName = x.HealthcareOrganizationContact.FirstName,
-                LastName = x.HealthcareOrganizationContact.LastName,
-                Npi = x.HealthcareOrganizationContact.Npi,
-                OrganizationContactId = x.HealthcareOrganizationContact.Id
-            }).ToList() ?? new List<EditableAccessionDto.AccessionContactDto>()
+            TestOrders = accession.TestOrders
+                .OrderByDescending(x => x.LastModifiedOn)
+                .Select(x => new EditableAccessionDto.TestOrderDto()
+                {
+                    Id = x.Id,
+                    TestId = x.Test.Id,
+                    TestName = x.Test.TestName,
+                    PanelId = x.AssociatedPanel?.Id,
+                    PanelName = x.AssociatedPanel?.PanelName,
+                    Status = x.Status != null ? x.Status.Value : default,
+                    DueDate = x.DueDate,
+                    TAT = x.TatSnapshot,
+                    CancellationReason = x.CancellationReason != null ? x.CancellationReason.Value : default,
+                    CancellationComments = x.CancellationComments,
+                    IsPartOfPanel = x.IsPartOfPanel()
+                }).ToList() ?? new List<EditableAccessionDto.TestOrderDto>(),
+            Attachments = accession.AccessionAttachments
+                .OrderByDescending(x => x.LastModifiedOn)
+                .Select(x => new EditableAccessionDto.AccessionAttachmentDto()
+                {
+                    Id = x.Id,
+                    Type = x.Type,
+                    Filename = x.Filename,
+                    Comments = x.Comments,
+                    PreSignedUrl = x.GetPreSignedUrl(fileStorage)
+                }).ToList() ?? new List<EditableAccessionDto.AccessionAttachmentDto>(),
+            AccessionContacts = accession.AccessionContacts
+                .OrderByDescending(x => x.LastModifiedOn)
+                .Select(x => new EditableAccessionDto.AccessionContactDto()
+                {
+                    Id = x.Id,
+                    TargetType = x.TargetType,
+                    TargetValue = x.TargetValue,
+                    FirstName = x.HealthcareOrganizationContact.FirstName,
+                    LastName = x.HealthcareOrganizationContact.LastName,
+                    Npi = x.HealthcareOrganizationContact.Npi,
+                    OrganizationContactId = x.HealthcareOrganizationContact.Id
+                }).ToList() ?? new List<EditableAccessionDto.AccessionContactDto>()
         };
     }
 }
