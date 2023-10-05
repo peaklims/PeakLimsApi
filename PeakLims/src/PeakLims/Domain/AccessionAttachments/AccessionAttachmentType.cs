@@ -1,18 +1,31 @@
 namespace PeakLims.Domain.AccessionAttachments;
 
 using Ardalis.SmartEnum;
+using Exceptions;
 
 public sealed class AccessionAttachmentType : ValueObject
 {
-    public string Value { get; set; }
+    private AccessionAttachmentTypeEnum _type;
+    public string Value
+    {
+        get => _type?.Name ?? null;
+        private set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                _type = null;
+                return;
+            }
+            
+            if (!AccessionAttachmentTypeEnum.TryFromName(value, true, out var parsed))
+                throw new InvalidSmartEnumPropertyName(nameof(Value), value);
+
+            _type = parsed;
+        }
+    }
     
     public AccessionAttachmentType(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            Value = null;
-            return;
-        }
         Value = value;
     }
     
@@ -20,9 +33,9 @@ public sealed class AccessionAttachmentType : ValueObject
     public static implicit operator string(AccessionAttachmentType value) => value.Value;
     public static List<string> ListNames() => AccessionAttachmentTypeEnum.List.Select(x => x.Name).ToList();
 
-    public static AccessionAttachmentType Received() => new AccessionAttachmentType(AccessionAttachmentTypeEnum.TestRequisition.Name);
-    public static AccessionAttachmentType Rejected() => new AccessionAttachmentType(AccessionAttachmentTypeEnum.LabReport.Name);
-    public static AccessionAttachmentType Disposed() => new AccessionAttachmentType(AccessionAttachmentTypeEnum.Other.Name);
+    public static AccessionAttachmentType TestRequisition() => new AccessionAttachmentType(AccessionAttachmentTypeEnum.TestRequisition.Name);
+    public static AccessionAttachmentType LabReport() => new AccessionAttachmentType(AccessionAttachmentTypeEnum.LabReport.Name);
+    public static AccessionAttachmentType Other() => new AccessionAttachmentType(AccessionAttachmentTypeEnum.Other.Name);
 
     private AccessionAttachmentType() { } // EF Core
     
