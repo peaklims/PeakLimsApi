@@ -20,7 +20,7 @@ updates:
     groups:
       microsoft:
         patterns:
-          - "@Microsoft*"
+          - "Microsoft*"
         update-types:
           - "minor"
           - "patch"
