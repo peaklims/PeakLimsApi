@@ -14,8 +14,8 @@
     <PackageReference Include="Ductus.FluentDocker" Version="2.10.59" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="MediatR" Version="12.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.13" />
     <PackageReference Include="NSubstitute" Version="5.1.0" />
     <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.16">
       <PrivateAssets>all</PrivateAssets>
