@@ -1,22 +1,20 @@
 namespace PeakLims.UnitTests.ServiceTests;
 
-using PeakLims.Domain.Users;
-using PeakLims.Domain.Users.Services;
-using PeakLims.SharedTestHelpers.Fakes.User;
-using PeakLims.Services;
-using PeakLims.Domain.RolePermissions.Services;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Bogus;
+using MediatR;
+using MockQueryable.NSubstitute;
+using NSubstitute;
 using PeakLims.Domain;
 using PeakLims.Domain.RolePermissions;
 using PeakLims.Domain.RolePermissions.Models;
+using PeakLims.Domain.RolePermissions.Services;
 using PeakLims.Domain.Roles;
-using Bogus;
-using FluentAssertions;
-using MediatR;
-using MockQueryable.Moq;
-using NSubstitute;
-using Xunit;
-using System.Threading.Tasks;
-using System.Security.Claims;
+using PeakLims.Domain.Users;
+using PeakLims.Domain.Users.Services;
+using PeakLims.Services;
+using PeakLims.SharedTestHelpers.Fakes.User;
 
 public class UserPolicyHandlerTests
 {
@@ -36,7 +34,8 @@ public class UserPolicyHandlerTests
         
         // Act
         var currentUserService = Substitute.For<ICurrentUserService>();
-        currentUserService.User.Returns(claimsPrincipal);
+        currentUserService.User
+            .Returns(claimsPrincipal);
         var rolePermissionsRepo = Substitute.For<IRolePermissionRepository>();
         var userRepo = Substitute.For<IUserRepository>();
         var mediator = Substitute.For<IMediator>();
@@ -112,12 +111,14 @@ public class UserPolicyHandlerTests
             Role = nonSuperAdminRole,
             Permission = permissionToAssign
         });
-        var rolePermissions = new List<RolePermission>() {{rolePermission}};
+        var rolePermissions = new List<RolePermission>() {rolePermission};
         var mockData = rolePermissions.AsQueryable().BuildMock();
         var rolePermissionsRepo = Substitute.For<IRolePermissionRepository>();
-        rolePermissionsRepo.Query().Returns(mockData);
+        rolePermissionsRepo.Query()
+            .Returns(mockData);
         
         // Act
+    
         var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo, currentUserService, userRepo, mediator);
         var permissions = await userPolicyHandler.GetUserPermissions();
         
@@ -149,7 +150,8 @@ public class UserPolicyHandlerTests
         var rolePermissions = new List<RolePermission>() {rolePermission, rolePermission};
         var mockData = rolePermissions.AsQueryable().BuildMock();
         var rolePermissionsRepo = Substitute.For<IRolePermissionRepository>();
-        rolePermissionsRepo.Query().Returns(mockData);
+        rolePermissionsRepo.Query()
+            .Returns(mockData);
         
         // Act
         var userPolicyHandler = new UserPolicyHandler(rolePermissionsRepo, currentUserService, userRepo, mediator);
@@ -172,7 +174,7 @@ public static class UserExtensions
     public static void UsersExist(this IUserRepository repo)
     {
         var user = new FakeUserBuilder().Build();
-        var users = new List<User>() {{user}};
+        var users = new List<User>() {user};
         var mockData = users.AsQueryable().BuildMock();
         
         repo.Query().Returns(mockData);
@@ -183,17 +185,23 @@ public static class CurrentUserServiceExtensions
     public static void SetCurrentUser(this ICurrentUserService repo, string nameIdentifier = null)
     {
         var user = SetUserClaim(nameIdentifier);
-        repo.User.Returns(user);
-        repo.UserId.Returns(user?.FindFirstValue(ClaimTypes.NameIdentifier));
-        repo.IsMachine.Returns(false);
+        repo.User
+            .Returns(user);
+        repo.UserId
+            .Returns(user?.FindFirstValue(ClaimTypes.NameIdentifier));
+        repo.IsMachine
+            .Returns(false);
     }
     
     public static void SetMachine(this ICurrentUserService repo, string nameIdentifier = null, string clientId = null)
     {
         var machine = SetMachineClaim(nameIdentifier, clientId);
-        repo.User.Returns(machine);
-        repo.UserId.Returns(machine?.FindFirstValue(ClaimTypes.NameIdentifier));
-        repo.IsMachine.Returns(true);
+        repo.User
+            .Returns(machine);
+        repo.UserId
+            .Returns(machine?.FindFirstValue(ClaimTypes.NameIdentifier));
+        repo.IsMachine
+            .Returns(true);
     }
     
     private static ClaimsPrincipal SetUserClaim(string nameIdentifier = null)
