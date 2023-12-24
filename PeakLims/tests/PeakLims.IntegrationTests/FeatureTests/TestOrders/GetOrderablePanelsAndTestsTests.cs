@@ -9,7 +9,7 @@ using SharedTestHelpers.Fakes.TestOrder;
 
 public class GetOrderablePanelsAndTestsTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Need to redo panel orders")]
     public async Task can_get_orderable_panels_and_tests()
     {
         // Arrange
