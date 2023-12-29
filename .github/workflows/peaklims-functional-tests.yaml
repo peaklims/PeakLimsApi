@@ -20,5 +20,5 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        working-directory: PeakLimsApi/tests/PeakLimsApi.FunctionalTests
+        working-directory: PeakLims/tests/PeakLims.FunctionalTests
         run: dotnet test --no-restore --verbosity minimal

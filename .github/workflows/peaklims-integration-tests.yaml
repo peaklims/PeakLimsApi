@@ -20,5 +20,5 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        working-directory: PeakLimsApi/tests/PeakLimsApi.IntegrationTests
+        working-directory: PeakLims/tests/PeakLims.IntegrationTests
         run: dotnet test --no-restore --verbosity minimal
