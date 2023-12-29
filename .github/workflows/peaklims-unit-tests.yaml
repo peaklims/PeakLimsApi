@@ -1,3 +1,7 @@
+name: Unit Tests
+
+on: [pull_request, workflow_dispatch]
+
 jobs:
   test:
     runs-on: ubuntu-latest
