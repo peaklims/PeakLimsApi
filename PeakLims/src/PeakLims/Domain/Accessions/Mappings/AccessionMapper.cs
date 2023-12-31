@@ -76,6 +76,7 @@ public static partial class AccessionMapper
                         Id = x.PanelOrder?.Id,
                         PanelName = x.PanelOrder?.Panel?.PanelName,
                         PanelCode = x.PanelOrder?.Panel?.PanelCode,
+                        PanelOrderId = x.PanelOrder?.Id,
                         Type = x.PanelOrder?.Panel?.Type,
                         Version = x.PanelOrder?.Panel?.Version,
                     },

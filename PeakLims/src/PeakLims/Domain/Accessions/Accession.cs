@@ -232,7 +232,7 @@ public class Accession : BaseEntity
     {
         // TODO unit test
         GuardIfInFinalState("Panel Orders");
-        _testOrders.RemoveAll(x => x.PanelOrder.Id == panelOrder.Id);
+        _testOrders.RemoveAll(x => x?.PanelOrder?.Id == panelOrder.Id);
         return this;
     }
 

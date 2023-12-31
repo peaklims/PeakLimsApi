@@ -119,6 +119,16 @@
             Deletes an existing Accession record.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.RemovePanelOrderFromAccession(System.Guid,System.Guid)">
+            <summary>
+            Removes a given panel order from an accession
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.RemoveTestOrderFromAccession(System.Guid,System.Guid)">
+            <summary>
+            Removes a given test order from an accession
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.ContainersController.GetContainers(PeakLims.Domain.Containers.Dtos.ContainerParametersDto)">
             <summary>
             Gets a paginated list of all Containers.

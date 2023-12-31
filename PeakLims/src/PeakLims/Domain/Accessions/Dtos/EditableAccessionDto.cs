@@ -65,6 +65,7 @@ public sealed record EditableAccessionDto
         public string PanelName { get; set; }
         public string Type { get; set; }
         public int? Version { get; set; }
+        public Guid? PanelOrderId { get; set; }
     }
     
     public sealed record AccessionAttachmentDto

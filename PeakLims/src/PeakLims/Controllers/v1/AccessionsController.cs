@@ -200,5 +200,31 @@ public sealed class AccessionsController: ControllerBase
         return NoContent();
     }
 
+
+    /// <summary>
+    /// Removes a given panel order from an accession
+    /// </summary>
+    [Authorize]
+    [HttpPut("{accessionId:guid}/removePanelOrder/{panelOrderId:guid}", Name = "RemovePanelOrderFromAccession")]
+    public async Task<IActionResult> RemovePanelOrderFromAccession(Guid accessionId, Guid panelOrderId)
+    {
+        var command = new RemovePanelOrderFromAccession.Command(accessionId, panelOrderId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
+    /// Removes a given test order from an accession
+    /// </summary>
+    [Authorize]
+    [HttpPut("{accessionId:guid}/removeTestOrder/{testOrderId:guid}", Name = "RemoveTestOrderFromAccession")]
+    public async Task<IActionResult> RemoveTestOrderFromAccession(Guid accessionId, Guid testOrderId)
+    {
+        var command = new RemoveTestOrderFromAccession.Command(accessionId, testOrderId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
     // endpoint marker - do not delete this comment
 }
