@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
+using Domain.Accessions.Features;
 using MediatR;
 
 [ApiController]
@@ -157,6 +158,19 @@ public sealed class PanelsController: ControllerBase
     public async Task<ActionResult> DeletePanel(Guid id)
     {
         var command = new DeletePanel.Command(id);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
+    /// Adds a panel to an accession
+    /// </summary>
+    [Authorize]
+    [HttpPost("toAccession", Name = "AddPanelToAccession")]
+    public async Task<IActionResult> AddPanelToAccession([FromQuery] Guid accessionId, [FromQuery] Guid panelId)
+    {
+        var command = new AddPanelToAccession.Command(accessionId, panelId);
         await _mediator.Send(command);
         return NoContent();
     }

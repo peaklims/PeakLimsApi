@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.TestOrders;
 
 using PeakLims.Domain.Accessions;
+using PeakLims.Domain.PanelOrders;
 using PeakLims.Domain.TestOrders.DomainEvents;
 using Panels;
 using PeakLims.Domain.Samples;
@@ -22,17 +23,17 @@ public class TestOrder : BaseEntity
 
     public string CancellationComments { get; private set; }
 
-    public Panel AssociatedPanel { get; private set; }
-
     public Test Test { get; private set; }
 
     public Sample Sample { get; private set; }
 
     public Accession Accession { get; }
 
+    public PanelOrder PanelOrder { get; private set; }
+
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
-    public bool IsPartOfPanel() => AssociatedPanel != null;
+    public bool IsPartOfPanel() => PanelOrder != null;
 
     public static TestOrder Create(Test test)
     {
@@ -47,20 +48,11 @@ public class TestOrder : BaseEntity
         return newTestOrder;
     }
     
-    public static TestOrder Create(Test test, Panel panel)
+    public static TestOrder Create(Test test, PanelOrder panelOrder)
     {
-        ValidationException.ThrowWhenNull(test, $"A test must be provided.");
-        ValidationException.ThrowWhenNull(panel, $"A panel must be provided.");
-        var newTestOrder = new TestOrder();
-
-        newTestOrder.Status = TestOrderStatus.Pending();
-        newTestOrder.Test = test;
-        newTestOrder.AssociatedPanel = panel;
-        // TODO derive TAT and due date from test
-
-        newTestOrder.QueueDomainEvent(new TestOrderCreated(){ TestOrder = newTestOrder });
-        
-        return newTestOrder;
+        var testOrder = Create(test);
+        testOrder.PanelOrder = panelOrder;
+        return testOrder;
     }
 
     public TestOrder Cancel(TestOrderCancellationReason reason, string comments)

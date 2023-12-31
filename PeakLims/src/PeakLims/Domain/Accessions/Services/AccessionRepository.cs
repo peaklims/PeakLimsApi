@@ -37,13 +37,13 @@ public sealed class AccessionRepository : GenericRepository<Accession>, IAccessi
                 .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Test)
                 .Include(x => x.TestOrders)
-                .ThenInclude(x => x.AssociatedPanel)
+                .ThenInclude(x => x.PanelOrder)
                 .FirstOrDefaultAsync(x => x.Id == accessionId, cancellationToken)
             : _dbContext.Accessions
                 .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Test)
                 .Include(x => x.TestOrders)
-                .ThenInclude(x => x.AssociatedPanel)
+                .ThenInclude(x => x.PanelOrder)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == accessionId, cancellationToken);
     }

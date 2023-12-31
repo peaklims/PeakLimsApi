@@ -17,35 +17,20 @@ using Tests.Services;
 
 public static class AddTestOrder
 {
-    public sealed record Command(Guid AccessionId, Guid? TestId, Guid? PanelId) : IRequest;
+    public sealed record Command(Guid AccessionId, Guid TestId) : IRequest;
 
-    public sealed class Handler : IRequestHandler<Command>
+    public sealed class Handler(ITestOrderRepository testOrderRepository, IUnitOfWork unitOfWork,
+            IHeimGuardClient heimGuard, ITestRepository testRepository, IPanelRepository panelRepository,
+            IAccessionRepository accessionRepository)
+        : IRequestHandler<Command>
     {
-        private readonly ITestOrderRepository _testOrderRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-        private readonly ITestRepository _testRepository;
-        private readonly IPanelRepository _panelRepository;
-        private readonly IAccessionRepository _accessionRepository;
-
-        public Handler(ITestOrderRepository testOrderRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard, ITestRepository testRepository, IPanelRepository panelRepository, IAccessionRepository accessionRepository)
-        {
-            _testOrderRepository = testOrderRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-            _testRepository = testRepository;
-            _panelRepository = panelRepository;
-            _accessionRepository = accessionRepository;
-        }
+        private readonly IPanelRepository _panelRepository = panelRepository;
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddTestOrders);
-
-            if(request.PanelId != null && request.TestId != null)
-                throw new ValidationException("Cannot add both a test and a panel to a test order.");
+            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddTestOrders);
             
-            var accession = await _accessionRepository.Query()
+            var accession = await accessionRepository.Query()
                 .Include(x => x.TestOrders)
                 .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);
             
@@ -54,20 +39,12 @@ public static class AddTestOrder
                 throw new NotFoundException(nameof(Accession), request.AccessionId);
             }
             
-            if(request.TestId.HasValue)
-            {
-                var test = await _testRepository.GetById(request.TestId.Value, true, cancellationToken);
-                var testOrder = accession.AddTest(test);
-                await _testOrderRepository.Add(testOrder, cancellationToken);
-            }
-            if(request.PanelId.HasValue)
-            {
-                var panel = await _panelRepository.GetById(request.PanelId.Value, true, cancellationToken);
-                var testOrders = accession.AddPanel(panel);
-                await _testOrderRepository.AddRange(testOrders, cancellationToken);
-            }
+            var test = await testRepository.GetById(request.TestId, true, cancellationToken);
+            var testOrder = accession.AddTest(test);
+            await testOrderRepository.Add(testOrder, cancellationToken);
             
-            await _unitOfWork.CommitChanges(cancellationToken);
+            
+            await unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }

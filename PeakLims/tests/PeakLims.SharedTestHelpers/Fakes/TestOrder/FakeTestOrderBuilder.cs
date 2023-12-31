@@ -8,7 +8,6 @@ using Test;
 public class FakeTestOrderBuilder
 {
     private Test _test = null;
-    private Panel _panel = null;
     
     public FakeTestOrderBuilder WithTest(Test test)
     {
@@ -16,19 +15,10 @@ public class FakeTestOrderBuilder
         return this;
     }
     
-    public FakeTestOrderBuilder WithPanel(Panel panel)
-    {
-        _panel = panel;
-        return this;
-    }
-    
     public TestOrder Build()
     {
         _test ??= new FakeTestBuilder().Build();
         var result = TestOrder.Create(_test);
-        
-        if(_panel != null)
-            result = TestOrder.Create(_test, _panel);
         
         return result;
     }

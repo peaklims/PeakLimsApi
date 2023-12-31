@@ -39,7 +39,7 @@ public static partial class AccessionMapper
                 TestOrders = x.TestOrders.Select(x => new AccessionWorklistDto.TestOrderDto()
                 {
                     TestName = x.Test.TestName, 
-                    PanelName = x.AssociatedPanel.PanelName
+                    PanelName = x.PanelOrder.Panel.PanelName
                 }).ToList() 
             });
     }
@@ -71,8 +71,15 @@ public static partial class AccessionMapper
                     Id = x.Id,
                     TestId = x.Test.Id,
                     TestName = x.Test.TestName,
-                    PanelId = x.AssociatedPanel?.Id,
-                    PanelName = x.AssociatedPanel?.PanelName,
+                    Panel = new EditableAccessionDto.Panel()
+                    {
+                        Id = x.PanelOrder?.Id,
+                        PanelName = x.PanelOrder?.Panel?.PanelName,
+                        PanelCode = x.PanelOrder?.Panel?.PanelCode,
+                        Type = x.PanelOrder?.Panel?.Type,
+                        Version = x.PanelOrder?.Panel?.Version,
+                    },
+                    TestCode = x.Test.TestCode,
                     Status = x.Status != null ? x.Status.Value : default,
                     DueDate = x.DueDate,
                     TAT = x.TatSnapshot,

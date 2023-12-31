@@ -17,7 +17,7 @@ namespace PeakLims.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -416,6 +416,58 @@ namespace PeakLims.Migrations
                     b.ToTable("healthcare_organizations", (string)null);
                 });
 
+            modelBuilder.Entity("PeakLims.Domain.PanelOrders.PanelOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CancellationComments")
+                        .HasColumnType("text")
+                        .HasColumnName("cancellation_comments");
+
+                    b.Property<string>("CancellationReason")
+                        .HasColumnType("text")
+                        .HasColumnName("cancellation_reason");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_modified_on");
+
+                    b.Property<Guid?>("PanelId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("panel_id");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id")
+                        .HasName("pk_panel_orders");
+
+                    b.HasIndex("PanelId")
+                        .HasDatabaseName("ix_panel_orders_panel_id");
+
+                    b.ToTable("panel_orders", (string)null);
+                });
+
             modelBuilder.Entity("PeakLims.Domain.Panels.Panel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -662,10 +714,6 @@ namespace PeakLims.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("accession_id");
 
-                    b.Property<Guid?>("AssociatedPanelId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("associated_panel_id");
-
                     b.Property<string>("CancellationComments")
                         .HasColumnType("text")
                         .HasColumnName("cancellation_comments");
@@ -698,6 +746,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
 
+                    b.Property<Guid?>("PanelOrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("panel_order_id");
+
                     b.Property<Guid?>("SampleId")
                         .HasColumnType("uuid")
                         .HasColumnName("sample_id");
@@ -720,8 +772,8 @@ namespace PeakLims.Migrations
                     b.HasIndex("AccessionId")
                         .HasDatabaseName("ix_test_orders_accession_id");
 
-                    b.HasIndex("AssociatedPanelId")
-                        .HasDatabaseName("ix_test_orders_associated_panel_id");
+                    b.HasIndex("PanelOrderId")
+                        .HasDatabaseName("ix_test_orders_panel_order_id");
 
                     b.HasIndex("SampleId")
                         .HasDatabaseName("ix_test_orders_sample_id");
@@ -1044,6 +1096,16 @@ namespace PeakLims.Migrations
                     b.Navigation("HealthcareOrganization");
                 });
 
+            modelBuilder.Entity("PeakLims.Domain.PanelOrders.PanelOrder", b =>
+                {
+                    b.HasOne("PeakLims.Domain.Panels.Panel", "Panel")
+                        .WithMany("PanelOrders")
+                        .HasForeignKey("PanelId")
+                        .HasConstraintName("fk_panel_orders_panels_panel_id");
+
+                    b.Navigation("Panel");
+                });
+
             modelBuilder.Entity("PeakLims.Domain.Patients.Patient", b =>
                 {
                     b.OwnsOne("PeakLims.Domain.Lifespans.Lifespan", "Lifespan", b1 =>
@@ -1148,10 +1210,10 @@ namespace PeakLims.Migrations
                         .HasForeignKey("AccessionId")
                         .HasConstraintName("fk_test_orders_accessions_accession_id");
 
-                    b.HasOne("PeakLims.Domain.Panels.Panel", "AssociatedPanel")
-                        .WithMany()
-                        .HasForeignKey("AssociatedPanelId")
-                        .HasConstraintName("fk_test_orders_panels_associated_panel_id");
+                    b.HasOne("PeakLims.Domain.PanelOrders.PanelOrder", "PanelOrder")
+                        .WithMany("TestOrders")
+                        .HasForeignKey("PanelOrderId")
+                        .HasConstraintName("fk_test_orders_panel_orders_panel_order_id");
 
                     b.HasOne("PeakLims.Domain.Samples.Sample", "Sample")
                         .WithMany("TestOrders")
@@ -1165,7 +1227,7 @@ namespace PeakLims.Migrations
 
                     b.Navigation("Accession");
 
-                    b.Navigation("AssociatedPanel");
+                    b.Navigation("PanelOrder");
 
                     b.Navigation("Sample");
 
@@ -1208,6 +1270,16 @@ namespace PeakLims.Migrations
                     b.Navigation("Accessions");
 
                     b.Navigation("HealthcareOrganizationContacts");
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.PanelOrders.PanelOrder", b =>
+                {
+                    b.Navigation("TestOrders");
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.Panels.Panel", b =>
+                {
+                    b.Navigation("PanelOrders");
                 });
 
             modelBuilder.Entity("PeakLims.Domain.Patients.Patient", b =>

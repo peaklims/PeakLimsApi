@@ -48,6 +48,7 @@ public class AddPanelToAccessionCommandPanels : TestBase
         // Assert
         testOrders.Count.Should().Be(1);
         testOrders.FirstOrDefault().Test.TestName.Should().Be(fakePanel.Tests.FirstOrDefault().TestName);
+        testOrders.FirstOrDefault().PanelOrder.Panel.PanelName.Should().Be(fakePanel.PanelName);
     }
     
     [Fact]
@@ -74,12 +75,14 @@ public class AddPanelToAccessionCommandPanels : TestBase
         var accessionFromDb = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .Include(x => x.TestOrders)
             .ThenInclude(x => x.Test)
-            .Include(x => x.TestOrders)
-            .ThenInclude(x => x.AssociatedPanel)
+            .ThenInclude(x => x.Panels)
+            .ThenInclude(x => x.PanelOrders)
             .FirstOrDefaultAsync(a => a.Id == accession.Id));
         var testOrders = accessionFromDb.TestOrders;
 
         // Assert
         testOrders.Count.Should().Be(2);
+        testOrders.FirstOrDefault(x => x.Test.Id == existingText.Id).PanelOrder.Should().BeNull();
+        testOrders.FirstOrDefault(x => x.Test.Id == fakeTest.Id).PanelOrder.Panel.PanelName.Should().Be(fakePanel.PanelName);
     }
 }

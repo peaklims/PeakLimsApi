@@ -37,14 +37,14 @@ public class ManagePanelOrderOnAccessionTests
         // Assert - Add
         fakeAccession.TestOrders.Count.Should().Be(1);
         
-        var orderedTest = fakeAccession.TestOrders.FirstOrDefault();
-        orderedTest.Test.TestCode.Should().Be(test.TestCode);
-        orderedTest.AssociatedPanel.PanelCode.Should().Be(panel.PanelCode);
+        var testOrder = fakeAccession.TestOrders.FirstOrDefault();
+        testOrder.Test.TestCode.Should().Be(test.TestCode);
+        testOrder.PanelOrder.Panel.PanelCode.Should().Be(panel.PanelCode);
         
         // Act - Can remove idempotently
-        fakeAccession.RemovePanel(panel)
-            .RemovePanel(panel)
-            .RemovePanel(panel);
+        fakeAccession.RemovePanelOrder(testOrder.PanelOrder)
+            .RemovePanelOrder(testOrder.PanelOrder)
+            .RemovePanelOrder(testOrder.PanelOrder);
 
         // Assert - Remove
         fakeAccession.TestOrders.Count.Should().Be(0);
@@ -93,6 +93,6 @@ public class ManagePanelOrderOnAccessionTests
 
         // Assert
         act.Should().Throw<ValidationException>()
-            .WithMessage("This panel has one or more tests that are not active. Only active tests can be added to an accession.");
+            .WithMessage("This panel has one or more tests that are not active. Only panels with all active tests can be added to an accession.");
     }
 }

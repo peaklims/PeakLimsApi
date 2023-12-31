@@ -24,31 +24,18 @@ public static class RemoveTestFromPanel
         }
     }
 
-    public sealed class Handler : IRequestHandler<Command, bool>
+    public sealed class Handler(IPanelRepository panelRepository, ITestRepository testRepository,
+            IHeimGuardClient heimGuard, ITestOrderRepository testOrderRepository, IUnitOfWork unitOfWork)
+        : IRequestHandler<Command, bool>
     {
-        private readonly IPanelRepository _panelRepository;
-        private readonly ITestRepository _testRepository;
-        private readonly ITestOrderRepository _testOrderRepository;
-        private readonly IHeimGuardClient _heimGuard;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public Handler(IPanelRepository panelRepository, ITestRepository testRepository, IHeimGuardClient heimGuard, ITestOrderRepository testOrderRepository, IUnitOfWork unitOfWork)
-        {
-            _testRepository = testRepository;
-            _panelRepository = panelRepository;
-            _heimGuard = heimGuard;
-            _testOrderRepository = testOrderRepository;
-            _unitOfWork = unitOfWork;
-        }
-
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanRemoveTestFromPanel);
+            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanRemoveTestFromPanel);
 
-            var panel = await _panelRepository.GetById(request.PanelId, true, cancellationToken);
-            var test = await _testRepository.GetById(request.TestId, true, cancellationToken);
-            panel.RemoveTest(test, _testOrderRepository);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            var panel = await panelRepository.GetById(request.PanelId, true, cancellationToken);
+            var test = await testRepository.GetById(request.TestId, true, cancellationToken);
+            panel.RemoveTest(test, testOrderRepository);
+            await unitOfWork.CommitChanges(cancellationToken);
             
             return true;
         }

@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.Panels;
 
 using PeakLims.Domain.Panels.Models;
+using PeakLims.Domain.PanelOrders;
 using PeakLims.Domain.Panels.DomainEvents;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,6 +28,8 @@ public class Panel : BaseEntity
 
     private readonly List<Test> _tests = new();
     public IReadOnlyCollection<Test> Tests => _tests.AsReadOnly();
+
+    public IReadOnlyCollection<PanelOrder> PanelOrders { get; } = new List<PanelOrder>();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 

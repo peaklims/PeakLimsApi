@@ -12,7 +12,7 @@ public class SampleType : ValueObject
         private set
         {
             if (!SampleTypeEnum.TryFromName(value, true, out var parsed))
-                throw new InvalidSmartEnumPropertyName(nameof(Value), value);
+                throw new ValidationException($"Invalid sample type. PLease use one of the following: {string.Join(", ", ListNames())}");
 
             _sampleType = parsed;
         }

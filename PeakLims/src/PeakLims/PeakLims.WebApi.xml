@@ -214,6 +214,26 @@
             Deactivates a HealthcareOrganization.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.PanelOrdersController.GetPanelOrders(PeakLims.Domain.PanelOrders.Dtos.PanelOrderParametersDto)">
+            <summary>
+            Gets a list of all PanelOrders.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelOrdersController.GetPanelOrder(System.Guid)">
+            <summary>
+            Gets a single PanelOrder by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelOrdersController.AddPanelOrder(PeakLims.Domain.PanelOrders.Dtos.PanelOrderForCreationDto)">
+            <summary>
+            Creates a new PanelOrder record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelOrdersController.DeletePanelOrder(System.Guid)">
+            <summary>
+            Deletes an existing PanelOrder record.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PanelsController.GetPanels(PeakLims.Domain.Panels.Dtos.PanelParametersDto)">
             <summary>
             Gets a list of all Panels.
@@ -257,6 +277,11 @@
         <member name="M:PeakLims.Controllers.v1.PanelsController.DeletePanel(System.Guid)">
             <summary>
             Deletes an existing Panel record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PanelsController.AddPanelToAccession(System.Guid,System.Guid)">
+            <summary>
+            Adds a panel to an accession
             </summary>
         </member>
         <member name="M:PeakLims.Controllers.v1.PatientsController.GetPatients(PeakLims.Domain.Patients.Dtos.PatientParametersDto)">
@@ -494,6 +519,11 @@
             The database configuration for Panels. 
             </summary>
         </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.PanelOrderConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.PanelOrders.PanelOrder})">
+            <summary>
+            The database configuration for PanelOrders. 
+            </summary>
+        </member>
         <member name="M:PeakLims.Databases.EntityConfigurations.PatientConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Patients.Patient})">
             <summary>
             The database configuration for Patients. 
@@ -564,148 +594,16 @@
             Registers all services in the assembly of the given interface.
             </summary>
         </member>
-        <member name="T:PeakLims.Migrations.InitialMigration">
+        <member name="T:PeakLims.Migrations.initial">
             <inheritdoc />
         </member>
-        <member name="M:PeakLims.Migrations.InitialMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:PeakLims.Migrations.initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:PeakLims.Migrations.InitialMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:PeakLims.Migrations.initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:PeakLims.Migrations.InitialMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.UpdateLifespanAge">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.UpdateLifespanAge.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.UpdateLifespanAge.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.UpdateLifespanAge.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddDbSequencesForSamplePatientAndAccession.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.TestOrderCleanup">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.TestOrderCleanup.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.TestOrderCleanup.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.TestOrderCleanup.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.AddOrgStatus">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddOrgStatus.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddOrgStatus.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddOrgStatus.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.AddAccessionContact">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionContact.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionContact.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionContact.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.SingleOrgPerOrgContact">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.SingleOrgPerOrgContact.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.SingleOrgPerOrgContact.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.SingleOrgPerOrgContact.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.OrgContactHasSplitName">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.OrgContactHasSplitName.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.OrgContactHasSplitName.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.OrgContactHasSplitName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.AddSampleStatus">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddSampleStatus.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddSampleStatus.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddSampleStatus.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.AddExternalIdToSample">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddExternalIdToSample.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddExternalIdToSample.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddExternalIdToSample.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.AddAccessionAttachments">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionAttachments.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionAttachments.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionAttachments.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.AddAccessionAttachmentsDisplayName">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionAttachmentsDisplayName.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionAttachmentsDisplayName.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAccessionAttachmentsDisplayName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:PeakLims.Migrations.initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

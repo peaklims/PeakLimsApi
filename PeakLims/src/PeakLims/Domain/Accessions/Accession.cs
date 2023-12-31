@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.Accessions;
 
 using PeakLims.Domain.AccessionContacts;
+using PeakLims.Domain.PanelOrders;
 using PeakLims.Domain.AccessionAttachments;
 using PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.Accessions.DomainEvents;
@@ -11,6 +12,7 @@ using PeakLims.Domain.Patients;
 using PeakLims.Domain.Patients.Models;
 using PeakLims.Domain.HealthcareOrganizations;
 using PeakLims.Domain.TestOrders;
+using TestOrders.Features;
 using Tests;
 
 public class Accession : BaseEntity
@@ -115,56 +117,6 @@ public class Accession : BaseEntity
         _testOrders.Remove(testOrder);
     }
 
-    public List<TestOrder> AddPanel(Panel panel)
-    {
-        // TODO unit test
-        GuardIfInFinalState("Panels");
-        
-        var hasInactivePanel = !panel.Status.IsActive();
-        ValidationException.MustNot(hasInactivePanel,
-            $"This panel is not active. Only active panels can be added to an accession.");
-        
-        var hasNonActiveTests = panel.Tests.Any(x => !x.Status.IsActive());
-        ValidationException.MustNot(hasNonActiveTests,
-            $"This panel has one or more tests that are not active. Only active tests can be added to an accession.");
-
-        // TODO unit test
-        var hasNoTests = panel.Tests.Count == 0;
-        if(hasNoTests)
-            throw new ValidationException(nameof(Accession),
-                $"This panel has no tests to assign.");
-        
-        var testOrdersToAdd = new List<TestOrder>();
-        foreach (var test in panel.Tests)
-        {
-            var testOrder = TestOrder.Create(test, panel);
-            testOrdersToAdd.Add(testOrder);
-        }
-        _testOrders.AddRange(testOrdersToAdd);
-        
-        QueueDomainEvent(new AccessionUpdated(){ Id = Id });
-        return testOrdersToAdd;
-    }
-
-    public Accession RemovePanel(Panel panel)
-    {
-        // TODO unit test
-        GuardIfInFinalState("Panels");
-
-        var alreadyExists = TestOrders.Any(x => panel == x.AssociatedPanel);
-        if (!alreadyExists)
-            return this;
-
-        var testsToRemove = TestOrders.Where(x => x.AssociatedPanel == panel).ToList();
-        foreach (var testOrder in testsToRemove)
-        {
-            RemoveTestOrderForTestOrPanel(testOrder);
-        }
-        
-        QueueDomainEvent(new AccessionUpdated(){ Id = Id });
-        return this;
-    }
-
     public Accession AddContact(AccessionContact contact)
     {
         var alreadyExists = AccessionContactAlreadyExists(contact);
@@ -249,6 +201,38 @@ public class Accession : BaseEntity
     public Accession RemoveAccessionAttachment(AccessionAttachment accessionAttachment)
     {
         _accessionAttachments.RemoveAll(x => x.Id == accessionAttachment.Id);
+        return this;
+    }
+
+    public PanelOrder AddPanel(Panel panel)
+    {
+        // TODO unit test
+        GuardIfInFinalState("Panels");
+        
+        var hasNonActivePanels = !panel.Status.IsActive();
+        if(hasNonActivePanels)
+            throw new ValidationException(nameof(Accession),
+                $"This panel is not active. Only active panels can be added to an accession.");
+        
+        var hasNonActiveTests = panel.Tests.Any(x => !x.Status.IsActive());
+        if(hasNonActiveTests)
+            throw new ValidationException(nameof(Accession),
+                $"This panel has one or more tests that are not active. Only panels with all active tests can be added to an accession.");
+        
+        var panelOrder = PanelOrder.Create(panel);
+        foreach (var panelOrderTestOrder in panelOrder.TestOrders)
+        {
+            _testOrders.Add(panelOrderTestOrder);
+        }
+        QueueDomainEvent(new AccessionUpdated(){ Id = Id });
+        return panelOrder;
+    }
+    
+    public Accession RemovePanelOrder(PanelOrder panelOrder)
+    {
+        // TODO unit test
+        GuardIfInFinalState("Panel Orders");
+        _testOrders.RemoveAll(x => x.PanelOrder.Id == panelOrder.Id);
         return this;
     }
 

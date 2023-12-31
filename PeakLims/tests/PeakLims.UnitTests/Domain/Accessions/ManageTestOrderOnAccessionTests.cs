@@ -83,7 +83,7 @@ public class ManageTestOrderOnAccessionTests
         var act = () => fakeAccession.RemoveTestOrder(testOrder);
 
         // Assert
-        act.Should().Throw<ValidationException>()
+         act.Should().Throw<ValidationException>()
             .WithMessage("Test orders that are part of a panel can not be selectively removed.");
     }
 }
