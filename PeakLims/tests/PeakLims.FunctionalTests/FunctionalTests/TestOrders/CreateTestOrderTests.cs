@@ -25,7 +25,6 @@ public class CreateTestOrderTests : TestBase
         
         var fakeTestOrder = new TestOrderForCreationDto();
         fakeTestOrder.TestId = test.Id;
-        fakeTestOrder.PanelId = null;
 
         var user = await AddNewSuperAdmin();
         FactoryClient.AddAuth(user.Identifier);
