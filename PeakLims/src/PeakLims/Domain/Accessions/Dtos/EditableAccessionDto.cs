@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.Accessions.Dtos;
 
 using Destructurama.Attributed;
+using TestOrderStatuses;
 
 public sealed record EditableAccessionDto
 {
@@ -56,6 +57,13 @@ public sealed record EditableAccessionDto
         public string CancellationReason { get; set; }
         public string CancellationComments { get; set; }
         public bool IsPartOfPanel { get; set; }
+        public Sample Sample { get; set; } = new Sample();
+    }
+
+    public sealed record Sample
+    {
+        public Guid? Id { get; set; } = default!;
+        public string? SampleNumber { get; set; } = default!;
     }
     
     public sealed record Panel

@@ -39,10 +39,14 @@ public static class GetEditableAccessionAggregate
                 .Include(x => x.TestOrders)
                     .ThenInclude(x => x.Test)
                 .Include(x => x.TestOrders)
+                    .ThenInclude(x => x.Sample)
+                .Include(x => x.TestOrders)
                     .ThenInclude(x => x.PanelOrder)
                     .ThenInclude(x => x.Panel)
+                .Include(x => x.TestOrders)
                 .Include(x => x.AccessionAttachments)
                 .AsNoTracking()
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);
             
             if (accession == null)

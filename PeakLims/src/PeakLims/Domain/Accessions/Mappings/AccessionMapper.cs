@@ -86,8 +86,15 @@ public static partial class AccessionMapper
                     TAT = x.TatSnapshot,
                     CancellationReason = x.CancellationReason != null ? x.CancellationReason.Value : default,
                     CancellationComments = x.CancellationComments,
-                    IsPartOfPanel = x.IsPartOfPanel()
-                }).ToList() ?? new List<EditableAccessionDto.TestOrderDto>(),
+                    IsPartOfPanel = x.IsPartOfPanel(),
+                    Sample = new EditableAccessionDto.Sample()
+                    {
+                        Id = x.Sample?.Id,
+                        SampleNumber = x?.Sample?.SampleNumber,
+                    }
+                })
+                .OrderByDescending(x => x.TestName)
+                .ToList() ?? new List<EditableAccessionDto.TestOrderDto>(),
             Attachments = accession.AccessionAttachments
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new EditableAccessionDto.AccessionAttachmentDto()

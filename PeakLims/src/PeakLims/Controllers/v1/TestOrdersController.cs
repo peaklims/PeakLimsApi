@@ -94,5 +94,31 @@ public sealed class TestOrdersController: ControllerBase
         return Ok(queryResponse);
     }
 
+
+    /// <summary>
+    /// Sets the sample on a test order
+    /// </summary>
+    [Authorize]
+    [HttpPut("{testOrderId:guid}/setSample/{sampleId}", Name = "SetSampleOnTestOrder")]
+    public async Task<IActionResult> SetSampleOnTestOrder([FromRoute] Guid testOrderId, [FromRoute] Guid? sampleId)
+    {
+        var command = new SetSampleOnTestOrder.Command(testOrderId, sampleId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+
+    /// <summary>
+    /// Sets the sample on a test order
+    /// </summary>
+    [Authorize]
+    [HttpPut("{testOrderId:guid}/clearSample", Name = "SetSampleOnTestOrderAsCleared")]
+    public async Task<IActionResult> SetSampleOnTestOrderAsCleared([FromRoute] Guid testOrderId)
+    {
+        var command = new SetSampleOnTestOrder.Command(testOrderId, null);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
     // endpoint marker - do not delete this comment
 }
