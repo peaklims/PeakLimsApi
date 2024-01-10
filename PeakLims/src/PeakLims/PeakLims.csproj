@@ -18,7 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0" />
     <PackageReference Include="AutoBogus" Version="2.13.1" />
-    <PackageReference Include="AWSSDK.S3" Version="3.7.305.6" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.305.7" />
     <PackageReference Include="Bogus" Version="35.3.0" />
     <PackageReference Include="Destructurama.Attributed" Version="3.1.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="8.0.2" />
@@ -28,7 +28,7 @@
     <PackageReference Include="HeimGuard" Version="1.0.0" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
     <PackageReference Include="MediatR" Version="12.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
