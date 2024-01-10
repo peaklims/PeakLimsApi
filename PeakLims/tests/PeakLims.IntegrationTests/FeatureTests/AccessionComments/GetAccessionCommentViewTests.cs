@@ -67,6 +67,7 @@ public class GetAccessionCommentViewTests : TestBase
         await testingServiceScope.SendAsync(command);
         
         var updatedCommentItem = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionComments
+            .Include(x => x.Accession)
             .FirstOrDefaultAsync(x => x.Comment == firstUpdatedCommentText));
         var finalCommentText = new Faker().Lorem.Sentence();
         command = new UpdateAccessionComment.Command(updatedCommentItem.Id, finalCommentText);
@@ -87,5 +88,7 @@ public class GetAccessionCommentViewTests : TestBase
         editedCommentItemView.History.Count.Should().Be(2);
         editedCommentItemView.History.Select(x => x.Comment).Should().Contain(rootCommentItem.Comment);
         editedCommentItemView.History.Select(x => x.Comment).Should().Contain(firstUpdatedCommentText);
+        
+        updatedCommentItem.Accession.Id.Should().Be(accession.Id);
     }
 }

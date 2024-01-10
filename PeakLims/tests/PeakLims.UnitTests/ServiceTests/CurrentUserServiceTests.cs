@@ -27,7 +27,7 @@ public class CurrentUserServiceTests
         
         var currentUserService = new CurrentUserService(sub, null);
 
-        currentUserService.UserId.Should().Be(name);
+        currentUserService.UserIdentifier.Should().Be(name);
     }
     
     [Fact]
@@ -48,7 +48,7 @@ public class CurrentUserServiceTests
         var currentUserService = new CurrentUserService(httpContextAccessor, jobContextAccessor);
 
         // Act & Assert
-        currentUserService.UserId.Should().Be(name);
+        currentUserService.UserIdentifier.Should().Be(name);
     }
     
     [Fact]
@@ -60,6 +60,6 @@ public class CurrentUserServiceTests
         
         var currentUserService = new CurrentUserService(sub, null);
 
-        currentUserService.UserId.Should().BeNullOrEmpty();
+        currentUserService.UserIdentifier.Should().BeNullOrEmpty();
     }
 }

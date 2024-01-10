@@ -34,6 +34,11 @@
             Gets a single AccessionComment by ID.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.GetAccessionCommentView(System.Guid)">
+            <summary>
+            Gets accession comments by accession
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionCommentsController.AddAccessionComment(PeakLims.Domain.AccessionComments.Dtos.AccessionCommentForCreationDto)">
             <summary>
             Creates a new AccessionComment record.

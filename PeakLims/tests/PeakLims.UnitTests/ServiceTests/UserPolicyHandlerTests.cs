@@ -187,7 +187,7 @@ public static class CurrentUserServiceExtensions
         var user = SetUserClaim(nameIdentifier);
         repo.User
             .Returns(user);
-        repo.UserId
+        repo.UserIdentifier
             .Returns(user?.FindFirstValue(ClaimTypes.NameIdentifier));
         repo.IsMachine
             .Returns(false);
@@ -198,7 +198,7 @@ public static class CurrentUserServiceExtensions
         var machine = SetMachineClaim(nameIdentifier, clientId);
         repo.User
             .Returns(machine);
-        repo.UserId
+        repo.UserIdentifier
             .Returns(machine?.FindFirstValue(ClaimTypes.NameIdentifier));
         repo.IsMachine
             .Returns(true);

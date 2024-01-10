@@ -39,6 +39,19 @@ public sealed class AccessionCommentsController: ControllerBase
 
 
     /// <summary>
+    /// Gets accession comments by accession
+    /// </summary>
+    [Authorize]
+    [HttpGet("byAccession/{accessionId:guid}", Name = "GetAccessionCommentView")]
+    public async Task<ActionResult<AccessionCommentDto>> GetAccessionCommentView(Guid accessionId)
+    {
+        var query = new GetAccessionCommentView.Query(accessionId);
+        var queryResponse = await _mediator.Send(query);
+        return Ok(queryResponse);
+    }
+
+
+    /// <summary>
     /// Creates a new AccessionComment record.
     /// </summary>
     [Authorize]

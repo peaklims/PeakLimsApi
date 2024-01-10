@@ -143,17 +143,17 @@ public sealed class PeakLimsDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.UpdateCreationProperties(now, _currentUserService?.UserId);
-                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserId);
+                    entry.Entity.UpdateCreationProperties(now, _currentUserService?.UserIdentifier);
+                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserIdentifier);
                     break;
 
                 case EntityState.Modified:
-                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserId);
+                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserIdentifier);
                     break;
                 
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
-                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserId);
+                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserIdentifier);
                     entry.Entity.UpdateIsDeleted(true);
                     break;
             }

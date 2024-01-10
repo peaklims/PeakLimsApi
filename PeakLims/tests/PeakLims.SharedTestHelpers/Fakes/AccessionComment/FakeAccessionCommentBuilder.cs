@@ -4,7 +4,6 @@ using Accession;
 using Bogus;
 using Domain.Accessions;
 using PeakLims.Domain.AccessionComments;
-using PeakLims.Domain.AccessionComments.Models;
 
 public class FakeAccessionCommentBuilder 
 {

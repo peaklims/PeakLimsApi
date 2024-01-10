@@ -12,6 +12,7 @@ public sealed class AccessionCommentViewDto
         public string CreatedByFirstName { get; set; }
         public string CreatedByLastName { get; set; }
         public string CreatedById { get; set; }
+        public bool OwnedByCurrentUser { get; set; }
         public List<AccessionCommentHistoryRecordDto> History { get; set; } = new List<AccessionCommentHistoryRecordDto>();
     }
     
@@ -23,5 +24,6 @@ public sealed class AccessionCommentViewDto
         public string CreatedByFirstName { get; set; }
         public string CreatedByLastName { get; set; }
         public string CreatedById { get; set; }
+        public bool OwnedByCurrentUser { get; set; }
     }
 }

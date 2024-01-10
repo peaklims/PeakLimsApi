@@ -6,7 +6,7 @@ using Resources.HangfireUtilities;
 public interface ICurrentUserService : IPeakLimsScopedService
 {
     ClaimsPrincipal? User { get; }
-    string? UserId { get; }
+    string? UserIdentifier { get; }
     string? Email { get; }
     string? FirstName { get; }
     string? LastName { get; }
@@ -27,7 +27,7 @@ public sealed class CurrentUserService : ICurrentUserService
     }
 
     public ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User ?? CreatePrincipalFromJobContextUserId();
-    public string? UserId => User?.FindFirstValue(ClaimTypes.NameIdentifier);
+    public string? UserIdentifier => User?.FindFirstValue(ClaimTypes.NameIdentifier);
     public string? Email => User?.FindFirstValue(ClaimTypes.Email);
     public string? FirstName => User?.FindFirstValue(ClaimTypes.GivenName);
     public string? LastName => User?.FindFirstValue(ClaimTypes.Surname);

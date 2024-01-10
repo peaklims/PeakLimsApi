@@ -5,7 +5,6 @@ using Exceptions;
 using PeakLims.Domain.AccessionComments.Services;
 using PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.AccessionComments.Dtos;
-using PeakLims.Domain.AccessionComments.Models;
 using PeakLims.Services;
 using PeakLims.Domain;
 using HeimGuard;

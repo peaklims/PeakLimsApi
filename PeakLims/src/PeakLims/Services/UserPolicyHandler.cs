@@ -64,7 +64,7 @@ public sealed class UserPolicyHandler : IUserPolicyHandler
         var claimsPrincipal = _currentUserService.User;
         if (claimsPrincipal == null) throw new ArgumentNullException(nameof(claimsPrincipal));
         
-        var nameIdentifier = _currentUserService.UserId;
+        var nameIdentifier = _currentUserService.UserIdentifier;
         var usersExist = _userRepository.Query().Any();
         
         if (!usersExist)
