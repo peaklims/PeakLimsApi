@@ -25,7 +25,7 @@ public class GetAccessionCommentViewTests : TestBase
             .Build();
         await testingServiceScope.InsertAsync(accessionCommentItem);
         var newComment =  new Faker().Lorem.Sentence();
-        var command = new UpdateAccessionComment.Command(accessionCommentItem.Id, newComment);
+        var command = new UpdateAccessionComment.Command(accessionCommentItem.Id, newComment, accessionCommentItem.CreatedBy);
         await testingServiceScope.SendAsync(command);
 
         // Act
@@ -63,14 +63,14 @@ public class GetAccessionCommentViewTests : TestBase
         await testingServiceScope.InsertAsync(rootCommentItem, standaloneCommentItem);
         
         var firstUpdatedCommentText = new Faker().Lorem.Sentence();
-        var command = new UpdateAccessionComment.Command(rootCommentItem.Id, firstUpdatedCommentText);
+        var command = new UpdateAccessionComment.Command(rootCommentItem.Id, firstUpdatedCommentText, rootCommentItem.CreatedBy);
         await testingServiceScope.SendAsync(command);
         
         var updatedCommentItem = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionComments
             .Include(x => x.Accession)
             .FirstOrDefaultAsync(x => x.Comment == firstUpdatedCommentText));
         var finalCommentText = new Faker().Lorem.Sentence();
-        command = new UpdateAccessionComment.Command(updatedCommentItem.Id, finalCommentText);
+        command = new UpdateAccessionComment.Command(updatedCommentItem.Id, finalCommentText, updatedCommentItem.CreatedBy);
         await testingServiceScope.SendAsync(command);
 
         // Act

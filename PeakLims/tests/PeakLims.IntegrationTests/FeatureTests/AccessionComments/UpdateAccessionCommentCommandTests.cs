@@ -27,7 +27,7 @@ public class UpdateAccessionCommentCommandTests : TestBase
         var comment = faker.Lorem.Sentence();
 
         // Act
-        var command = new UpdateAccessionComment.Command(originalAccessionComment.Id, comment);
+        var command = new UpdateAccessionComment.Command(originalAccessionComment.Id, comment, originalAccessionComment.CreatedBy);
         await testingServiceScope.SendAsync(command);
         
         var accessionComments = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionComments
@@ -35,6 +35,7 @@ public class UpdateAccessionCommentCommandTests : TestBase
             .ToListAsync());
         var newComment = accessionComments.FirstOrDefault(a => a.Status == AccessionCommentStatus.Active());
         var archivedComment = accessionComments.FirstOrDefault(a => a.Status == AccessionCommentStatus.Archived());
+        
         // Assert
         accessionComments.Count.Should().Be(2);
         
@@ -60,7 +61,27 @@ public class UpdateAccessionCommentCommandTests : TestBase
         var comment = faker.Lorem.Sentence();
 
         // Act
-        var command = new UpdateAccessionComment.Command(Guid.NewGuid(), comment);
+        var command = new UpdateAccessionComment.Command(Guid.NewGuid(), comment, null);
+        var act = () => testingServiceScope.SendAsync(command);
+
+        // Assert
+        await act.Should().ThrowAsync<ForbiddenAccessException>();
+    }
+
+    [Fact]
+    public async Task can_not_edit_another_user_comment()
+    {
+        // Arrange
+        var testingServiceScope = new TestingServiceScope();
+        var faker = new Faker();
+        var originalAccessionComment = new FakeAccessionCommentBuilder().Build();
+        await testingServiceScope.InsertAsync(originalAccessionComment);
+        
+        testingServiceScope.SetRandomUser();
+        var comment = faker.Lorem.Sentence();
+
+        // Act
+        var command = new UpdateAccessionComment.Command(originalAccessionComment.Id, comment, Guid.NewGuid().ToString());
         var act = () => testingServiceScope.SendAsync(command);
 
         // Assert

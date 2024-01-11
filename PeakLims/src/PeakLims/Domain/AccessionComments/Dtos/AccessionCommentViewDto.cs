@@ -13,6 +13,7 @@ public sealed class AccessionCommentViewDto
         public string CreatedByLastName { get; set; }
         public string CreatedById { get; set; }
         public bool OwnedByCurrentUser { get; set; }
+        public DateTime OriginalCommentAt { get; set; }
         public List<AccessionCommentHistoryRecordDto> History { get; set; } = new List<AccessionCommentHistoryRecordDto>();
     }
     

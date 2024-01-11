@@ -11,20 +11,14 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
+using Services;
 
 [ApiController]
 [Route("api/accessioncomments")]
 [ApiVersion("1.0")]
-public sealed class AccessionCommentsController: ControllerBase
+public sealed class AccessionCommentsController(IMediator mediator,
+    ICurrentUserService currentUserService) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public AccessionCommentsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
-
     /// <summary>
     /// Gets a single AccessionComment by ID.
     /// </summary>
@@ -33,7 +27,7 @@ public sealed class AccessionCommentsController: ControllerBase
     public async Task<ActionResult<AccessionCommentDto>> GetAccessionComment(Guid id)
     {
         var query = new GetAccessionComment.Query(id);
-        var queryResponse = await _mediator.Send(query);
+        var queryResponse = await mediator.Send(query);
         return Ok(queryResponse);
     }
 
@@ -46,7 +40,7 @@ public sealed class AccessionCommentsController: ControllerBase
     public async Task<ActionResult<AccessionCommentDto>> GetAccessionCommentView(Guid accessionId)
     {
         var query = new GetAccessionCommentView.Query(accessionId);
-        var queryResponse = await _mediator.Send(query);
+        var queryResponse = await mediator.Send(query);
         return Ok(queryResponse);
     }
 
@@ -59,7 +53,7 @@ public sealed class AccessionCommentsController: ControllerBase
     public async Task<ActionResult<AccessionCommentDto>> AddAccessionComment([FromBody]AccessionCommentForCreationDto accessionCommentForCreation)
     {
         var command = new AddAccessionComment.Command(accessionCommentForCreation.AccessionId, accessionCommentForCreation.Comment);
-        var commandResponse = await _mediator.Send(command);
+        var commandResponse = await mediator.Send(command);
 
         return CreatedAtRoute("GetAccessionComment",
             new { commandResponse.Id },
@@ -74,8 +68,8 @@ public sealed class AccessionCommentsController: ControllerBase
     [HttpPut("{id:guid}", Name = "UpdateAccessionComment")]
     public async Task<IActionResult> UpdateAccessionComment(Guid id, AccessionCommentForUpdateDto accessionComment)
     {
-        var command = new UpdateAccessionComment.Command(id, accessionComment.Comment);
-        await _mediator.Send(command);
+        var command = new UpdateAccessionComment.Command(id, accessionComment.Comment, currentUserService.UserIdentifier);
+        await mediator.Send(command);
         return NoContent();
     }
 
@@ -88,7 +82,7 @@ public sealed class AccessionCommentsController: ControllerBase
     public async Task<ActionResult> DeleteAccessionComment(Guid id)
     {
         var command = new DeleteAccessionComment.Command(id);
-        await _mediator.Send(command);
+        await mediator.Send(command);
         return NoContent();
     }
 

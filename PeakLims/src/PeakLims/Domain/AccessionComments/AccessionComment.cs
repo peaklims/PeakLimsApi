@@ -54,6 +54,9 @@ public class AccessionComment : BaseEntity
         QueueDomainEvent(new AccessionCommentUpdated(){ Id = Id });
         newComment.QueueDomainEvent(new AccessionCommentCreated(){ AccessionComment = newComment });
     }
+    
+    public bool CanBeUpdatedByUser(string userIdentifier) 
+        => CreatedBy == userIdentifier;
 
     private static void GuardCommentNotEmptyOrNull(string commentText)
     {

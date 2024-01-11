@@ -52,6 +52,11 @@ public static class GetAccessionCommentView
                 treatmentPlanDto.AccessionComments.Add(GetAccessionCommentItemDto(accessionComment, allAccessionComments, distinctUserList, currentUserId));
             }
 
+            treatmentPlanDto.AccessionComments =
+                treatmentPlanDto.AccessionComments
+                    .OrderBy(x => x.OriginalCommentAt)
+                    .ToList();
+
             return treatmentPlanDto;
         }
     }
@@ -110,6 +115,8 @@ public static class GetAccessionCommentView
         }
 
         accessionCommentDto.History.AddRange(accessionCommentHistory);
+        accessionCommentDto.OriginalCommentAt = accessionCommentDto.History.LastOrDefault()?.CreatedDate 
+                                                ?? accessionCommentDto.CreatedDate;
 
         return accessionCommentDto;
     }
