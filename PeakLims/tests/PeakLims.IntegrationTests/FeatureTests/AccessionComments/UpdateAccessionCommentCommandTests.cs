@@ -77,7 +77,6 @@ public class UpdateAccessionCommentCommandTests : TestBase
         var originalAccessionComment = new FakeAccessionCommentBuilder().Build();
         await testingServiceScope.InsertAsync(originalAccessionComment);
         
-        testingServiceScope.SetRandomUser();
         var comment = faker.Lorem.Sentence();
 
         // Act
