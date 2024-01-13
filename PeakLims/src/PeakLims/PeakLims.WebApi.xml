@@ -229,6 +229,21 @@
             Deactivates a HealthcareOrganization.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.HipaaAuditLogsController.GetHipaaAuditLogs(PeakLims.Domain.HipaaAuditLogs.Dtos.HipaaAuditLogParametersDto)">
+            <summary>
+            Gets a list of all HipaaAuditLogs.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HipaaAuditLogsController.GetHipaaAuditLog(System.Guid)">
+            <summary>
+            Gets a single HipaaAuditLog by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.HipaaAuditLogsController.UpdateHipaaAuditLog(System.Guid,PeakLims.Domain.HipaaAuditLogs.Dtos.HipaaAuditLogForUpdateDto)">
+            <summary>
+            Updates an entire existing HipaaAuditLog.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PanelOrdersController.GetPanelOrders(PeakLims.Domain.PanelOrders.Dtos.PanelOrderParametersDto)">
             <summary>
             Gets a list of all PanelOrders.
@@ -322,11 +337,6 @@
         <member name="M:PeakLims.Controllers.v1.PatientsController.UpdatePatient(System.Guid,PeakLims.Domain.Patients.Dtos.PatientForUpdateDto)">
             <summary>
             Updates an entire existing Patient.
-            </summary>
-        </member>
-        <member name="M:PeakLims.Controllers.v1.PatientsController.DeletePatient(System.Guid)">
-            <summary>
-            Deletes an existing Patient record.
             </summary>
         </member>
         <member name="M:PeakLims.Controllers.v1.PermissionsController.GetPermissions">
@@ -539,6 +549,11 @@
             The database configuration for HealthcareOrganizationContacts. 
             </summary>
         </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.HipaaAuditLogConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.HipaaAuditLogs.HipaaAuditLog})">
+            <summary>
+            The database configuration for HipaaAuditLogs. 
+            </summary>
+        </member>
         <member name="M:PeakLims.Databases.EntityConfigurations.PanelConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Panels.Panel})">
             <summary>
             The database configuration for Panels. 
@@ -629,6 +644,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.AddAuditLog">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAuditLog.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAuditLog.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddAuditLog.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

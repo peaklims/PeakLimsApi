@@ -6,6 +6,9 @@ public static class Permissions
 {
 
     // Permissions marker - do not delete this comment
+    public const string CanDeleteHipaaAuditLogs = nameof(CanDeleteHipaaAuditLogs);
+    public const string CanUpdateHipaaAuditLogs = nameof(CanUpdateHipaaAuditLogs);
+    public const string CanReadHipaaAuditLogs = nameof(CanReadHipaaAuditLogs);
     public const string CanDeletePanelOrders = nameof(CanDeletePanelOrders);
     public const string CanAddPanelOrders = nameof(CanAddPanelOrders);
     public const string CanReadPanelOrders = nameof(CanReadPanelOrders);

@@ -125,18 +125,5 @@ public sealed class PatientsController: ControllerBase
         return NoContent();
     }
 
-
-    /// <summary>
-    /// Deletes an existing Patient record.
-    /// </summary>
-    [Authorize]
-    [HttpDelete("{id:guid}", Name = "DeletePatient")]
-    public async Task<ActionResult> DeletePatient(Guid id)
-    {
-        var command = new DeletePatient.Command(id);
-        await _mediator.Send(command);
-        return NoContent();
-    }
-
     // endpoint marker - do not delete this comment
 }

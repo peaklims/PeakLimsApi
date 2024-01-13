@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Patients.Mappings;
 
+using HipaaAuditLogs.Models;
 using PeakLims.Domain.Patients.Dtos;
 using PeakLims.Domain.Patients.Models;
 using Riok.Mapperly.Abstractions;
@@ -13,6 +14,10 @@ public static partial class PatientMapper
     [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth) }, new[] { nameof(PatientDto.DateOfBirth) })]
     [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(PatientDto.Age) })]
     public static partial PatientDto ToPatientDto(this Patient patient);
+    
+    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth) }, new[] { nameof(PatientDto.DateOfBirth) })]
+    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(PatientDto.Age) })]
+    public static partial PatientAuditLogEntry ToPatientAuditLogEntry(this Patient patient);
     
     [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth) }, new[] { nameof(PatientDto.DateOfBirth) })]
     [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(PatientDto.Age) })]

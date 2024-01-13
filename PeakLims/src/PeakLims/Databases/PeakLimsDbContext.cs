@@ -20,6 +20,7 @@ using PeakLims.Domain.HealthcareOrganizationContacts;
 using PeakLims.Domain.AccessionContacts;
 using PeakLims.Domain.AccessionAttachments;
 using PeakLims.Domain.PanelOrders;
+using PeakLims.Domain.HipaaAuditLogs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
@@ -43,6 +44,7 @@ public sealed class PeakLimsDbContext : DbContext
     }
 
     #region DbSet Region - Do Not Delete
+    public DbSet<HipaaAuditLog> HipaaAuditLogs { get; set; }
     public DbSet<PanelOrder> PanelOrders { get; set; }
     public DbSet<AccessionAttachment> AccessionAttachments { get; set; }
     public DbSet<AccessionContact> AccessionContacts { get; set; }
@@ -84,6 +86,7 @@ public sealed class PeakLimsDbContext : DbContext
         */
 
         #region Entity Database Config Region - Only delete if you don't want to automatically add configurations
+        modelBuilder.ApplyConfiguration(new HipaaAuditLogConfiguration());
         modelBuilder.ApplyConfiguration(new PanelOrderConfiguration());
         modelBuilder.ApplyConfiguration(new AccessionAttachmentConfiguration());
         modelBuilder.ApplyConfiguration(new AccessionContactConfiguration());

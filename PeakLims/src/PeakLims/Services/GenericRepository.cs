@@ -17,7 +17,7 @@ public interface IGenericRepository<TEntity> : IPeakLimsScopedService
     Task Add(TEntity entity, CancellationToken cancellationToken = default);    
     Task AddRange(IEnumerable<TEntity> entity, CancellationToken cancellationToken = default);    
     void Update(TEntity entity);
-    void Remove(TEntity entity);
+    void Remove(TEntity patient);
     void RemoveRange(IEnumerable<TEntity> entity);
 }
 
@@ -77,9 +77,9 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity>
         _dbContext.Set<TEntity>().Update(entity);
     }
 
-    public virtual void Remove(TEntity entity)
+    public virtual void Remove(TEntity patient)
     {
-        _dbContext.Set<TEntity>().Remove(entity);
+        _dbContext.Set<TEntity>().Remove(patient);
     }
 
     public virtual void RemoveRange(IEnumerable<TEntity> entities)
