@@ -21,12 +21,8 @@ public static class UpdateAccessionComment
 
             var accessionCommentToUpdate = await accessionCommentRepository
                 .GetById(request.AccessionCommentId, cancellationToken: cancellationToken);
-
-            var canBeUpdated = accessionCommentToUpdate.CanBeUpdatedByUser(request.UserIdentifier);
-            if (!canBeUpdated)
-                throw new ForbiddenAccessException("Accession comment cannot be updated by current user");
             
-            accessionCommentToUpdate.Update(request.Comment, out var newComment, out var archivedComment);
+            accessionCommentToUpdate.Update(request.Comment, request.UserIdentifier, out var newComment, out var archivedComment);
             await accessionCommentRepository.Add(newComment, cancellationToken);
             accessionCommentRepository.Update(archivedComment);
             await unitOfWork.CommitChanges(cancellationToken);

@@ -3,6 +3,7 @@ namespace PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.AccessionComments.DomainEvents;
 using System.ComponentModel.DataAnnotations;
 using AccessionCommentStatuses;
+using Exceptions;
 using PeakLims.Domain.Accessions;
 using ValidationException = Exceptions.ValidationException;
 
@@ -36,9 +37,13 @@ public class AccessionComment : BaseEntity
         return newAccessionComment;
     }
 
-    public void Update(string commentText, out AccessionComment newComment, out AccessionComment archivedComment)
+    public void Update(string commentText, string userIdentifier, out AccessionComment newComment, out AccessionComment archivedComment)
     {
         GuardCommentNotEmptyOrNull(commentText);
+        var canBeUpdated = CanBeUpdatedByUser(userIdentifier);
+        if (!canBeUpdated)
+            throw new ForbiddenAccessException("Accession comment cannot be updated by this user.");
+        
         newComment = new AccessionComment
         {
             Comment = commentText,

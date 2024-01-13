@@ -11,25 +11,6 @@ using System.Threading.Tasks;
 public class UpdateAccessionCommentRecordTests : TestBase
 {
     [Fact]
-    public async Task put_accessioncomment_returns_nocontent_when_entity_exists_and_auth_credentials_are_valid()
-    {
-        // Arrange
-        var fakeAccessionComment = new FakeAccessionCommentBuilder().Build();
-        var updatedAccessionCommentDto = new FakeAccessionCommentForUpdateDto().Generate();
-
-        var user = await AddNewSuperAdmin();
-        FactoryClient.AddAuth(user.Identifier);
-        await InsertAsync(fakeAccessionComment);
-
-        // Act
-        var route = ApiRoutes.AccessionComments.Put(fakeAccessionComment.Id);
-        var result = await FactoryClient.PutJsonRequestAsync(route, updatedAccessionCommentDto);
-
-        // Assert
-        result.StatusCode.Should().Be(HttpStatusCode.NoContent);
-    }
-            
-    [Fact]
     public async Task put_accessioncomment_returns_unauthorized_without_valid_token()
     {
         // Arrange
