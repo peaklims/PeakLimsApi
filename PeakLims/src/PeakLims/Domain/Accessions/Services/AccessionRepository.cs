@@ -25,6 +25,8 @@ public sealed class AccessionRepository : GenericRepository<Accession>, IAccessi
         return _dbContext.Accessions
             .Include(x => x.TestOrders)
             .ThenInclude(x => x.Test)
+            .Include(x => x.TestOrders)
+            .ThenInclude(x => x.PanelOrder)
             .Include(x => x.AccessionContacts)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync(cancellationToken);

@@ -27,7 +27,6 @@ public class UpdatePanelOrderTests
         panelOrder.Update(updatedPanelOrder);
 
         // Assert
-        panelOrder.Status.Should().Be(updatedPanelOrder.Status);
         panelOrder.CancellationReason.Should().Be(updatedPanelOrder.CancellationReason);
         panelOrder.CancellationComments.Should().Be(updatedPanelOrder.CancellationComments);
     }

@@ -23,11 +23,9 @@ public class AddPanelOrderCommandTests : TestBase
             .FirstOrDefaultAsync(p => p.Id == panelOrderReturned.Id));
 
         // Assert
-        panelOrderReturned.Status.Should().Be(panelOrderOne.Status);
         panelOrderReturned.CancellationReason.Should().Be(panelOrderOne.CancellationReason);
         panelOrderReturned.CancellationComments.Should().Be(panelOrderOne.CancellationComments);
 
-        panelOrderCreated.Status.Should().Be(panelOrderOne.Status);
         panelOrderCreated.CancellationReason.Should().Be(panelOrderOne.CancellationReason);
         panelOrderCreated.CancellationComments.Should().Be(panelOrderOne.CancellationComments);
     }

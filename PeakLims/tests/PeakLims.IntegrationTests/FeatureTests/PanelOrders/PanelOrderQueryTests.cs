@@ -22,7 +22,6 @@ public class PanelOrderQueryTests : TestBase
         var panelOrder = await testingServiceScope.SendAsync(query);
 
         // Assert
-        panelOrder.Status.Should().Be(panelOrderOne.Status);
         panelOrder.CancellationReason.Should().Be(panelOrderOne.CancellationReason);
         panelOrder.CancellationComments.Should().Be(panelOrderOne.CancellationComments);
     }

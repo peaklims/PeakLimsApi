@@ -13,12 +13,6 @@ public class FakePanelOrderBuilder
         return this;
     }
     
-    public FakePanelOrderBuilder WithStatus(string status)
-    {
-        _creationData.Status = status;
-        return this;
-    }
-    
     public FakePanelOrderBuilder WithCancellationReason(string cancellationReason)
     {
         _creationData.CancellationReason = cancellationReason;

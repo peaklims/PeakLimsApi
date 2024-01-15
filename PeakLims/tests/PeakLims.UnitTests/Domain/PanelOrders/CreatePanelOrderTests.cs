@@ -26,7 +26,6 @@ public class CreatePanelOrderTests
         var panelOrder = PanelOrder.Create(panelOrderToCreate);
 
         // Assert
-        panelOrder.Status.Should().Be(panelOrderToCreate.Status);
         panelOrder.CancellationReason.Should().Be(panelOrderToCreate.CancellationReason);
         panelOrder.CancellationComments.Should().Be(panelOrderToCreate.CancellationComments);
     }

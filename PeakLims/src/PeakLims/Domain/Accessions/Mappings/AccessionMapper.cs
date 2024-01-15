@@ -79,6 +79,7 @@ public static partial class AccessionMapper
                         PanelOrderId = x.PanelOrder?.Id,
                         Type = x.PanelOrder?.Panel?.Type,
                         Version = x.PanelOrder?.Panel?.Version,
+                        Status = x?.PanelOrder?.Status()?.Value,
                     },
                     TestCode = x.Test.TestCode,
                     Status = x.Status != null ? x.Status.Value : default,

@@ -9,11 +9,14 @@ using Destructurama.Attributed;
 using PeakLims.Exceptions;
 using PeakLims.Domain.PanelOrders.Models;
 using PeakLims.Domain.PanelOrders.DomainEvents;
+using PanelOrderStatuses;
+using TestOrderCancellationReasons;
+using TestOrderStatuses;
 using ValidationException = Exceptions.ValidationException;
 
 public class PanelOrder : BaseEntity
 {
-    public string Status { get; private set; }
+    public PanelOrderStatus Status() => DeriveStatus();
 
     public string CancellationReason { get; private set; }
 
@@ -33,13 +36,44 @@ public class PanelOrder : BaseEntity
     {
         var newPanelOrder = new PanelOrder();
 
-        newPanelOrder.Status = panelOrderForCreation.Status;
         newPanelOrder.CancellationReason = panelOrderForCreation.CancellationReason;
         newPanelOrder.CancellationComments = panelOrderForCreation.CancellationComments;
 
         newPanelOrder.QueueDomainEvent(new PanelOrderCreated(){ PanelOrder = newPanelOrder });
         
         return newPanelOrder;
+    }
+    
+    public PanelOrder Cancel(TestOrderCancellationReason cancellationReason, string cancellationComments)
+    {
+        foreach (var testOrder in TestOrders)
+        {
+            testOrder.Cancel(cancellationReason, cancellationComments);
+        }
+        CancellationReason = cancellationReason.Value;
+        CancellationComments = cancellationComments;
+
+        QueueDomainEvent(new PanelOrderUpdated(){ Id = Id });
+        return this;
+    }
+    
+    private PanelOrderStatus DeriveStatus()
+    {
+        var testOrderStatuses = TestOrders?.Select(x => x.Status)?.Distinct()?.ToList() ?? new List<TestOrderStatus>();
+        var isFullyCancelled = testOrderStatuses?.All(x => x == PanelOrderStatus.Cancelled()) ?? false;
+        var isFullyAbandoned = testOrderStatuses?.All(x => x == PanelOrderStatus.Abandoned()) ?? false;
+        
+        if (isFullyCancelled)
+            return PanelOrderStatus.Cancelled();
+        if (isFullyAbandoned)
+            return PanelOrderStatus.Abandoned();
+        
+        var isFinal = testOrderStatuses.All(x => x.IsFinalState());
+        if (isFinal)
+            return PanelOrderStatus.Completed();
+        
+        var isInProgress = testOrderStatuses.Any(x => x.IsProcessing());
+        return isInProgress ? PanelOrderStatus.Processing() : PanelOrderStatus.Pending();
     }
 
     public static PanelOrder Create(Panel panel)
@@ -64,7 +98,6 @@ public class PanelOrder : BaseEntity
 
     public PanelOrder Update(PanelOrderForUpdate panelOrderForUpdate)
     {
-        Status = panelOrderForUpdate.Status;
         CancellationReason = panelOrderForUpdate.CancellationReason;
         CancellationComments = panelOrderForUpdate.CancellationComments;
 
