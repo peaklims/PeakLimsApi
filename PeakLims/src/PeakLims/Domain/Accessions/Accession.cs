@@ -28,11 +28,6 @@ public class Accession : BaseEntity
     private readonly List<TestOrder> _testOrders = new();
     public IReadOnlyCollection<TestOrder> TestOrders => _testOrders.AsReadOnly();
     
-    public IReadOnlyCollection<PanelOrder> PanelOrders => _testOrders
-        .Select(x => x.PanelOrder)
-        .ToList()
-        .AsReadOnly();
-    
     public IReadOnlyCollection<AccessionComment> Comments { get; } = new List<AccessionComment>();
 
     private readonly List<AccessionContact> _accessionContacts = new();
