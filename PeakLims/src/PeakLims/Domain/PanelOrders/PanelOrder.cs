@@ -1,12 +1,8 @@
 namespace PeakLims.Domain.PanelOrders;
 
-using System.ComponentModel.DataAnnotations;
 using PeakLims.Domain.TestOrders;
 using PeakLims.Domain.Accessions;
 using PeakLims.Domain.Panels;
-using System.ComponentModel.DataAnnotations.Schema;
-using Destructurama.Attributed;
-using PeakLims.Exceptions;
 using PeakLims.Domain.PanelOrders.Models;
 using PeakLims.Domain.PanelOrders.DomainEvents;
 using PanelOrderStatuses;
@@ -59,7 +55,9 @@ public class PanelOrder : BaseEntity
     
     private PanelOrderStatus DeriveStatus()
     {
-        var testOrderStatuses = TestOrders?.Select(x => x.Status)?.Distinct()?.ToList() ?? new List<TestOrderStatus>();
+        var testOrderStatuses = TestOrders
+            ?.Where(x => x.PanelOrder?.Id == Id)
+            ?.Select(x => x.Status)?.Distinct()?.ToList() ?? new List<TestOrderStatus>();
         var isFullyCancelled = testOrderStatuses?.All(x => x == PanelOrderStatus.Cancelled()) ?? false;
         var isFullyAbandoned = testOrderStatuses?.All(x => x == PanelOrderStatus.Abandoned()) ?? false;
         
