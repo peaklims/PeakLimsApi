@@ -119,6 +119,18 @@ public sealed class TestOrdersController: ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
+    
+    /// <summary>
+    /// Cancels a test order
+    /// </summary>
+    [Authorize]
+    [HttpPut("{testOrderId:guid}/cancel", Name = "CancelTestOrder")]
+    public async Task<IActionResult> CancelTestOrder([FromRoute] Guid testOrderId, [FromBody] TestOrderCancellationDto testOrderCancellationDto)
+    {
+        var command = new CancelTestOrder.Command(testOrderId, testOrderCancellationDto.Reason, testOrderCancellationDto.Comments);
+        await _mediator.Send(command);
+        return NoContent();
+    }
 
     // endpoint marker - do not delete this comment
 }

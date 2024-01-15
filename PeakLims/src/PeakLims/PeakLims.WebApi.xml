@@ -444,6 +444,11 @@
             Sets the sample on a test order
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.CancelTestOrder(System.Guid,PeakLims.Domain.TestOrders.Dtos.TestOrderCancellationDto)">
+            <summary>
+            Cancels a test order
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.TestsController.GetTests(PeakLims.Domain.Tests.Dtos.TestParametersDto)">
             <summary>
             Gets a list of all Tests.
