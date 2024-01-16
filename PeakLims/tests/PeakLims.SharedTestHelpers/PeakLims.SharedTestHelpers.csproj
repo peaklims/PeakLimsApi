@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0" />
+    <PackageReference Include="Ardalis.SmartEnum" Version="8.0.0" />
     <PackageReference Include="AutoBogusLifesupport" Version="2.14.0" />
     <PackageReference Include="Bogus" Version="35.3.0" />
     <PackageReference Include="NSubstitute" Version="5.1.0" />
