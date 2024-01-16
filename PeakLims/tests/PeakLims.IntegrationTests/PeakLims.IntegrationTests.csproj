@@ -24,7 +24,7 @@
     <PackageReference Include="Testcontainers.LocalStack" Version="3.6.0" />
     <PackageReference Include="Testcontainers.RabbitMq" Version="3.6.0" />
     <PackageReference Include="Testcontainers.PostgreSql" Version="3.6.0" />
-    <PackageReference Include="xunit" Version="2.6.5" />
+    <PackageReference Include="xunit" Version="2.6.6" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
