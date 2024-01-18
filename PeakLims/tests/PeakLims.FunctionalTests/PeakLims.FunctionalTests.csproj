@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="WebMotions.Fake.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="WebMotions.Fake.Authentication.JwtBearer" Version="8.0.1" />
     <PackageReference Include="Testcontainers.LocalStack" Version="3.7.0" />
     <PackageReference Include="Testcontainers" Version="3.7.0" />
     <PackageReference Include="Testcontainers.RabbitMq" Version="3.7.0" />
