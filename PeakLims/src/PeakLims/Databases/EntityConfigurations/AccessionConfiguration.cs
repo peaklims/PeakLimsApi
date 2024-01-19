@@ -24,6 +24,8 @@ public sealed class AccessionConfiguration : IEntityTypeConfiguration<Accession>
             .WithMany(x => x.Accessions);
         builder.HasMany(x => x.TestOrders)
             .WithOne(x => x.Accession);
+        builder.HasMany(x => x.PanelOrders)
+            .WithOne(x => x.Accession);
         
         builder.Property(o => o.AccessionNumber)
             .HasDefaultValueSql($"concat('{Consts.DatabaseSequences.AccessionNumberPrefix}', nextval('\"{Consts.DatabaseSequences.AccessionNumberPrefix}\"'))")

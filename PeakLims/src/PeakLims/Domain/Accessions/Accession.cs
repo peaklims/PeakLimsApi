@@ -28,6 +28,9 @@ public class Accession : BaseEntity
     private readonly List<TestOrder> _testOrders = new();
     public IReadOnlyCollection<TestOrder> TestOrders => _testOrders.AsReadOnly();
     
+    private readonly List<PanelOrder> _panelOrders = new();
+    public IReadOnlyCollection<PanelOrder> PanelOrders => _panelOrders.AsReadOnly();
+    
     public IReadOnlyCollection<AccessionComment> Comments { get; } = new List<AccessionComment>();
 
     private readonly List<AccessionContact> _accessionContacts = new();
@@ -220,6 +223,7 @@ public class Accession : BaseEntity
                 $"This panel has one or more tests that are not active. Only panels with all active tests can be added to an accession.");
         
         var panelOrder = PanelOrder.Create(panel);
+        _panelOrders.Add(panelOrder);
         foreach (var panelOrderTestOrder in panelOrder.TestOrders)
         {
             _testOrders.Add(panelOrderTestOrder);

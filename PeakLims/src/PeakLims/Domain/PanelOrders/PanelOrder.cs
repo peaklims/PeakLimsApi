@@ -57,9 +57,10 @@ public class PanelOrder : BaseEntity
     {
         var testOrderStatuses = TestOrders
             ?.Where(x => x.PanelOrder?.Id == Id)
-            ?.Select(x => x.Status)?.Distinct()?.ToList() ?? new List<TestOrderStatus>();
-        var isFullyCancelled = testOrderStatuses?.All(x => x == PanelOrderStatus.Cancelled()) ?? false;
-        var isFullyAbandoned = testOrderStatuses?.All(x => x == PanelOrderStatus.Abandoned()) ?? false;
+            ?.Select(x => x.Status)
+            ?.ToList() ?? new List<TestOrderStatus>();
+        var isFullyCancelled = testOrderStatuses?.All(x => x == TestOrderStatus.Cancelled()) ?? false;
+        var isFullyAbandoned = testOrderStatuses?.All(x => x == TestOrderStatus.Abandoned()) ?? false;
         
         if (isFullyCancelled)
             return PanelOrderStatus.Cancelled();

@@ -675,5 +675,17 @@
         <member name="M:PeakLims.Migrations.RemovePanelOrderStatus.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:PeakLims.Migrations.PanelOrdersOffOfAccession">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.PanelOrdersOffOfAccession.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.PanelOrdersOffOfAccession.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.PanelOrdersOffOfAccession.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

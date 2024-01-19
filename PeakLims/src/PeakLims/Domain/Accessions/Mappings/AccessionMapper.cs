@@ -46,6 +46,14 @@ public static partial class AccessionMapper
     
     public static EditableAccessionDto ToEditableAccessionDto(this Accession accession, IFileStorage fileStorage)
     {
+        var standaloneTestOrders = accession.TestOrders
+            .Where(x => x.PanelOrder == null)
+            .ToList();
+        var panelOrders = accession.PanelOrders.ToList();
+        var testOrdersCombined = standaloneTestOrders
+            .Concat(panelOrders.SelectMany(x => x.TestOrders))
+            .ToList();
+        
         return new EditableAccessionDto()
         {
             Id = accession.Id,
@@ -64,7 +72,7 @@ public static partial class AccessionMapper
                 Sex = accession.Patient.Sex.Value,
                 InternalId = accession.Patient.InternalId
             },
-            TestOrders = accession.TestOrders
+            TestOrders = testOrdersCombined
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new EditableAccessionDto.TestOrderDto()
                 {
