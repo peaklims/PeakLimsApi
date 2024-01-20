@@ -12,19 +12,9 @@ using Tests.Services;
 
 public static class AddTestToPanel
 {
-    public sealed class Command : IRequest<bool>
-    {
-        public readonly Guid PanelId;
-        public readonly Guid TestId;
+    public sealed record Command(Guid PanelId, Guid TestId) : IRequest;
 
-        public Command(Guid panelId, Guid testId)
-        {
-            PanelId = panelId;
-            TestId = testId;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Command, bool>
+    public sealed class Handler : IRequestHandler<Command>
     {
         private readonly IPanelRepository _panelRepository;
         private readonly ITestRepository _testRepository;
@@ -41,7 +31,7 @@ public static class AddTestToPanel
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
+        public async Task Handle(Command request, CancellationToken cancellationToken)
         {
             await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddTestToPanel);
 
@@ -49,8 +39,6 @@ public static class AddTestToPanel
             var test = await _testRepository.GetById(request.TestId, cancellationToken: cancellationToken);
             panel.AddTest(test, _testOrderRepository);
             await _unitOfWork.CommitChanges(cancellationToken);
-            
-            return true;
         }
     }
 }

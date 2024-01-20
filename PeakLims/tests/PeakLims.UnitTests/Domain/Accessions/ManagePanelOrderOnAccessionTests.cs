@@ -35,9 +35,15 @@ public class ManagePanelOrderOnAccessionTests
         fakeAccession.AddPanel(panel);
 
         // Assert - Add
-        fakeAccession.TestOrders.Count.Should().Be(1);
+        fakeAccession.PanelOrders
+            .SelectMany(x => x.TestOrders)
+            .ToList()
+            .Count
+            .Should()
+            .Be(1);
         
-        var testOrder = fakeAccession.TestOrders.FirstOrDefault();
+        var testOrder = fakeAccession.PanelOrders
+            .SelectMany(x => x.TestOrders).FirstOrDefault();
         testOrder.Test.TestCode.Should().Be(test.TestCode);
         testOrder.PanelOrder.Panel.PanelCode.Should().Be(panel.PanelCode);
         

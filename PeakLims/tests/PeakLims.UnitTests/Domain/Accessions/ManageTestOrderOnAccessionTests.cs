@@ -77,7 +77,8 @@ public class ManageTestOrderOnAccessionTests
             .AddTest(test)
             .Activate();
         fakeAccession.AddPanel(panel);
-        var testOrder = fakeAccession.TestOrders.First();
+        var testOrder = fakeAccession.PanelOrders
+            .SelectMany(x => x.TestOrders).First();
         
         // Act
         var act = () => fakeAccession.RemoveTestOrder(testOrder);

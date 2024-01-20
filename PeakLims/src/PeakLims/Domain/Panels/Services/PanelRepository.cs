@@ -10,14 +10,9 @@ public interface IPanelRepository : IGenericRepository<Panel>
     bool Exists(string panelCode, int version);
 }
 
-public sealed class PanelRepository : GenericRepository<Panel>, IPanelRepository
+public sealed class PanelRepository(PeakLimsDbContext dbContext) : GenericRepository<Panel>(dbContext), IPanelRepository
 {
-    private readonly PeakLimsDbContext _dbContext;
-
-    public PanelRepository(PeakLimsDbContext dbContext) : base(dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly PeakLimsDbContext _dbContext = dbContext;
 
     public bool Exists(string panelCode, int version)
     {

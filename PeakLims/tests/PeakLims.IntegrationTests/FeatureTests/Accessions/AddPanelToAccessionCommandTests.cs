@@ -38,12 +38,13 @@ public class AddPanelToAccessionCommandPanels : TestBase
         // Act
         var command = new AddPanelToAccession.Command(fakeAccessionOne.Id, fakePanel.Id);
         await testingServiceScope.SendAsync(command);
-        var accession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
+        var panelOrders = await testingServiceScope.ExecuteDbContextAsync(db => db.PanelOrders
+            .Include(x => x.Accession)
+            .Include(x => x.Panel)
             .Include(x => x.TestOrders)
-            .ThenInclude(x => x.Test)
-            .ThenInclude(x => x.Panels)
-            .FirstOrDefaultAsync(a => a.Id == fakeAccessionOne.Id));
-        var testOrders = accession.TestOrders;
+                .ThenInclude(x => x.Test)
+            .FirstOrDefaultAsync(a => a.Accession.Id == fakeAccessionOne.Id));
+        var testOrders = panelOrders.TestOrders;
 
         // Assert
         testOrders.Count.Should().Be(1);
@@ -72,13 +73,22 @@ public class AddPanelToAccessionCommandPanels : TestBase
         // Act
         var command = new AddPanelToAccession.Command(accession.Id, fakePanel.Id);
         await testingServiceScope.SendAsync(command);
-        var accessionFromDb = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
+        var panelOrders = await testingServiceScope.ExecuteDbContextAsync(db => db.PanelOrders
+            .Include(x => x.Accession)
+            .Include(x => x.Panel)
             .Include(x => x.TestOrders)
             .ThenInclude(x => x.Test)
-            .ThenInclude(x => x.Panels)
-            .ThenInclude(x => x.PanelOrders)
-            .FirstOrDefaultAsync(a => a.Id == accession.Id));
-        var testOrders = accessionFromDb.TestOrders;
+            .Where(a => a.Accession.Id == accession.Id)
+            .ToListAsync());
+        var dbTestOrders = await testingServiceScope.ExecuteDbContextAsync(db => db.TestOrders
+            .Include(x => x.Accession)
+            .Include(x => x.Test)
+            .Where(a => a.Accession.Id == accession.Id)
+            .ToListAsync());
+        
+        var testOrders = panelOrders.SelectMany(x => x.TestOrders)
+            .Concat(dbTestOrders)
+            .ToList();
 
         // Assert
         testOrders.Count.Should().Be(2);

@@ -25,6 +25,7 @@ public class Accession : BaseEntity
 
     public HealthcareOrganization HealthcareOrganization { get; private set; }
 
+    // Test orders are only direct test orders and will not include test orders inside a panel order
     private readonly List<TestOrder> _testOrders = new();
     public IReadOnlyCollection<TestOrder> TestOrders => _testOrders.AsReadOnly();
     
@@ -98,13 +99,13 @@ public class Accession : BaseEntity
 
     public Accession RemoveTestOrder(TestOrder testOrder)
     {
-        var alreadyExists = TestOrders.Any(x => testOrder.Id == x.Id);
-        if (!alreadyExists)
-            return this;
-        
         if(testOrder.IsPartOfPanel())
             throw new ValidationException(nameof(Accession),
                 $"Test orders that are part of a panel can not be selectively removed.");
+        
+        var alreadyExists = TestOrders.Any(x => testOrder.Id == x.Id);
+        if (!alreadyExists)
+            return this;
         
         RemoveTestOrderForTestOrPanel(testOrder);
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
@@ -224,10 +225,10 @@ public class Accession : BaseEntity
         
         var panelOrder = PanelOrder.Create(panel);
         _panelOrders.Add(panelOrder);
-        foreach (var panelOrderTestOrder in panelOrder.TestOrders)
-        {
-            _testOrders.Add(panelOrderTestOrder);
-        }
+        // foreach (var panelOrderTestOrder in panelOrder.TestOrders)
+        // {
+        //     _testOrders.Add(panelOrderTestOrder);
+        // }
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
         return panelOrder;
     }

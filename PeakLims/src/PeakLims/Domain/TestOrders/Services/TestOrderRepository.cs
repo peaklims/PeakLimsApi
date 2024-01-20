@@ -33,6 +33,6 @@ public sealed class TestOrderRepository : GenericRepository<TestOrder>, ITestOrd
             .Include(x => x.Accession)
             .Include(x => x.PanelOrder)
             .ThenInclude(x => x.Panel)
-            .Any(x => x.Accession != null && x.PanelOrder.Panel == panel);
+            .Any(x => x.PanelOrder.Panel == panel);
     }
 }
