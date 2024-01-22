@@ -25,29 +25,22 @@ public static class UpdateContainer
         }
     }
 
-    public sealed class Handler : IRequestHandler<Command>
+    public sealed class Handler(
+        IContainerRepository containerRepository,
+        IUnitOfWork unitOfWork,
+        IHeimGuardClient heimGuard)
+        : IRequestHandler<Command>
     {
-        private readonly IContainerRepository _containerRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IContainerRepository containerRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _containerRepository = containerRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateContainers);
+            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateContainers);
 
-            var containerToUpdate = await _containerRepository.GetById(request.Id, cancellationToken: cancellationToken);
+            var containerToUpdate = await containerRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var containerToAdd = request.UpdatedContainerData.ToContainerForUpdate();
             containerToUpdate.Update(containerToAdd);
 
-            _containerRepository.Update(containerToUpdate);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            containerRepository.Update(containerToUpdate);
+            await unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }

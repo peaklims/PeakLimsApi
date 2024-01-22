@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
 using Domain.Panels.Features;
+using Domain.TestOrderCancellationReasons;
 using MediatR;
 
 [ApiController]
@@ -131,6 +132,14 @@ public sealed class TestOrdersController: ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
+    
+    /// <summary>
+    /// Get a list of all possible cancellation reasons
+    /// </summary>
+    [Authorize]
+    [HttpGet("cancellationReasons", Name = "GetCancellationReasons")]
+    public async Task<IActionResult> GetCancellationReasons()
+        => Ok(TestOrderCancellationReason.ListNames());
 
     // endpoint marker - do not delete this comment
 }

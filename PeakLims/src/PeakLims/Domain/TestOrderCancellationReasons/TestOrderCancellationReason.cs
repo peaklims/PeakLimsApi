@@ -41,34 +41,14 @@ public class TestOrderCancellationReason : ValueObject
     protected TestOrderCancellationReason() { } // EF Core
 }
 
-public abstract class TestOrderCancellationReasonEnum : SmartEnum<TestOrderCancellationReasonEnum>
+public abstract class TestOrderCancellationReasonEnum(string name, int value)
+    : SmartEnum<TestOrderCancellationReasonEnum>(name, value)
 {
     public static readonly TestOrderCancellationReasonEnum Qns = new QnsType();
     public static readonly TestOrderCancellationReasonEnum Abandoned = new AbandonedType();
     public static readonly TestOrderCancellationReasonEnum Other = new OtherType();
-
-    protected TestOrderCancellationReasonEnum(string name, int value) : base(name, value)
-    {
-    }
-
-    private class QnsType : TestOrderCancellationReasonEnum
-    {
-        public QnsType() : base("QNS", 0)
-        {
-        }
-    }
-
-    private class AbandonedType : TestOrderCancellationReasonEnum
-    {
-        public AbandonedType() : base("Abandoned", 1)
-        {
-        }
-    }
-
-    private class OtherType : TestOrderCancellationReasonEnum
-    {
-        public OtherType() : base("Other", 100)
-        {
-        }
-    }
+    
+    private class QnsType() : TestOrderCancellationReasonEnum("QNS", 0);
+    private class AbandonedType() : TestOrderCancellationReasonEnum("Abandoned", 1);
+    private class OtherType() : TestOrderCancellationReasonEnum("Other", 100);
 }
