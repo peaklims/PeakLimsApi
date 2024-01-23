@@ -23,7 +23,7 @@ public sealed class TestOrderRepository : GenericRepository<TestOrder>, ITestOrd
 
     public void CleanupOrphanedTestOrders()
     {
-        var testOrders = _dbContext.TestOrders.Where(x => x.Accession == null).ToList();
+        var testOrders = _dbContext.TestOrders.Where(x => x.Accession == null && x.PanelOrder == null).ToList();
         _dbContext.TestOrders.RemoveRange(testOrders);
     }
 

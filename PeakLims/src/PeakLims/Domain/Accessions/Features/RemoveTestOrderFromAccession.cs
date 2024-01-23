@@ -10,45 +10,26 @@ using TestOrders.Services;
 
 public static class RemoveTestOrderFromAccession
 {
-    public sealed class Command : IRequest<bool>
+    public sealed record Command(Guid AccessionId, Guid TestOrderId) : IRequest;
+
+    public sealed class Handler(
+        IUnitOfWork unitOfWork,
+        IHeimGuardClient heimGuard,
+        IAccessionRepository accessionRepository,
+        ITestOrderRepository testOrderRepository)
+        : IRequestHandler<Command>
     {
-        public readonly Guid AccessionId;
-        public readonly Guid TestOrderId;
-
-        public Command( Guid accessionId, Guid testOrderId)
+        public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            AccessionId = accessionId;
-            TestOrderId = testOrderId;
-        }
-    }
+            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteTestOrders);
 
-    public sealed class Handler : IRequestHandler<Command, bool>
-    {
-        private readonly IAccessionRepository _accessionRepository;
-        private readonly ITestOrderRepository _testOrderRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IUnitOfWork unitOfWork, IHeimGuardClient heimGuard, IAccessionRepository accessionRepository, ITestOrderRepository testOrderRepository)
-        {
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-            _accessionRepository = accessionRepository;
-            _testOrderRepository = testOrderRepository;
-        }
-
-        public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
-        {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteTestOrders);
-
-            var accession = await _accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
-            var testOrderToRemove = await _testOrderRepository.GetById(request.TestOrderId, true, cancellationToken);
+            var accession = await accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
+            var testOrderToRemove = await testOrderRepository.GetById(request.TestOrderId, true, cancellationToken);
             accession.RemoveTestOrder(testOrderToRemove);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            await unitOfWork.CommitChanges(cancellationToken);
             
-            _testOrderRepository.CleanupOrphanedTestOrders();
-            await _unitOfWork.CommitChanges(cancellationToken);
-            return true;
+            testOrderRepository.CleanupOrphanedTestOrders();
+            await unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }
