@@ -20,7 +20,7 @@
     <PackageReference Include="AutoBogus" Version="2.13.1" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.305.15" />
     <PackageReference Include="Bogus" Version="35.4.0" />
-    <PackageReference Include="Destructurama.Attributed" Version="3.1.0" />
+    <PackageReference Include="Destructurama.Attributed" Version="3.2.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Hangfire" Version="1.8.7" />
