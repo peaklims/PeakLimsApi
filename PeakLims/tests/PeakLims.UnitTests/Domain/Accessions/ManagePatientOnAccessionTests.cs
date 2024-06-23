@@ -51,7 +51,7 @@ public class ManagePatientOnAccessionTests
             .WithSetupForValidReadyForTestingTransition()
             .Build();
         accession.DomainEvents.Clear();
-        accession.SetStatusToReadyForTesting();
+        accession.Submit();
 
         var anotherPatient = new FakePatientBuilder().Build();
         

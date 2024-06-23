@@ -66,7 +66,7 @@ public class ManageHealthcareOrganizationOnAccessionTests
         var accession = new FakeAccessionBuilder()
             .WithSetupForValidReadyForTestingTransition()
             .Build();
-        accession.SetStatusToReadyForTesting();
+        accession.Submit();
 
         var anotherOrg = new FakeHealthcareOrganizationBuilder().Build();
         

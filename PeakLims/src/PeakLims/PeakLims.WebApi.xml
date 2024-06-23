@@ -134,6 +134,11 @@
             Removes a given test order from an accession
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.SubmitAccession(System.Guid)">
+            <summary>
+            Submits an accession
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.ContainersController.GetContainers(PeakLims.Domain.Containers.Dtos.ContainerParametersDto)">
             <summary>
             Gets a paginated list of all Containers.

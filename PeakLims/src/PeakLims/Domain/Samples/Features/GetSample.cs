@@ -20,22 +20,14 @@ public static class GetSample
         }
     }
 
-    public sealed class Handler : IRequestHandler<Query, SampleDto>
+    public sealed class Handler(ISampleRepository sampleRepository, IHeimGuardClient heimGuard)
+        : IRequestHandler<Query, SampleDto>
     {
-        private readonly ISampleRepository _sampleRepository;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(ISampleRepository sampleRepository, IHeimGuardClient heimGuard)
-        {
-            _sampleRepository = sampleRepository;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<SampleDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadSamples);
+            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadSamples);
 
-            var result = await _sampleRepository.GetById(request.Id, cancellationToken: cancellationToken);
+            var result = await sampleRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToSampleDto();
         }
     }

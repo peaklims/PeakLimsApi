@@ -23,12 +23,21 @@ public sealed class AccessionRepository : GenericRepository<Accession>, IAccessi
     public Task<Accession> GetAccessionForStatusChange(Guid id, CancellationToken cancellationToken = default)
     {
         return _dbContext.Accessions
+            .Include(x => x.Patient)
+            .Include(x => x.HealthcareOrganization)
             .Include(x => x.TestOrders)
             .ThenInclude(x => x.Test)
             .Include(x => x.TestOrders)
-            .ThenInclude(x => x.PanelOrder)
+            .ThenInclude(x => x.Sample)
+            .Include(x => x.PanelOrders)
+            .ThenInclude(x => x.TestOrders)
+            .ThenInclude(x => x.Test)
+            .Include(x => x.PanelOrders)
+            .ThenInclude(x => x.TestOrders)
+            .ThenInclude(x => x.Sample)
             .Include(x => x.AccessionContacts)
             .Where(x => x.Id == id)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(cancellationToken);
     }
 

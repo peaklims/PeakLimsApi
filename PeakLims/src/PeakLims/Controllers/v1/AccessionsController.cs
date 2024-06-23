@@ -226,5 +226,18 @@ public sealed class AccessionsController: ControllerBase
         return NoContent();
     }
 
+
+    /// <summary>
+    /// Submits an accession
+    /// </summary>
+    [Authorize]
+    [HttpPut("{accessionId:guid}/submit", Name = "SubmitAccession")]
+    public async Task<IActionResult> SubmitAccession(Guid accessionId)
+    {
+        var command = new SubmitAccession.Command(accessionId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
     // endpoint marker - do not delete this comment
 }

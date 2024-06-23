@@ -32,7 +32,7 @@ public class SetStatusToReadyForTestingTests
         fakeTestOrder.SetSample(sample);
         
         // Act
-        fakeTestOrder.SetStatusToReadyForTesting();
+        fakeTestOrder.MarkAsReadyForTesting();
 
         // Assert
         fakeTestOrder.Status.Should().Be(TestOrderStatus.ReadyForTesting());
@@ -51,10 +51,10 @@ public class SetStatusToReadyForTestingTests
         var test = new FakeTestBuilder().Build().Activate();
         var fakeTestOrder = TestOrder.Create(test);
         fakeTestOrder.SetSample(sample);
-        fakeTestOrder.SetStatusToReadyForTesting();
+        fakeTestOrder.MarkAsReadyForTesting();
         
         // Act
-        var actAdd = () => fakeTestOrder.SetStatusToReadyForTesting();
+        var actAdd = () => fakeTestOrder.MarkAsReadyForTesting();
 
         // Assert
         actAdd.Should().Throw<ValidationException>()
@@ -69,7 +69,7 @@ public class SetStatusToReadyForTestingTests
         var fakeTestOrder = TestOrder.Create(test);
         
         // Act
-        var actAdd = () => fakeTestOrder.SetStatusToReadyForTesting();
+        var actAdd = () => fakeTestOrder.MarkAsReadyForTesting();
 
         // Assert
         actAdd.Should().Throw<ValidationException>()

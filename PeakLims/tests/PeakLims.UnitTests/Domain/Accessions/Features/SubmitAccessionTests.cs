@@ -11,13 +11,13 @@ using PeakLims.Domain.Accessions.Services;
 using PeakLims.Services;
 using Xunit;
 
-public class SetAccessionStatusToReadyForTestingTests
+public class SubmitAccessionTests
 {
     private IUnitOfWork UnitOfWork { get; set; } 
     private IAccessionRepository AccessionRepository { get; set; } 
     private IHeimGuardClient HeimGuard { get; set; } 
 
-    public SetAccessionStatusToReadyForTestingTests()
+    public SubmitAccessionTests()
     {
         UnitOfWork = Substitute.For<IUnitOfWork>();
         AccessionRepository = Substitute.For<IAccessionRepository>();
@@ -32,8 +32,8 @@ public class SetAccessionStatusToReadyForTestingTests
             .ThrowsAsync<ForbiddenAccessException>();
         
         //Act
-        var query = new SetAccessionStatusToReadyForTesting.Command(Guid.NewGuid());
-        var handler = new SetAccessionStatusToReadyForTesting.Handler(AccessionRepository, 
+        var query = new SubmitAccession.Command(Guid.NewGuid());
+        var handler = new SubmitAccession.Handler(AccessionRepository, 
             UnitOfWork, 
             HeimGuard);
         var act = () => handler.Handle(query, CancellationToken.None);

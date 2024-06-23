@@ -41,7 +41,7 @@ public class AccessionReadyForTestingTests
         fakeAccession.DomainEvents.Clear();
         
         // Act
-        fakeAccession.SetStatusToReadyForTesting();
+        fakeAccession.Submit();
 
         // Assert
         fakeAccession.Status.Should().Be(AccessionStatus.ReadyForTesting());
@@ -67,7 +67,7 @@ public class AccessionReadyForTestingTests
         fakeAccession.DomainEvents.Clear();
         
         // Act
-        fakeAccession.SetStatusToReadyForTesting();
+        fakeAccession.Submit();
 
         // Assert
         fakeAccession.TestOrders.Count().Should().Be(1);
@@ -90,7 +90,7 @@ public class AccessionReadyForTestingTests
         fakeAccession.DomainEvents.Clear();
         
         // Act
-        var act = () => fakeAccession.SetStatusToReadyForTesting();
+        var act = () => fakeAccession.Submit();
 
         // Assert
         act.Should().Throw<ValidationException>();
@@ -106,7 +106,7 @@ public class AccessionReadyForTestingTests
             .SetPatient(patient);
         
         // Act
-        var act = () => fakeAccession.SetStatusToReadyForTesting();
+        var act = () => fakeAccession.Submit();
 
         // Assert
         act.Should().Throw<ValidationException>();
@@ -124,7 +124,7 @@ public class AccessionReadyForTestingTests
             .SetHealthcareOrganization(org);
         
         // Act
-        var act = () => fakeAccession.SetStatusToReadyForTesting();
+        var act = () => fakeAccession.Submit();
 
         // Assert
         act.Should().Throw<ValidationException>();
@@ -142,7 +142,7 @@ public class AccessionReadyForTestingTests
             .SetHealthcareOrganization(org);
 
         // Act
-        var act = () => fakeAccession.SetStatusToReadyForTesting();
+        var act = () => fakeAccession.Submit();
 
         // Assert
         act.Should().Throw<ValidationException>();

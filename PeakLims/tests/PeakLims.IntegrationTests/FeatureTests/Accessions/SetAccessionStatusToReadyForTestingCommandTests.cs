@@ -36,7 +36,7 @@ public class SetAccessionStatusToReadyForTestingCommandTests : TestBase
         var id = accession.Id;
 
         // Act
-        var command = new SetAccessionStatusToReadyForTesting.Command(id);
+        var command = new SubmitAccession.Command(id);
         await testingServiceScope.SendAsync(command);
         var updatedAccession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions.FirstOrDefaultAsync(a => a.Id == id));
 

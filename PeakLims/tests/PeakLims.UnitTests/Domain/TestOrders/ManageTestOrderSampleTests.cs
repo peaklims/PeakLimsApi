@@ -53,7 +53,7 @@ public class ManageTestOrderSampleTests
         var test = new FakeTestBuilder().Build().Activate();
         var testOrder = TestOrder.Create(test);
         testOrder.SetSample(sample);
-        testOrder.SetStatusToReadyForTesting();
+        testOrder.MarkAsReadyForTesting();
 
         var anotherSample = new FakeSampleBuilder().WithValidContainer(container).Build();
         

@@ -71,7 +71,7 @@ public class TestOrder : BaseEntity
         return this;
     }
 
-    public TestOrder SetStatusToReadyForTesting()
+    public TestOrder MarkAsReadyForTesting()
     {
         ValidationException.MustNot(Status.IsProcessing(), 
             $"Test orders in a {Status.Value} state can not be set to {TestOrderStatus.ReadyForTesting().Value}.");

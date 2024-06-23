@@ -54,27 +54,32 @@ public class Accession : BaseEntity
         return newAccession;
     }
     
-    public Accession SetStatusToReadyForTesting()
+    public Accession Submit()
     {
         ValidationException.ThrowWhenNull(Patient, 
             $"A patient is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
         ValidationException.ThrowWhenNull(HealthcareOrganization, 
                 $"An organization is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
-        ValidationException.MustNot(TestOrders.Count <= 0,
+
+        var directTestOrders = TestOrders;
+        var panelTestOrders = PanelOrders.SelectMany(x => x.TestOrders).ToList();
+        ValidationException.MustNot(directTestOrders.Count <= 0 && panelTestOrders.Count <= 0,
                 $"At least 1 panel or test is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
         ValidationException.MustNot(AccessionContacts.Count <= 0,
                 $"At least 1 organization contact is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
         
-        // TODO unit test
         if (Status != AccessionStatus.Draft())
             throw new ValidationException(nameof(Accession),
                 $"Test orders in a '{Status?.Value}' state can not be set to '{AccessionStatus.ReadyForTesting().Value}'");
 
         Status = AccessionStatus.ReadyForTesting();
-        
-        foreach (var testOrder in TestOrders)
+        foreach (var testOrder in directTestOrders)
         {
-            testOrder.SetStatusToReadyForTesting();
+            testOrder.MarkAsReadyForTesting();
+        }
+        foreach (var testOrder in panelTestOrders)
+        {
+            testOrder.MarkAsReadyForTesting();
         }
 
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
