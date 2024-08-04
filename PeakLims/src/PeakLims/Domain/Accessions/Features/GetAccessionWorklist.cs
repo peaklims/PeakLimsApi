@@ -18,24 +18,17 @@ public static class GetAccessionWorklist
 {
     public sealed record Query(AccessionParametersDto QueryParameters) : IRequest<PagedList<AccessionWorklistDto>>;
 
-    public sealed class Handler : IRequestHandler<Query, PagedList<AccessionWorklistDto>>
+    public sealed class Handler(IAccessionRepository accessionRepository, IHeimGuardClient heimGuard)
+        : IRequestHandler<Query, PagedList<AccessionWorklistDto>>
     {
-        private readonly IAccessionRepository _accessionRepository;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IAccessionRepository accessionRepository, IHeimGuardClient heimGuard)
-        {
-            _accessionRepository = accessionRepository;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<PagedList<AccessionWorklistDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessions);
+            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessions);
 
             var queryKitConfig = new QueryKitConfiguration(config =>
             {
                 config.Property<Accession>(x => x.Status.Value).HasQueryName("status");
+                config.Property<Accession>(x => x.HealthcareOrganization.Name).HasQueryName("organizationName");
             });
             var queryKitData = new QueryKitData()
             {
@@ -44,7 +37,7 @@ public static class GetAccessionWorklist
                 Configuration = queryKitConfig
             };
             
-            var collection = _accessionRepository.Query()
+            var collection = accessionRepository.Query()
                 .Include(x => x.Patient)
                 .Include(x => x.TestOrders)
                 .Include(x => x.HealthcareOrganization)
