@@ -33,8 +33,6 @@ public static class GetHealthcareOrganizationContact
 
         public async Task<HealthcareOrganizationContactDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadHealthcareOrganizationContacts);
-
             var result = await _healthcareOrganizationContactRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToHealthcareOrganizationContactDto();
         }

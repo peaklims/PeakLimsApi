@@ -33,8 +33,6 @@ public static class GetPatient
 
         public async Task<PatientDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadPatients);
-
             var result = await _patientRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToPatientDto();
         }

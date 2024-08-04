@@ -28,8 +28,6 @@ public static class GetAccessionAttachment
 
         public async Task<AccessionAttachmentDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessionAttachments);
-
             var result = await _accessionAttachmentRepository.GetById(request.AccessionAttachmentId, cancellationToken: cancellationToken);
             return result.ToAccessionAttachmentDto(_fileStorage);
         }

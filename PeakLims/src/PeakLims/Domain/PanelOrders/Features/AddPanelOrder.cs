@@ -30,8 +30,6 @@ public static class AddPanelOrder
 
         public async Task<PanelOrderDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddPanelOrders);
-
             var panelOrderToAdd = request.PanelOrderToAdd.ToPanelOrderForCreation();
             var panelOrder = PanelOrder.Create(panelOrderToAdd);
 

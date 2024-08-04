@@ -25,8 +25,6 @@ public static class GetHipaaAuditLog
 
         public async Task<HipaaAuditLogDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadHipaaAuditLogs);
-
             var result = await _hipaaAuditLogRepository.GetById(request.HipaaAuditLogId, cancellationToken: cancellationToken);
             return result.ToHipaaAuditLogDto();
         }

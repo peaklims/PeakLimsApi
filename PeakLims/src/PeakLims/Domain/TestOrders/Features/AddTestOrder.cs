@@ -28,8 +28,6 @@ public static class AddTestOrder
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddTestOrders);
-            
             var accession = await accessionRepository.Query()
                 .Include(x => x.TestOrders)
                 .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);

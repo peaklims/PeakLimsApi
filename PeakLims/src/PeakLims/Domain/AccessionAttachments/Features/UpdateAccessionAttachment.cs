@@ -30,8 +30,6 @@ public static class UpdateAccessionAttachment
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateAccessionAttachments);
-
             var accessionAttachmentToUpdate = await _accessionAttachmentRepository.GetById(request.AccessionAttachmentId, cancellationToken: cancellationToken);
             var accessionAttachmentToAdd = request.UpdatedAccessionAttachmentData.ToAccessionAttachmentForUpdate();
             accessionAttachmentToUpdate.Update(accessionAttachmentToAdd);

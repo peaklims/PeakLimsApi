@@ -32,8 +32,6 @@ public static class RemoveContactFromAccession
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteAccessionContacts);
-
             var orgContact = await _accessionContactRepository.GetById(request.AccessionContactId, cancellationToken: cancellationToken);
             var accession = await _accessionRepository.Query()
                 .Include(x => x.AccessionContacts)

@@ -33,8 +33,6 @@ public static class GetTest
 
         public async Task<TestDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadTests);
-
             var result = await _testRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToTestDto();
         }

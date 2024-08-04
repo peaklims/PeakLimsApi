@@ -45,8 +45,6 @@ public static class AddAccession
 
         public async Task<AccessionDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddAccessions);
-            
             var accession = Accession.Create();
             await _accessionRepository.Add(accession, cancellationToken);
 

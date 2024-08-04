@@ -38,8 +38,6 @@ public static class AddContainer
 
         public async Task<ContainerDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddContainers);
-
             var containerToAdd = request.ContainerToAdd.ToContainerForCreation();
             var container = Container.Create(containerToAdd);
 

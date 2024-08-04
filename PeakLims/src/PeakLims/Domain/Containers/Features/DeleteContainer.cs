@@ -34,8 +34,6 @@ public static class DeleteContainer
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteContainers);
-
             var recordToDelete = await _containerRepository.GetById(request.Id, cancellationToken: cancellationToken);
             _containerRepository.Remove(recordToDelete);
             await _unitOfWork.CommitChanges(cancellationToken);

@@ -39,8 +39,6 @@ public static class GetRolePermissionList
 
         public async Task<PagedList<RolePermissionDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadRolePermissions);
-            
             var queryKitConfig = new CustomQueryKitConfiguration();
             var queryKitData = new QueryKitData()
             {

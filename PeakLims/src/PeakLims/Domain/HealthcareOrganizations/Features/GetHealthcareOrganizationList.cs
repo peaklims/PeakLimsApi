@@ -39,8 +39,6 @@ public static class GetHealthcareOrganizationList
 
         public async Task<PagedList<HealthcareOrganizationDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadHealthcareOrganizations);
-            
             var queryKitConfig = new CustomQueryKitConfiguration();
             var queryKitData = new QueryKitData()
             {

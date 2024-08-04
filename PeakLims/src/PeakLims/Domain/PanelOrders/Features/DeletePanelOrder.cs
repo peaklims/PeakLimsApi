@@ -26,8 +26,6 @@ public static class DeletePanelOrder
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeletePanelOrders);
-
             var recordToDelete = await _panelOrderRepository.GetById(request.PanelOrderId, cancellationToken: cancellationToken);
             _panelOrderRepository.Remove(recordToDelete);
             await _unitOfWork.CommitChanges(cancellationToken);

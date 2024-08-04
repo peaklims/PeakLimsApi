@@ -26,8 +26,6 @@ public static class DeleteAccessionAttachment
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteAccessionAttachments);
-
             var recordToDelete = await _accessionAttachmentRepository.GetById(request.AccessionAttachmentId, cancellationToken: cancellationToken);
             _accessionAttachmentRepository.Remove(recordToDelete);
             await _unitOfWork.CommitChanges(cancellationToken);

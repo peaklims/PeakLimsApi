@@ -33,8 +33,6 @@ public static class GetContainer
 
         public async Task<ContainerDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadContainers);
-
             var result = await _containerRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToContainerDto();
         }

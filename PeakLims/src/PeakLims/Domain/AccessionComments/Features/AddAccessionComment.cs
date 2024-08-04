@@ -42,8 +42,6 @@ public static class AddAccessionComment
 
         public async Task<AccessionCommentDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddAccessionComments);
-
             var accession = await _accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
             var accessionComment = AccessionComment.Create(accession, request.Comment);
             await _accessionCommentRepository.Add(accessionComment, cancellationToken);

@@ -21,8 +21,6 @@ public static class CancelTestOrder
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanCancelTestOrders);
-
             var testOrder = await testOrderRepository.GetById(request.TestOrderId, cancellationToken: cancellationToken);
             testOrder.Cancel(TestOrderCancellationReason.Of(request.Reason), request.Comments);
             testOrderRepository.Update(testOrder);

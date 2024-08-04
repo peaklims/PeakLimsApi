@@ -29,8 +29,6 @@ public static class GetEditableAccessionAggregate
 
         public async Task<EditableAccessionDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessions);
-
             var accession = await _accessionRepository.Query()
                 .Include(x => x.Patient)
                 .Include(x => x.HealthcareOrganization)

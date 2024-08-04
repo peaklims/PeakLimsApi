@@ -39,8 +39,6 @@ public static class GetTestList
 
         public async Task<PagedList<TestDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadTests);
-            
             var queryKitConfig = new CustomQueryKitConfiguration();
             var queryKitData = new QueryKitData()
             {

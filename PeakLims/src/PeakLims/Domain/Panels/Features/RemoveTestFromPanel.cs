@@ -20,8 +20,6 @@ public static class RemoveTestFromPanel
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanRemoveTestFromPanel);
-
             var panel = await panelRepository.GetById(request.PanelId, true, cancellationToken);
             var test = await testRepository.GetById(request.TestId, true, cancellationToken);
             panel.RemoveTest(test, testOrderRepository);

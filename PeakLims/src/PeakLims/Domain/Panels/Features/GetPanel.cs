@@ -33,8 +33,6 @@ public static class GetPanel
 
         public async Task<PanelDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadPanels);
-
             var result = await _panelRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToPanelDto();
         }

@@ -39,8 +39,6 @@ public static class GetSampleList
 
         public async Task<PagedList<SampleDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadSamples);
-            
             var queryKitConfig = new CustomQueryKitConfiguration();
             var queryKitData = new QueryKitData()
             {

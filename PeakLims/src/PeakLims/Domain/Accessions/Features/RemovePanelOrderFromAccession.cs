@@ -20,8 +20,6 @@ public static class RemovePanelOrderFromAccession
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeletePanelOrders);
-
             var accession = await accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
             var panelOrderToRemove = await panelOrderRepository.GetById(request.PanelOrderId, true, cancellationToken);
             accession.RemovePanelOrder(panelOrderToRemove);

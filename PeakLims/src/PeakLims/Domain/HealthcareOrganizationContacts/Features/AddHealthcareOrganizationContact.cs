@@ -41,8 +41,6 @@ public static class AddHealthcareOrganizationContact
 
         public async Task<HealthcareOrganizationContactDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddHealthcareOrganizationContacts);
-            
             var organization = await _healthcareOrganizationRepository.GetById(request.HealthcareOrganizationContactToAdd.HealthcareOrganizationId, cancellationToken: cancellationToken);
 
             var healthcareOrganizationContactToAdd = request.HealthcareOrganizationContactToAdd.ToHealthcareOrganizationContactForCreation();

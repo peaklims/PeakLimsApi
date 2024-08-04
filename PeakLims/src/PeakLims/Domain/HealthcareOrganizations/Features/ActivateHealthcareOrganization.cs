@@ -26,8 +26,6 @@ public static class ActivateHealthcareOrganization
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanActivateHealthcareOrganizations);
-
             var panelToUpdate = await _panelRepository.GetById(request.OrgId, cancellationToken: cancellationToken);
             panelToUpdate.Activate();
             await _unitOfWork.CommitChanges(cancellationToken);

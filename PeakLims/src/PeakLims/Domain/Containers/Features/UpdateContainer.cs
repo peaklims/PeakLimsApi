@@ -33,8 +33,6 @@ public static class UpdateContainer
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateContainers);
-
             var containerToUpdate = await containerRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var containerToAdd = request.UpdatedContainerData.ToContainerForUpdate();
             containerToUpdate.Update(containerToAdd);

@@ -34,8 +34,6 @@ public static class DeleteAccessionComment
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteAccessionComments);
-
             var recordToDelete = await _accessionCommentRepository.GetById(request.Id, cancellationToken: cancellationToken);
             _accessionCommentRepository.Remove(recordToDelete);
             await _unitOfWork.CommitChanges(cancellationToken);

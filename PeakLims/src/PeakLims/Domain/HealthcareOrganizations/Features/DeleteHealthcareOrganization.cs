@@ -34,8 +34,6 @@ public static class DeleteHealthcareOrganization
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteHealthcareOrganizations);
-
             var recordToDelete = await _healthcareOrganizationRepository.GetById(request.Id, cancellationToken: cancellationToken);
             _healthcareOrganizationRepository.Remove(recordToDelete);
             await _unitOfWork.CommitChanges(cancellationToken);

@@ -32,14 +32,11 @@ public static class SetAccessionPatient
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateAccessions);
-            
             var accession = await _accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
             var isNewPatient = request.PatientId == null;
 
             if (isNewPatient)
             {
-                await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddPatients);
                 if (request.PatientForCreationDto == null)
                     throw new ArgumentNullException(nameof(request.PatientForCreationDto));
                 

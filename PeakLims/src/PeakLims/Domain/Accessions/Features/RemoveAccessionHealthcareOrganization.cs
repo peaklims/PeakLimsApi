@@ -35,8 +35,6 @@ public static class RemoveAccessionHealthcareOrganization
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateAccessions);
-
             var accession = await _accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
             accession.RemoveHealthcareOrganization();
 

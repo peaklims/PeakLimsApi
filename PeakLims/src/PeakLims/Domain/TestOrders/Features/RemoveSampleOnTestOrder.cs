@@ -37,8 +37,6 @@ public static class RemoveSampleOnTestOrder
         
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanRemoveSampleOnTestOrder);
-
             var testOrder = await _testOrderRepository.GetById(request.TestOrderId, cancellationToken: cancellationToken);
             testOrder.RemoveSample();
             _testOrderRepository.Update(testOrder);

@@ -42,8 +42,6 @@ public static class AddTestToAccession
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddTestToAccessions);
-
             var accession = await _accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
             if (accession == null)
             {

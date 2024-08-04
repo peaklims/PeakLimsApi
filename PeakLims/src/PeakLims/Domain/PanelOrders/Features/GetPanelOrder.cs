@@ -25,8 +25,6 @@ public static class GetPanelOrder
 
         public async Task<PanelOrderDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadPanelOrders);
-
             var result = await _panelOrderRepository.GetById(request.PanelOrderId, cancellationToken: cancellationToken);
             return result.ToPanelOrderDto();
         }

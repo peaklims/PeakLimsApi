@@ -40,8 +40,6 @@ public static class UpdateRolePermission
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateRolePermissions);
-
             var rolePermissionToUpdate = await _rolePermissionRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var rolePermissionToAdd = request.UpdatedRolePermissionData.ToRolePermissionForUpdate();
             rolePermissionToUpdate.Update(rolePermissionToAdd);

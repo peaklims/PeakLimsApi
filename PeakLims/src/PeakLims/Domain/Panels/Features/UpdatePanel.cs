@@ -40,8 +40,6 @@ public static class UpdatePanel
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdatePanels);
-
             var panelToUpdate = await _panelRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var panelToAdd = request.UpdatedPanelData.ToPanelForUpdate();
             panelToUpdate.Update(panelToAdd);

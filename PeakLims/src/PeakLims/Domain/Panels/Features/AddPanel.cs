@@ -38,8 +38,6 @@ public static class AddPanel
 
         public async Task<PanelDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddPanels);
-
             var panelToAdd = request.PanelToAdd.ToPanelForCreation();
             var panel = Panel.Create(panelToAdd);
 

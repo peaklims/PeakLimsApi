@@ -30,8 +30,6 @@ public static class GetHipaaAuditLogList
 
         public async Task<PagedList<HipaaAuditLogDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadHipaaAuditLogs);
-
             var collection = _hipaaAuditLogRepository.Query().AsNoTracking();
 
             var queryKitConfig = new CustomQueryKitConfiguration();

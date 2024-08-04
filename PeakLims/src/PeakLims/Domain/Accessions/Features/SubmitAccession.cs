@@ -27,8 +27,6 @@ public static class SubmitAccession
     {
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanSetAccessionStatusToReadyForTesting);
-
             var accessionToUpdate = await accessionRepository.GetAccessionForStatusChange(request.Id, cancellationToken);
             accessionToUpdate.Submit();
             return await unitOfWork.CommitChanges(cancellationToken) >= 1;

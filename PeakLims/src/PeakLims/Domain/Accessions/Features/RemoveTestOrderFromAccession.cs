@@ -21,8 +21,6 @@ public static class RemoveTestOrderFromAccession
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteTestOrders);
-
             var accession = await accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
             var testOrderToRemove = await testOrderRepository.GetById(request.TestOrderId, true, cancellationToken);
             accession.RemoveTestOrder(testOrderToRemove);

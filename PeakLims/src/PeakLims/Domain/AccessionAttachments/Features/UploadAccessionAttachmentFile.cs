@@ -31,8 +31,6 @@ public class UploadAccessionAttachmentFile
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUploadAccessionAttachments);
-            
             var accession = await _accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
             var accessionAttachment = new AccessionAttachment();
             await accessionAttachment.UploadFile(request.File, _fileStorage);

@@ -21,7 +21,6 @@ public static class SetSampleOnTestOrder
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanSetSampleOnTestOrder);
             var testOrder = await testOrderRepository.Query()
                 .Include(x => x.Sample)
                 .FirstOrDefaultAsync(x => x.Id == request.TestOrderId, cancellationToken: cancellationToken);

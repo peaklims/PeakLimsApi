@@ -40,8 +40,6 @@ public static class UpdateTest
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateTests);
-
             var testToUpdate = await _testRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var testToAdd = request.UpdatedTestData.ToTestForUpdate();
             testToUpdate.Update(testToAdd);

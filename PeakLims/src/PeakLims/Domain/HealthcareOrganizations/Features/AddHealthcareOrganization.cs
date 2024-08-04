@@ -38,8 +38,6 @@ public static class AddHealthcareOrganization
 
         public async Task<HealthcareOrganizationDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddHealthcareOrganizations);
-
             var healthcareOrganizationToAdd = request.HealthcareOrganizationToAdd.ToHealthcareOrganizationForCreation();
             var healthcareOrganization = HealthcareOrganization.Create(healthcareOrganizationToAdd);
 

@@ -23,8 +23,6 @@ public static class AddPanelToAccession
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddPanelToAccession);
-
             var accession = await accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
             if (accession == null)
             {

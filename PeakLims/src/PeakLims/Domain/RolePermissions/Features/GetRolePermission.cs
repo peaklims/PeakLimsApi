@@ -33,8 +33,6 @@ public static class GetRolePermission
 
         public async Task<RolePermissionDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadRolePermissions);
-
             var result = await _rolePermissionRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToRolePermissionDto();
         }

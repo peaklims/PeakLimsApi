@@ -38,8 +38,6 @@ public static class AddTest
 
         public async Task<TestDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddTests);
-
             var testToAdd = request.TestToAdd.ToTestForCreation();
             var test = Test.Create(testToAdd);
 

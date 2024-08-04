@@ -35,8 +35,6 @@ public static class ActivateTest
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanActivateTests);
-
             var testToUpdate = await _testRepository.GetById(request.Id, cancellationToken: cancellationToken);
             testToUpdate.Activate();
             return await _unitOfWork.CommitChanges(cancellationToken) >= 1;

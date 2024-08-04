@@ -37,8 +37,6 @@ public static class AddSample
 
         public async Task<SampleDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddSamples);
-
             var patient = await _patientRepository.GetById(request.SampleToAdd.PatientId, true, cancellationToken);
 
             var sampleToAdd = request.SampleToAdd.ToSampleForCreation();

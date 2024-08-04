@@ -32,8 +32,6 @@ public static class GetOrderablePanelsAndTests
 
         public async Task<OrderablePanelsAndTestsDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadPanels);
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadTests);
             
             var tests = await _testRepository.Query()
                 .AsNoTracking()

@@ -31,8 +31,6 @@ public static class DisposeSample
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateSamples);
-
             var sample = await _sampleRepository.GetById(request.SampleId, cancellationToken: cancellationToken);
             sample.Dispose();
 

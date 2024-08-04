@@ -25,8 +25,6 @@ public static class GetAccessionContact
 
         public async Task<AccessionContactDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessionContacts);
-
             var result = await _accessionContactRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToAccessionContactDto();
         }

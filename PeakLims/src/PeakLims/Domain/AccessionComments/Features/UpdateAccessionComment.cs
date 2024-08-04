@@ -17,8 +17,6 @@ public static class UpdateAccessionComment
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateAccessionComments);
-
             var accessionCommentToUpdate = await accessionCommentRepository
                 .GetById(request.AccessionCommentId, cancellationToken: cancellationToken);
             

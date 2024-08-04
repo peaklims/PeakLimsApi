@@ -30,8 +30,6 @@ public static class GetPanelOrderList
 
         public async Task<PagedList<PanelOrderDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadPanelOrders);
-
             var collection = _panelOrderRepository.Query().AsNoTracking();
 
             var queryKitConfig = new CustomQueryKitConfiguration();

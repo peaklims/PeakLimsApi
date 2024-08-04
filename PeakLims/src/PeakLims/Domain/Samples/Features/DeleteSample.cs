@@ -34,8 +34,6 @@ public static class DeleteSample
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteSamples);
-
             var recordToDelete = await _sampleRepository.GetById(request.Id, cancellationToken: cancellationToken);
             _sampleRepository.Remove(recordToDelete);
             await _unitOfWork.CommitChanges(cancellationToken);

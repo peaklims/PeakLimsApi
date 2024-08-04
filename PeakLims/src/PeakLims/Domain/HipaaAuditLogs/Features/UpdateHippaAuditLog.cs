@@ -30,8 +30,6 @@ public static class UpdateHipaaAuditLog
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateHipaaAuditLogs);
-
             var hipaaAuditLogToUpdate = await _hipaaAuditLogRepository.GetById(request.HipaaAuditLogId, cancellationToken: cancellationToken);
             var hipaaAuditLogToAdd = request.UpdatedHipaaAuditLogData.ToHipaaAuditLogForUpdate();
             hipaaAuditLogToUpdate.Update(hipaaAuditLogToAdd);

@@ -38,8 +38,6 @@ public static class AddPatient
 
         public async Task<PatientDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddPatients);
-
             var patientToAdd = request.PatientToAdd.ToPatientForCreation();
             var patient = Patient.Create(patientToAdd);
 

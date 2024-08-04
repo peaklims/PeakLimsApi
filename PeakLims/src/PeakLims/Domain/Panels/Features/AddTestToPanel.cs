@@ -33,8 +33,6 @@ public static class AddTestToPanel
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddTestToPanel);
-
             var panel = await _panelRepository.GetById(request.PanelId, cancellationToken: cancellationToken);
             var test = await _testRepository.GetById(request.TestId, cancellationToken: cancellationToken);
             panel.AddTest(test, _testOrderRepository);

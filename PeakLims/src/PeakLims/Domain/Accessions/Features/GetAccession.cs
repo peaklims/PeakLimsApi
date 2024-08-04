@@ -33,8 +33,6 @@ public static class GetAccession
 
         public async Task<AccessionDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessions);
-
             var result = await _accessionRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToAccessionDto();
         }

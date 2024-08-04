@@ -34,8 +34,6 @@ public static class DeactivatePanel
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeactivatePanels);
-
             var panelToUpdate = await _panelRepository.GetById(request.Id, cancellationToken: cancellationToken);
             panelToUpdate.Deactivate();
             return await _unitOfWork.CommitChanges(cancellationToken) >= 1;

@@ -34,8 +34,6 @@ public static class DeletePanel
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeletePanels);
-
             var recordToDelete = await _panelRepository.GetById(request.Id, cancellationToken: cancellationToken);
             _panelRepository.Remove(recordToDelete);
             await _unitOfWork.CommitChanges(cancellationToken);

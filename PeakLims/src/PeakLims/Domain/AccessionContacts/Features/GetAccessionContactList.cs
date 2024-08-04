@@ -30,8 +30,6 @@ public static class GetAccessionContactList
 
         public async Task<PagedList<AccessionContactDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessionContacts);
-
             var collection = _accessionContactRepository.Query().AsNoTracking();
 
             var queryKitConfig = new CustomQueryKitConfiguration();

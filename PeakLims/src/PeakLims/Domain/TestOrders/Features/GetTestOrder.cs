@@ -33,8 +33,6 @@ public static class GetTestOrder
 
         public async Task<TestOrderDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadTestOrders);
-
             var result = await _testOrderRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToTestOrderDto();
         }

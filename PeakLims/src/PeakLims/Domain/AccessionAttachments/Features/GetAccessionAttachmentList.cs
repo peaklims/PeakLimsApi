@@ -33,8 +33,6 @@ public static class GetAccessionAttachmentList
 
         public async Task<PagedList<AccessionAttachmentDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessionAttachments);
-
             var collection = _accessionAttachmentRepository.Query().AsNoTracking();
 
             var queryKitConfig = new CustomQueryKitConfiguration();

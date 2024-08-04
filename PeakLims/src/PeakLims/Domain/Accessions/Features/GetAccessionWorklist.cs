@@ -23,8 +23,6 @@ public static class GetAccessionWorklist
     {
         public async Task<PagedList<AccessionWorklistDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessions);
-
             var queryKitConfig = new QueryKitConfiguration(config =>
             {
                 config.Property<Accession>(x => x.Status.Value).HasQueryName("status");

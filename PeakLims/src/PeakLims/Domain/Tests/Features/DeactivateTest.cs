@@ -35,8 +35,6 @@ public static class DeactivateTest
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeactivateTests);
-
             var testToUpdate = await _testRepository.GetById(request.Id, cancellationToken: cancellationToken);
             testToUpdate.Deactivate();
             return await _unitOfWork.CommitChanges(cancellationToken) >= 1;

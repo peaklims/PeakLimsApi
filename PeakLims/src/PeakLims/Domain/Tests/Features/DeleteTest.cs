@@ -34,8 +34,6 @@ public static class DeleteTest
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeleteTests);
-
             var recordToDelete = await _testRepository.GetById(request.Id, cancellationToken: cancellationToken);
             _testRepository.Remove(recordToDelete);
             await _unitOfWork.CommitChanges(cancellationToken);

@@ -43,8 +43,6 @@ public static class UpdateSample
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateSamples);
-
             var sampleToUpdate = await _sampleRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var sampleToAdd = request.UpdatedSampleData.ToSampleForUpdate();
             sampleToUpdate.Update(sampleToAdd);

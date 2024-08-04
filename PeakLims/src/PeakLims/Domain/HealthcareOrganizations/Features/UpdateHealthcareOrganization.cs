@@ -40,8 +40,6 @@ public static class UpdateHealthcareOrganization
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateHealthcareOrganizations);
-
             var healthcareOrganizationToUpdate = await _healthcareOrganizationRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var healthcareOrganizationToAdd = request.UpdatedHealthcareOrganizationData.ToHealthcareOrganizationForUpdate();
             healthcareOrganizationToUpdate.Update(healthcareOrganizationToAdd);

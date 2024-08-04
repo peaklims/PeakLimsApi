@@ -26,7 +26,6 @@ public sealed class RolesController: ControllerBase
     [HttpGet(Name = "GetRoles")]
     public List<string> GetRoles()
     {
-        _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanGetRoles);
         return Role.ListNames();
     }
 }

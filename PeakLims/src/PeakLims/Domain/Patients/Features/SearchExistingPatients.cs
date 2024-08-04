@@ -31,8 +31,6 @@ public static class SearchExistingPatients
 
         public async Task<PagedList<PatientSearchResultDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadPatients);
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessions);
             
             var queryKitConfig = new CustomQueryKitConfiguration();
             // var queryKitConfig = new CustomQueryKitConfiguration(config =>

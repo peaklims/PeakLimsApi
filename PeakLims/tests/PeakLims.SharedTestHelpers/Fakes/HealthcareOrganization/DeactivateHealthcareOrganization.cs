@@ -34,8 +34,6 @@ public static class DeactivateHealthcareOrganization
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeactivateHealthcareOrganizations);
-
             var healthcareOrganizationToUpdate = await _healthcareOrganizationRepository.GetById(request.Id, cancellationToken: cancellationToken);
             healthcareOrganizationToUpdate.Deactivate();
             return await _unitOfWork.CommitChanges(cancellationToken) >= 1;

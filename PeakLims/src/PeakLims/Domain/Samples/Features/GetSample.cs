@@ -25,8 +25,6 @@ public static class GetSample
     {
         public async Task<SampleDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadSamples);
-
             var result = await sampleRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToSampleDto();
         }

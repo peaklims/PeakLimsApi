@@ -36,8 +36,6 @@ public static class AddContactToAccession
 
         public async Task<AccessionContactDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanAddAccessionContacts);
-
             var orgContact = await _healthcareOrganizationContactRepository.GetById(request.HeathcareOrganizationContactId, cancellationToken: cancellationToken);
             var accession = await _accessionRepository.Query()
                 .Include(x => x.AccessionContacts)

@@ -35,8 +35,6 @@ public static class GetSamplesByPatient
 
         public async Task<List<SampleDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadSamples);
-            
             await _patientRepository.GetById(request.PatientId, false, cancellationToken);
             
             return await _sampleRepository.Query()

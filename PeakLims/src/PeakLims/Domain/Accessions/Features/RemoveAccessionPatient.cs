@@ -28,8 +28,6 @@ public static class RemoveAccessionPatient
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateAccessions);
-
             var accession = await _accessionRepository.Query()
                 .Include(x => x.Patient)
                 .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);

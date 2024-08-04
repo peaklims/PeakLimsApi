@@ -21,8 +21,6 @@ public static class DeletePatient
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanDeletePatients);
-
             var recordToDelete = await patientRepository.GetById(request.Id, cancellationToken: cancellationToken);
             patientRepository.Remove(recordToDelete);
             await unitOfWork.CommitChanges(cancellationToken);

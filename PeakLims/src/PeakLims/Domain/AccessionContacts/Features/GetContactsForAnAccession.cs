@@ -27,7 +27,6 @@ public static class GetContactsForAnAccession
 
         public async Task<List<AccessionContactDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessionContacts);
             return await _accessionContactRepository.Query()
                 .Where(x => x.Accession.Id == request.AccessionId)
                 .AsNoTracking()

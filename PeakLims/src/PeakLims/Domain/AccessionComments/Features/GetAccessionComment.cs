@@ -33,8 +33,6 @@ public static class GetAccessionComment
 
         public async Task<AccessionCommentDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadAccessionComments);
-
             var result = await _accessionCommentRepository.GetById(request.Id, cancellationToken: cancellationToken);
             return result.ToAccessionCommentDto();
         }

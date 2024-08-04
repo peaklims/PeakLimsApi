@@ -31,7 +31,6 @@ public static class GetContactsForAnOrganization
 
         public async Task<List<HealthcareOrganizationContactDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadHealthcareOrganizationContacts);
             return await _healthcareOrganizationContactRepository.Query()
                 .Include(x => x.HealthcareOrganization)
                 .Where(x => x.HealthcareOrganization.Id == request.OrganizationId)

@@ -26,7 +26,6 @@ public static class GetAllContainers
 
         public async Task<List<ContainerDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadContainers);
             return await _containerRepository.Query()
                 .AsNoTracking()
                 .ToContainerDtoQueryable()

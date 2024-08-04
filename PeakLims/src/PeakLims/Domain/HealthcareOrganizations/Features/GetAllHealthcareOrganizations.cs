@@ -31,7 +31,6 @@ public static class GetAllHealthcareOrganizations
 
         public async Task<List<HealthcareOrganizationDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            await _heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadHealthcareOrganizations);
             return await _healthcareOrganizationRepository.Query()
                 .AsNoTracking()
                 .ToHealthcareOrganizationDtoQueryable()
