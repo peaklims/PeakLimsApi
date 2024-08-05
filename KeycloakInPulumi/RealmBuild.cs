@@ -10,9 +10,9 @@ class RealmBuild : Stack
 {
     public RealmBuild()
     {
-        var realm = new Realm("DevRealm-realm", new RealmArgs
+        var realm = new Realm("PeakLIMS-realm", new RealmArgs
         {
-            RealmName = "DevRealm",
+            RealmName = "PeakLIMS",
             RegistrationAllowed = true,
             ResetPasswordAllowed = true,
             RememberMe = true,
