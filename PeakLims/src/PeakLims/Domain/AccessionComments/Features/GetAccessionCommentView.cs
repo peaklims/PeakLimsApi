@@ -31,11 +31,11 @@ public static class GetAccessionCommentView
             if (accession == null)
                 throw new KeyNotFoundException($"Accession with id {request.AccessionId} not found");
 
-            var treatmentPlanDto = new AccessionCommentViewDto();
+            var commentView = new AccessionCommentViewDto();
 
             var allAccessionComments = accession.Comments.ToList();
             var activeAccessionComments = allAccessionComments
-                .Where(tsi => tsi.Status == AccessionCommentStatus.Active())
+                .Where(x => x.Status == AccessionCommentStatus.Active())
                 .OrderBy(x => x.CreatedOn)
                 .ToList();
             var distinctAccessionCommentUserIdList = allAccessionComments.Select(x => x.CreatedBy)
@@ -43,21 +43,21 @@ public static class GetAccessionCommentView
                 .ToList();
 
             var distinctUserList = await userRepository.Query()
-                .Where(x => distinctAccessionCommentUserIdList.Contains(x.CreatedBy))
+                .Where(x => distinctAccessionCommentUserIdList.Contains(x.Identifier))
                 .ToListAsync(cancellationToken);
 
             var currentUserId = currentUserService.UserIdentifier;
             foreach (var accessionComment in activeAccessionComments)
             {
-                treatmentPlanDto.AccessionComments.Add(GetAccessionCommentItemDto(accessionComment, allAccessionComments, distinctUserList, currentUserId));
+                commentView.AccessionComments.Add(GetAccessionCommentItemDto(accessionComment, allAccessionComments, distinctUserList, currentUserId));
             }
 
-            treatmentPlanDto.AccessionComments =
-                treatmentPlanDto.AccessionComments
+            commentView.AccessionComments =
+                commentView.AccessionComments
                     .OrderBy(x => x.OriginalCommentAt)
                     .ToList();
 
-            return treatmentPlanDto;
+            return commentView;
         }
     }
     
