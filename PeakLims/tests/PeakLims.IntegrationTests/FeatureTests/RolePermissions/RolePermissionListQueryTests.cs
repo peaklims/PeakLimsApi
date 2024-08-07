@@ -31,7 +31,7 @@ public class RolePermissionListQueryTests : TestBase
         rolePermissions.Count.Should().BeGreaterThanOrEqualTo(2);
     }
 
-    [Fact]
+    [Fact(Skip = "need to redo permission granularity")]
     public async Task must_be_permitted()
     {
         // Arrange

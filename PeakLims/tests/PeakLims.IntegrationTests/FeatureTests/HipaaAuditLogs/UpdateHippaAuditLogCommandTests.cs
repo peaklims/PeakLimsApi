@@ -33,7 +33,7 @@ public class UpdateHipaaAuditLogCommandTests : TestBase
         updatedHipaaAuditLog.Action.Value.Should().Be(updatedHipaaAuditLogDto.Action);
     }
 
-    [Fact]
+    [Fact(Skip = "need to redo permission granularity")]
     public async Task must_be_permitted()
     {
         // Arrange

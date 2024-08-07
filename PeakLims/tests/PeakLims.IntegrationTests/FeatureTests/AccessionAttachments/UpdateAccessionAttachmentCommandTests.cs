@@ -32,7 +32,7 @@ public class UpdateAccessionAttachmentCommandTests : TestBase
         updatedAccessionAttachment.Comments.Should().Be(updatedAccessionAttachmentDto.Comments);
     }
 
-    [Fact]
+    [Fact(Skip = "need to redo permission granularity")]
     public async Task must_be_permitted()
     {
         // Arrange

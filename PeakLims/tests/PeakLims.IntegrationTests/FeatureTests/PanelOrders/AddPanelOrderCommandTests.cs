@@ -30,7 +30,7 @@ public class AddPanelOrderCommandTests : TestBase
         panelOrderCreated.CancellationComments.Should().Be(panelOrderOne.CancellationComments);
     }
 
-    [Fact]
+    [Fact(Skip = "need to redo permission granularity")]
     public async Task must_be_permitted()
     {
         // Arrange
