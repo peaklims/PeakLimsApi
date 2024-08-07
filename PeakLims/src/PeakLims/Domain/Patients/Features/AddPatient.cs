@@ -23,26 +23,19 @@ public static class AddPatient
         }
     }
 
-    public sealed class Handler : IRequestHandler<Command, PatientDto>
+    public sealed class Handler(
+        IPatientRepository patientRepository,
+        IUnitOfWork unitOfWork,
+        IHeimGuardClient heimGuard)
+        : IRequestHandler<Command, PatientDto>
     {
-        private readonly IPatientRepository _patientRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IPatientRepository patientRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _patientRepository = patientRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<PatientDto> Handle(Command request, CancellationToken cancellationToken)
         {
             var patientToAdd = request.PatientToAdd.ToPatientForCreation();
             var patient = Patient.Create(patientToAdd);
 
-            await _patientRepository.Add(patient, cancellationToken);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            await patientRepository.Add(patient, cancellationToken);
+            await unitOfWork.CommitChanges(cancellationToken);
 
             return patient.ToPatientDto();
         }

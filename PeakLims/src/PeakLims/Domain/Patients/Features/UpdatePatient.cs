@@ -13,39 +13,22 @@ using MediatR;
 
 public static class UpdatePatient
 {
-    public sealed class Command : IRequest
+    public sealed record Command(Guid Id, PatientForUpdateDto UpdatedPatientData) : IRequest;
+
+    public sealed class Handler(
+        IPatientRepository patientRepository,
+        IUnitOfWork unitOfWork,
+        IHeimGuardClient heimGuard)
+        : IRequestHandler<Command>
     {
-        public readonly Guid Id;
-        public readonly PatientForUpdateDto UpdatedPatientData;
-
-        public Command(Guid id, PatientForUpdateDto updatedPatientData)
-        {
-            Id = id;
-            UpdatedPatientData = updatedPatientData;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Command>
-    {
-        private readonly IPatientRepository _patientRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IPatientRepository patientRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _patientRepository = patientRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var patientToUpdate = await _patientRepository.GetById(request.Id, cancellationToken: cancellationToken);
+            var patientToUpdate = await patientRepository.GetById(request.Id, cancellationToken: cancellationToken);
             var patientToAdd = request.UpdatedPatientData.ToPatientForUpdate();
             patientToUpdate.Update(patientToAdd);
 
-            _patientRepository.Update(patientToUpdate);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            patientRepository.Update(patientToUpdate);
+            await unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }
