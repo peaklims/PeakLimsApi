@@ -13,6 +13,8 @@ public sealed class HealthcareOrganizationConfiguration : IEntityTypeConfigurati
     public void Configure(EntityTypeBuilder<HealthcareOrganization> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
+        builder.HasMany(x => x.HealthcareOrganizationContacts)
+            .WithOne(x => x.HealthcareOrganization);
         
         builder.Property(x => x.Status)
             .HasConversion(x => x.Value, x => new HealthcareOrganizationStatus(x));
