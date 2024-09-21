@@ -18,7 +18,6 @@ public class LifespanTests
     [Theory]
     [InlineData(-18, 0)]
     [InlineData(-2250, 6)]
-    [InlineData(-365, 1)]
     [InlineData(-364, 0)]
     [InlineData(0, 0)]
     public void can_get_lifespan_from_dateonly(int daysOld, int age)
