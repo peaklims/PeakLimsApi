@@ -24,32 +24,33 @@ public class AddPanelToAccessionCommandPanels : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakePatientOne = new FakePatientBuilder().Build();
-        await testingServiceScope.InsertAsync(fakePatientOne);
-        var fakeHealthcareOrganizationOne = new FakeHealthcareOrganizationBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationOne);
-        var fakeTest = new FakeTestBuilder().Build().Activate();
-        var fakePanel = new FakePanelBuilder().WithTest(fakeTest).Build().Activate();
-        await testingServiceScope.InsertAsync(fakePanel);
+        var patient = new FakePatientBuilder().Build();
+        await testingServiceScope.InsertAsync(patient);
+        var org = new FakeHealthcareOrganizationBuilder().Build();
+        await testingServiceScope.InsertAsync(org);
+        var test = new FakeTestBuilder().Build().Activate();
+        var panel = new FakePanelBuilder().WithTest(test).Build().Activate();
+        await testingServiceScope.InsertAsync(panel);
 
-        var fakeAccessionOne = new FakeAccessionBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeAccessionOne);
+        var accession = new FakeAccessionBuilder().Build();
+        accession.SetPatient(patient);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
-        var command = new AddPanelToAccession.Command(fakeAccessionOne.Id, fakePanel.Id);
+        var command = new AddPanelToAccession.Command(accession.Id, panel.Id);
         await testingServiceScope.SendAsync(command);
         var panelOrders = await testingServiceScope.ExecuteDbContextAsync(db => db.PanelOrders
             .Include(x => x.Accession)
             .Include(x => x.Panel)
             .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Test)
-            .FirstOrDefaultAsync(a => a.Accession.Id == fakeAccessionOne.Id));
+            .FirstOrDefaultAsync(a => a.Accession.Id == accession.Id));
         var testOrders = panelOrders.TestOrders;
 
         // Assert
         testOrders.Count.Should().Be(1);
-        testOrders.FirstOrDefault().Test.TestName.Should().Be(fakePanel.Tests.FirstOrDefault().TestName);
-        testOrders.FirstOrDefault().PanelOrder.Panel.PanelName.Should().Be(fakePanel.PanelName);
+        testOrders.FirstOrDefault().Test.TestName.Should().Be(panel.Tests.FirstOrDefault().TestName);
+        testOrders.FirstOrDefault().PanelOrder.Panel.PanelName.Should().Be(panel.PanelName);
     }
     
     [Fact]
@@ -57,8 +58,8 @@ public class AddPanelToAccessionCommandPanels : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakePatientOne = new FakePatientBuilder().Build();
-        await testingServiceScope.InsertAsync(fakePatientOne);
+        var patient = new FakePatientBuilder().Build();
+        await testingServiceScope.InsertAsync(patient);
         var fakeHealthcareOrganizationOne = new FakeHealthcareOrganizationBuilder().Build();
         await testingServiceScope.InsertAsync(fakeHealthcareOrganizationOne);
         var existingText = new FakeTestBuilder().Build().Activate();
@@ -68,6 +69,7 @@ public class AddPanelToAccessionCommandPanels : TestBase
 
         var accession = new FakeAccessionBuilder().Build();
         accession.AddTest(existingText);
+        accession.SetPatient(patient);
         await testingServiceScope.InsertAsync(accession);
 
         // Act

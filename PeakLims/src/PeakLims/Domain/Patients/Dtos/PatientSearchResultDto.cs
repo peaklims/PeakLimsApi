@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Patients.Dtos;
 
-public sealed class PatientSearchResultDto
+public sealed record PatientSearchResultDto
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }
@@ -11,7 +11,7 @@ public sealed class PatientSearchResultDto
     public string InternalId { get; set; }
     public List<Accession> Accessions { get; set; }
     
-    public sealed class Accession
+    public sealed record Accession
     {
         public Guid Id { get; set; }
         public string AccessionNumber { get; set; }

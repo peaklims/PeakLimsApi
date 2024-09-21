@@ -3,7 +3,7 @@ namespace PeakLims.Domain.Accessions.Dtos;
 using Destructurama.Attributed;
 using TestOrderStatuses;
 
-public sealed record EditableAccessionDto
+public sealed record AccessionPageViewDto
 {
     public Guid Id { get; set; }
     public string AccessionNumber { get; set; }

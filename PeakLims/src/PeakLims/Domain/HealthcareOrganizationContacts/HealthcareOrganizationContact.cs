@@ -23,8 +23,6 @@ public class HealthcareOrganizationContact : BaseEntity
     
     public HealthcareOrganization HealthcareOrganization { get; }
 
-    public IReadOnlyCollection<AccessionContact> Accessions { get; } = new List<AccessionContact>();
-
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
 

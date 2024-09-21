@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PeakLims.Databases;
@@ -11,9 +12,11 @@ using PeakLims.Databases;
 namespace PeakLims.Migrations
 {
     [DbContext(typeof(PeakLimsDbContext))]
-    partial class PeakLimsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240811174455_MaybeContactCleanup")]
+    partial class MaybeContactCleanup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1098,7 +1101,7 @@ namespace PeakLims.Migrations
                         .HasConstraintName("fk_accession_contacts_accessions_accession_id");
 
                     b.HasOne("PeakLims.Domain.HealthcareOrganizationContacts.HealthcareOrganizationContact", "HealthcareOrganizationContact")
-                        .WithMany()
+                        .WithMany("AccessionContacts")
                         .HasForeignKey("HealthcareOrganizationContactId")
                         .HasConstraintName("fk_accession_contacts_healthcare_organization_contacts_healthc");
 
@@ -1327,6 +1330,11 @@ namespace PeakLims.Migrations
             modelBuilder.Entity("PeakLims.Domain.Containers.Container", b =>
                 {
                     b.Navigation("Samples");
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.HealthcareOrganizationContacts.HealthcareOrganizationContact", b =>
+                {
+                    b.Navigation("AccessionContacts");
                 });
 
             modelBuilder.Entity("PeakLims.Domain.HealthcareOrganizations.HealthcareOrganization", b =>

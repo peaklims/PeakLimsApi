@@ -105,7 +105,7 @@ public sealed class AccessionsController: ControllerBase
     [HttpGet("{id:guid}/forAggregateEdit", Name = "GetEditableAccessionAggregate")]
     public async Task<IActionResult> GetEditableAccessionAggregate(Guid id)
     {
-        var query = new GetEditableAccessionAggregate.Query(id);
+        var query = new GetAccessionPageView.Query(id);
         var queryResponse = await _mediator.Send(query);
         return Ok(queryResponse);
     }

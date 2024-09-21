@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Accessions.Features;
 
+using Databases;
 using Exceptions;
 using HeimGuard;
 using MediatR;
@@ -18,16 +19,15 @@ public static class AddPanelToAccession
     public sealed record Command(Guid AccessionId, Guid PanelId) : IRequest;
 
     public sealed class Handler(IPanelRepository panelRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard,
-            IAccessionRepository accessionRepository, IPanelOrderRepository panelOrderRepository)
+            PeakLimsDbContext dbContext, IPanelOrderRepository panelOrderRepository)
         : IRequestHandler<Command>
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var accession = await accessionRepository.GetWithTestOrderWithChildren(request.AccessionId, true, cancellationToken);
-            if (accession == null)
-            {
-                throw new NotFoundException($"Accession with id {request.AccessionId} not found.");
-            }
+            var accession = (await dbContext.GetAccessionAggregate()
+                    .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken))
+                .MustBeFoundOrThrow();
+            
             var panel = await panelRepository.GetById(request.PanelId, true, cancellationToken);
             var panelOrder = accession.AddPanel(panel);
 

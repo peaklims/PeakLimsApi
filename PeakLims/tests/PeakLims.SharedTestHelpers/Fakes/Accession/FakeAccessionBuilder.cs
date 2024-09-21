@@ -17,13 +17,19 @@ using Test;
 public class FakeAccessionBuilder
 {
     private List<Test> _tests = new List<Test>();
-    private Patient _patient = null;
+    private Patient _patient = new FakePatientBuilder().Build();
     private HealthcareOrganization _healthcareOrganization = null;
     private AccessionContact _accessionContact = null;
     
     public FakeAccessionBuilder WithTest(Test test)
     {
         _tests.Add(test);
+        return this;
+    }
+    
+    public FakeAccessionBuilder WithPatient(Patient patient)
+    {
+        _patient = patient;
         return this;
     }
 

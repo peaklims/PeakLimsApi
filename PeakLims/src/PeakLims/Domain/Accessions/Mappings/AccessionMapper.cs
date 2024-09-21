@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Accessions.Mappings;
 
+using Patients;
 using PeakLims.Domain.Accessions.Dtos;
 using PeakLims.Services.External;
 using Riok.Mapperly.Abstractions;
@@ -10,16 +11,10 @@ public static partial class AccessionMapper
 {
     public static partial AccessionDto ToAccessionDto(this Accession accession);
     public static partial IQueryable<AccessionDto> ToAccessionDtoQueryable(this IQueryable<Accession> accession);
-
-
-    // [MapProperty(new[] { nameof(Accession.Patient.FirstName) }, new[] { nameof(AccessionWorklistDto.Patient.FirstName) })]
-    // [MapProperty(new[] { nameof(Accession.Patient.LastName) }, new[] { nameof(AccessionWorklistDto.Patient.LastName) })]
-    // [MapProperty(new[] { nameof(Accession.Patient.Lifespan.Age) }, new[] { nameof(AccessionWorklistDto.Patient.Age) })]
-    // [MapProperty(new[] { nameof(Accession.TestOrders), nameof(TestOrder.Test), nameof(TestOrder.Test.TestName) }, new[] { nameof(AccessionWorklistDto.TestOrders), nameof(AccessionWorklistDto.TestOrderDto.TestName) })]
-    // [MapProperty(new[] { nameof(Accession.TestOrders), nameof(TestOrder.AssociatedPanel), nameof(TestOrder.AssociatedPanel.PanelName) }, new[] { nameof(AccessionWorklistDto.TestOrders), nameof(AccessionWorklistDto.TestOrderDto.PanelName) })]
     
-    // [MapProperty(nameof(Accession), nameof(AccessionWorklistDto))]
-    // [MapProperty(nameof(Accession.Patient.Lifespan.Age), nameof(AccessionWorklistDto.Patient.Age))]
+    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(AccessionWorklistDto.PatientDto.Age) })]
+    private static partial AccessionWorklistDto.PatientDto ToAccessionWorklistDtoPatientDto(this Patient accessionAttachment);
+    
     public static IQueryable<AccessionWorklistDto> ToAccessionWorklistDtoQueryable(this IQueryable<Accession> accession)
     {
         return accession?.Select(x => x == null 
@@ -28,13 +23,7 @@ public static partial class AccessionMapper
             { 
                 Id = x.Id, AccessionNumber = x.AccessionNumber, 
                 Status = x.Status != null ? x.Status.Value : default,
-                Patient = new AccessionWorklistDto.PatientDto() 
-                { 
-                    FirstName = x.Patient.FirstName, 
-                    LastName = x.Patient.LastName, 
-                    Age = x.Patient.Lifespan.Age,
-                    Sex = x.Patient.Sex.Value
-                },
+                Patient = x.Patient.ToAccessionWorklistDtoPatientDto(),
                 OrganizationName = x.HealthcareOrganization.Name,
                 TestOrders = x.TestOrders.Select(x => new AccessionWorklistDto.TestOrderDto()
                 {
@@ -44,7 +33,11 @@ public static partial class AccessionMapper
             });
     }
     
-    public static EditableAccessionDto ToEditableAccessionDto(this Accession accession, IFileStorage fileStorage)
+    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth) }, new[] { nameof(AccessionPageViewDto.PatientDto.DateOfBirth) })]
+    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(AccessionPageViewDto.PatientDto.Age) })]
+    private static partial AccessionPageViewDto.PatientDto ToAccessionPageViewDtoPatientDto(this Patient accessionAttachment);
+    
+    public static AccessionPageViewDto ToEditableAccessionDto(this Accession accession, IFileStorage fileStorage)
     {
         var standaloneTestOrders = accession.TestOrders
             .Where(x => x.PanelOrder == null)
@@ -54,32 +47,21 @@ public static partial class AccessionMapper
             .Concat(panelOrders.SelectMany(x => x.TestOrders))
             .ToList();
         
-        return new EditableAccessionDto()
+        return new AccessionPageViewDto()
         {
             Id = accession.Id,
             AccessionNumber = accession.AccessionNumber,
             Status = accession.Status != null ? accession.Status.Value : default,
             OrganizationId = accession?.HealthcareOrganization?.Id,
-            Patient = accession?.Patient == null ? null : new EditableAccessionDto.PatientDto()
-            {
-                Id = accession.Patient.Id,
-                FirstName = accession.Patient.FirstName,
-                LastName = accession.Patient.LastName,
-                Age = accession.Patient.Lifespan.Age,
-                DateOfBirth = accession.Patient.Lifespan.DateOfBirth,
-                Race = accession.Patient.Race.Value,
-                Ethnicity = accession.Patient.Ethnicity.Value,
-                Sex = accession.Patient.Sex.Value,
-                InternalId = accession.Patient.InternalId
-            },
+            Patient = accession.Patient.ToAccessionPageViewDtoPatientDto(),
             TestOrders = testOrdersCombined
                 .OrderByDescending(x => x.CreatedOn)
-                .Select(x => new EditableAccessionDto.TestOrderDto()
+                .Select(x => new AccessionPageViewDto.TestOrderDto()
                 {
                     Id = x.Id,
                     TestId = x.Test.Id,
                     TestName = x.Test.TestName,
-                    Panel = new EditableAccessionDto.Panel()
+                    Panel = new AccessionPageViewDto.Panel()
                     {
                         Id = x.PanelOrder?.Id,
                         PanelName = x.PanelOrder?.Panel?.PanelName,
@@ -96,17 +78,17 @@ public static partial class AccessionMapper
                     CancellationReason = x.CancellationReason != null ? x.CancellationReason.Value : default,
                     CancellationComments = x.CancellationComments,
                     IsPartOfPanel = x.IsPartOfPanel(),
-                    Sample = new EditableAccessionDto.Sample()
+                    Sample = new AccessionPageViewDto.Sample()
                     {
                         Id = x.Sample?.Id,
                         SampleNumber = x?.Sample?.SampleNumber,
                     }
                 })
                 .OrderByDescending(x => x.TestName)
-                .ToList() ?? new List<EditableAccessionDto.TestOrderDto>(),
+                .ToList() ?? new List<AccessionPageViewDto.TestOrderDto>(),
             Attachments = accession.AccessionAttachments
                 .OrderByDescending(x => x.CreatedOn)
-                .Select(x => new EditableAccessionDto.AccessionAttachmentDto()
+                .Select(x => new AccessionPageViewDto.AccessionAttachmentDto()
                 {
                     Id = x.Id,
                     Type = x.Type,
@@ -114,10 +96,10 @@ public static partial class AccessionMapper
                     Comments = x.Comments,
                     DisplayName = x.DisplayName,
                     PreSignedUrl = x.GetPreSignedUrl(fileStorage)
-                }).ToList() ?? new List<EditableAccessionDto.AccessionAttachmentDto>(),
+                }).ToList() ?? new List<AccessionPageViewDto.AccessionAttachmentDto>(),
             AccessionContacts = accession.AccessionContacts
                 .OrderByDescending(x => x.CreatedOn)
-                .Select(x => new EditableAccessionDto.AccessionContactDto()
+                .Select(x => new AccessionPageViewDto.AccessionContactDto()
                 {
                     Id = x.Id,
                     TargetType = x.TargetType,
@@ -126,7 +108,7 @@ public static partial class AccessionMapper
                     LastName = x.HealthcareOrganizationContact.LastName,
                     Npi = x.HealthcareOrganizationContact.Npi,
                     OrganizationContactId = x.HealthcareOrganizationContact.Id
-                }).ToList() ?? new List<EditableAccessionDto.AccessionContactDto>()
+                }).ToList() ?? new List<AccessionPageViewDto.AccessionContactDto>()
         };
     }
 }

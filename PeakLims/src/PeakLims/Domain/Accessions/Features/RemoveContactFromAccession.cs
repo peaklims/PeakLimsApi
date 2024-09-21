@@ -2,6 +2,7 @@ namespace PeakLims.Domain.Accessions.Features;
 
 using AccessionContacts;
 using AccessionContacts.Services;
+using Databases;
 using Exceptions;
 using HealthcareOrganizationContacts.Services;
 using HeimGuard;
@@ -15,37 +16,26 @@ public static class RemoveContactFromAccession
 {
     public sealed record Command(Guid AccessionId, Guid AccessionContactId) : IRequest;
 
-    public sealed class Handler : IRequestHandler<Command>
+    public sealed class Handler(
+        IAccessionContactRepository accessionContactRepository,
+        IUnitOfWork unitOfWork,
+        PeakLimsDbContext dbContext, 
+        IHeimGuardClient heimGuard)
+        : IRequestHandler<Command>
     {
-        private readonly IAccessionContactRepository _accessionContactRepository;
-        private readonly IAccessionRepository _accessionRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IAccessionContactRepository accessionContactRepository, IAccessionRepository accessionRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _accessionContactRepository = accessionContactRepository;
-            _accessionRepository = accessionRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var orgContact = await _accessionContactRepository.GetById(request.AccessionContactId, cancellationToken: cancellationToken);
-            var accession = await _accessionRepository.Query()
-                .Include(x => x.AccessionContacts)
-                .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);
+            var accession = await dbContext.GetAccessionAggregate()
+                .GetById(request.AccessionId, cancellationToken: cancellationToken);
+            accession.MustBeFoundOrThrow();
             
-            if (accession == null)
-            {
-                throw new NotFoundException(nameof(Accession), request.AccessionId);
-            }
+            var orgContact = accession.AccessionContacts.FirstOrDefault(x => x.Id == request.AccessionContactId);
+            orgContact.MustBeFoundOrThrow();
             
             accession.RemoveContact(orgContact);
-            _accessionContactRepository.Remove(orgContact);
+            accessionContactRepository.Remove(orgContact);
             
-            await _unitOfWork.CommitChanges(cancellationToken);
+            await unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }

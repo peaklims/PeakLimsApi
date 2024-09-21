@@ -33,7 +33,8 @@ public class Patient : BaseEntity
     public string InternalId { get; }
 
     private readonly List<Sample> _sample = new();
-    public IReadOnlyCollection<Sample> Samples => _sample.AsReadOnly();
+    // public IReadOnlyCollection<Sample> Samples => _sample.AsReadOnly();
+    public List<Sample> Samples => _sample;
 
     public IReadOnlyCollection<Accession> Accessions { get; }
 

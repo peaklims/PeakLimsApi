@@ -219,6 +219,56 @@ public static class Extensions
 
         return result.MustBeFoundOrThrow();
     }
+
+    public static IQueryable<Accession> GetAccessionAggregate(this PeakLimsDbContext dbContext)
+    {
+        return dbContext.Accessions
+            .Include(x => x.Patient)
+                // .ThenInclude(x => x.Samples)
+            .Include(x => x.HealthcareOrganization)
+            .Include(x => x.AccessionContacts)
+                .ThenInclude(x => x.HealthcareOrganizationContact)
+            .Include(x => x.TestOrders)
+                .ThenInclude(x => x.Test)
+            .Include(x => x.TestOrders)
+                .ThenInclude(x => x.Sample)
+            .Include(x => x.PanelOrders)
+                .ThenInclude(x => x.TestOrders)
+                .ThenInclude(x => x.Test)
+            .Include(x => x.PanelOrders)
+                .ThenInclude(x => x.TestOrders)
+                .ThenInclude(x => x.Sample)
+            .Include(x => x.AccessionContacts)
+            .Include(x => x.PanelOrders)
+                .ThenInclude(x => x.Panel)
+            .AsSplitQuery();
+    }
+
+    public static IQueryable<Patient> GetPatientAggregate(this PeakLimsDbContext dbContext)
+    {
+        return dbContext.Patients
+            // .Include(x => x.Samples)
+            .Include(x => x.Accessions)
+                .ThenInclude(x => x.HealthcareOrganization)
+            .Include(x => x.Accessions)
+                .ThenInclude(x => x.AccessionContacts)
+                .ThenInclude(x => x.HealthcareOrganizationContact)
+                .ThenInclude(x => x.HealthcareOrganization)
+            .Include(x => x.Accessions)
+                .ThenInclude(x => x.TestOrders)
+                .ThenInclude(x => x.Test)
+            .Include(x => x.Accessions)
+                .ThenInclude(x => x.TestOrders)
+                .ThenInclude(x => x.Sample)
+            .Include(x => x.Accessions)
+                .ThenInclude(x => x.PanelOrders)
+                .ThenInclude(x => x.TestOrders)
+                .ThenInclude(x => x.Test)
+            .Include(x => x.Accessions)
+                .ThenInclude(x => x.PanelOrders)
+                .ThenInclude(x => x.Panel)
+            .AsSplitQuery();
+    }
     
     public static TEntity MustBeFoundOrThrow<TEntity>(this TEntity entity)
         where TEntity : BaseEntity

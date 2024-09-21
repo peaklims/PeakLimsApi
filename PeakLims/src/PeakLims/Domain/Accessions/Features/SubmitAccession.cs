@@ -1,33 +1,35 @@
 namespace PeakLims.Domain.Accessions.Features;
 
-using Exceptions;
-using PeakLims.Domain.Accessions.Services;
+using Databases;
 using PeakLims.Services;
-using PeakLims.Domain;
 using HeimGuard;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 public static class SubmitAccession
 {
     public sealed class Command : IRequest<bool>
     {
-        public readonly Guid Id;
+        public readonly Guid AccessionId;
 
         public Command(Guid accessionId)
         {
-            Id = accessionId;
+            AccessionId = accessionId;
         }
     }
 
     public sealed class Handler(
-        IAccessionRepository accessionRepository,
+        PeakLimsDbContext dbContext,
         IUnitOfWork unitOfWork,
         IHeimGuardClient heimGuard)
         : IRequestHandler<Command, bool>
     {
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            var accessionToUpdate = await accessionRepository.GetAccessionForStatusChange(request.Id, cancellationToken);
+            var accessionToUpdate = (await dbContext.GetAccessionAggregate()
+                .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken))
+                .MustBeFoundOrThrow();
+            
             accessionToUpdate.Submit();
             return await unitOfWork.CommitChanges(cancellationToken) >= 1;
         }

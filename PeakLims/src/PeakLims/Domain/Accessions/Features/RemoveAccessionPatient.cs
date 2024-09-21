@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Accessions.Features;
 
+using Databases;
 using Exceptions;
 using Patients.Services;
 using PeakLims.Domain.Accessions.Services;
@@ -13,32 +14,23 @@ public static class RemoveAccessionPatient
 {
     public sealed record Command(Guid AccessionId) : IRequest;
 
-    public sealed class Handler : IRequestHandler<Command>
+    public sealed class Handler(
+        IAccessionRepository accessionRepository,
+        IUnitOfWork unitOfWork,
+        PeakLimsDbContext dbContext, 
+        IHeimGuardClient heimGuard)
+        : IRequestHandler<Command>
     {
-        private readonly IAccessionRepository _accessionRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IAccessionRepository accessionRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _accessionRepository = accessionRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var accession = await _accessionRepository.Query()
-                .Include(x => x.Patient)
-                .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken);
+            var accession = await dbContext.GetAccessionAggregate()
+                .GetById(request.AccessionId, cancellationToken: cancellationToken);
             
-            if(accession == null)
-                throw new NotFoundException(nameof(Accession), request.AccessionId);
-            
+            accession.MustBeFoundOrThrow();
             accession.RemovePatient();
 
-            _accessionRepository.Update(accession);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            accessionRepository.Update(accession);
+            await unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }

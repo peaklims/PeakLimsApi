@@ -22,13 +22,10 @@ public class UpdatePatientCommandTests : TestBase
         var updatedPatientDto = new FakePatientForUpdateDto().Generate();
         await testingServiceScope.InsertAsync(fakePatientOne);
 
-        var patient = await testingServiceScope.ExecuteDbContextAsync(db => db.Patients
-            .FirstOrDefaultAsync(p => p.Id == fakePatientOne.Id));
-
         // Act
-        var command = new UpdatePatient.Command(patient.Id, updatedPatientDto);
+        var command = new UpdatePatient.Command(fakePatientOne.Id, updatedPatientDto);
         await testingServiceScope.SendAsync(command);
-        var updatedPatient = await testingServiceScope.ExecuteDbContextAsync(db => db.Patients.FirstOrDefaultAsync(p => p.Id == patient.Id));
+        var updatedPatient = await testingServiceScope.ExecuteDbContextAsync(db => db.Patients.FirstOrDefaultAsync(p => p.Id == fakePatientOne.Id));
 
         // Assert
         updatedPatient.FirstName.Should().Be(updatedPatientDto.FirstName);

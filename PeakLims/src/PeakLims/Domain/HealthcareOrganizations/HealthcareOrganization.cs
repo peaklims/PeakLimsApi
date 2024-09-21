@@ -23,8 +23,10 @@ public class HealthcareOrganization : BaseEntity
 
 
     private readonly List<HealthcareOrganizationContact> _organizationContacts = new();
-    public IReadOnlyCollection<HealthcareOrganizationContact> HealthcareOrganizationContacts => _organizationContacts.AsReadOnly();
-
+    // public IReadOnlyCollection<HealthcareOrganizationContact> HealthcareOrganizationContacts => _organizationContacts.AsReadOnly();
+    // TODO readonly collection is causing issues with joins in aggreagates when joining org to things
+    public List<HealthcareOrganizationContact> HealthcareOrganizationContacts => _organizationContacts;
+    
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
 

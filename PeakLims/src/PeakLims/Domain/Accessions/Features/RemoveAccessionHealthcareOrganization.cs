@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.Accessions.Features;
 
+using Databases;
 using Exceptions;
 using HealthcareOrganizations.Services;
 using PeakLims.Domain.Accessions.Services;
@@ -10,36 +11,24 @@ using MediatR;
 
 public static class RemoveAccessionHealthcareOrganization
 {
-    public sealed class Command : IRequest<bool>
+    public sealed record Command(Guid AccessionId) : IRequest<bool>;
+
+    public sealed class Handler(
+        IAccessionRepository accessionRepository,
+        IUnitOfWork unitOfWork,
+        PeakLimsDbContext dbContext, 
+        IHeimGuardClient heimGuard)
+        : IRequestHandler<Command, bool>
     {
-        public readonly Guid AccessionId;
-
-        public Command(Guid accessionId)
-        {
-            AccessionId = accessionId;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Command, bool>
-    {
-        private readonly IAccessionRepository _accessionRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IAccessionRepository accessionRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _accessionRepository = accessionRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            var accession = await _accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
+            var accession = await dbContext.GetAccessionAggregate()
+                .GetById(request.AccessionId, cancellationToken: cancellationToken);
+            accession.MustBeFoundOrThrow();
             accession.RemoveHealthcareOrganization();
 
-            _accessionRepository.Update(accession);
-            return await _unitOfWork.CommitChanges(cancellationToken) >= 1;
+            accessionRepository.Update(accession);
+            return await unitOfWork.CommitChanges(cancellationToken) >= 1;
         }
     }
 }

@@ -21,6 +21,7 @@ public class Accession : BaseEntity
 
     public AccessionStatus Status { get; private set; }
 
+    // public Guid? PatientId { get; }
     public Patient Patient { get; private set; }
 
     public HealthcareOrganization HealthcareOrganization { get; private set; }
@@ -68,9 +69,8 @@ public class Accession : BaseEntity
         ValidationException.MustNot(AccessionContacts.Count <= 0,
                 $"At least 1 organization contact is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
         
-        if (Status != AccessionStatus.Draft())
-            throw new ValidationException(nameof(Accession),
-                $"Test orders in a '{Status?.Value}' state can not be set to '{AccessionStatus.ReadyForTesting().Value}'");
+        ValidationException.Must(Status == AccessionStatus.Draft(),
+            $"This accession is already submitted and is ready for testing");
 
         Status = AccessionStatus.ReadyForTesting();
         foreach (var testOrder in directTestOrders)
@@ -152,6 +152,8 @@ public class Accession : BaseEntity
     {
         GuardIfInProcessingState("The patient");
         ValidationException.ThrowWhenNull(patient, $"Invalid Patient.");
+        
+        // TODO if there is already a patient, clear the accession info
         
         Patient = patient;
         return this;

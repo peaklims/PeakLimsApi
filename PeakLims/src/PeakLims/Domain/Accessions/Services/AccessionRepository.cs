@@ -7,8 +7,6 @@ using PeakLims.Services;
 
 public interface IAccessionRepository : IGenericRepository<Accession>
 {
-    public Task<Accession> GetAccessionForStatusChange(Guid id, CancellationToken cancellationToken = default);
-    public Task<Accession> GetWithTestOrderWithChildren(Guid accessionId, bool withTracking, CancellationToken cancellationToken = default);
 }
 
 public sealed class AccessionRepository : GenericRepository<Accession>, IAccessionRepository
@@ -18,44 +16,5 @@ public sealed class AccessionRepository : GenericRepository<Accession>, IAccessi
     public AccessionRepository(PeakLimsDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
-    }
-
-    public Task<Accession> GetAccessionForStatusChange(Guid id, CancellationToken cancellationToken = default)
-    {
-        return _dbContext.Accessions
-            .Include(x => x.Patient)
-            .Include(x => x.HealthcareOrganization)
-            .Include(x => x.TestOrders)
-            .ThenInclude(x => x.Test)
-            .Include(x => x.TestOrders)
-            .ThenInclude(x => x.Sample)
-            .Include(x => x.PanelOrders)
-            .ThenInclude(x => x.TestOrders)
-            .ThenInclude(x => x.Test)
-            .Include(x => x.PanelOrders)
-            .ThenInclude(x => x.TestOrders)
-            .ThenInclude(x => x.Sample)
-            .Include(x => x.AccessionContacts)
-            .Where(x => x.Id == id)
-            .AsSplitQuery()
-            .FirstOrDefaultAsync(cancellationToken);
-    }
-
-    public Task<Accession> GetWithTestOrderWithChildren(Guid accessionId, bool withTracking, CancellationToken cancellationToken = default)
-    {
-        return withTracking
-            ? _dbContext.Accessions
-                .Include(x => x.TestOrders)
-                .ThenInclude(x => x.Test)
-                .Include(x => x.TestOrders)
-                .ThenInclude(x => x.PanelOrder)
-                .FirstOrDefaultAsync(x => x.Id == accessionId, cancellationToken)
-            : _dbContext.Accessions
-                .Include(x => x.TestOrders)
-                .ThenInclude(x => x.Test)
-                .Include(x => x.TestOrders)
-                .ThenInclude(x => x.PanelOrder)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == accessionId, cancellationToken);
     }
 }

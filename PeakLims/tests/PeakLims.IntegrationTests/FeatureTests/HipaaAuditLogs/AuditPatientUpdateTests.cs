@@ -10,6 +10,7 @@ using PeakLims.Domain.AuditLogConcepts;
 using PeakLims.Domain.HipaaAuditLogs.Models;
 using PeakLims.Domain.Patients.Features;
 using PeakLims.SharedTestHelpers.Fakes.Patient;
+using SharedTestHelpers.Fakes.Accession;
 
 public class AuditPatientUpdateTests : TestBase
 {
@@ -19,16 +20,16 @@ public class AuditPatientUpdateTests : TestBase
         // Arrange
         var testingServiceScope = new TestingServiceScope();
         var fakePatientOne = new FakePatientBuilder().Build();
-        var updatedPatientDto = new FakePatientForUpdateDto().Generate();
         await testingServiceScope.InsertAsync(fakePatientOne);
-
-        var patient = await testingServiceScope.ExecuteDbContextAsync(db => db.Patients
-            .FirstOrDefaultAsync(p => p.Id == fakePatientOne.Id));
+        
+        var fakeAccessionOne = new FakeAccessionBuilder().Build();
+        await testingServiceScope.InsertAsync(fakeAccessionOne);
+        var updatedPatientDto = new FakePatientForUpdateDto().Generate();
 
         // Act
-        var command = new UpdatePatient.Command(patient.Id, updatedPatientDto);
+        var command = new UpdatePatient.Command(fakePatientOne.Id, updatedPatientDto);
         await testingServiceScope.SendAsync(command);
-        var updatedPatient = await testingServiceScope.ExecuteDbContextAsync(db => db.Patients.FirstOrDefaultAsync(p => p.Id == patient.Id));
+        var updatedPatient = await testingServiceScope.ExecuteDbContextAsync(db => db.Patients.FirstOrDefaultAsync(p => p.Id == fakePatientOne.Id));
         var auditLogs = await testingServiceScope.ExecuteDbContextAsync(db => db.HipaaAuditLogs
             .Where(p => p.Identifier == updatedPatient.Id)
             .ToListAsync());
