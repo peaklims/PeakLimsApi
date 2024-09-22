@@ -59,6 +59,7 @@ public class TestFixture : IAsyncLifetime
             .WithPortBinding(localstackPort, 4566)
             .Build();
         await _localStackContainer.StartAsync();
+        await AddS3Buckets(localstackPort);
         
         builder.ConfigureServices();
         var services = builder.Services;
@@ -80,6 +81,16 @@ public class TestFixture : IAsyncLifetime
             .Options;
         var context = new PeakLimsDbContext(options, null, null, null);
         await context?.Database?.MigrateAsync();
+    }
+
+    private static async Task AddS3Buckets(int localstackPort)
+    {
+        var config = new AmazonS3Config { ForcePathStyle = true, ServiceURL = $"http://localhost:{localstackPort}" };
+        var client = new AmazonS3Client("test", "test", config);
+        foreach (var bucket in Consts.S3Buckets.List())
+        {
+            await client.PutBucketAsync(bucket);
+        }
     }
 
     public async Task DisposeAsync()
