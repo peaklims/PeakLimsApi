@@ -9,8 +9,6 @@ public class PeakLimsOptions
     public RabbitMqOptions RabbitMq { get; set; } = new RabbitMqOptions();
     public ConnectionStringOptions ConnectionStrings { get; set; } = new ConnectionStringOptions();
     public AuthOptions Auth { get; set; } = new AuthOptions();
-    public string JaegerHost { get; set; } = String.Empty;
-    public string LocalstackPort { get; set; } = String.Empty;
     
     public class RabbitMqOptions
     {
