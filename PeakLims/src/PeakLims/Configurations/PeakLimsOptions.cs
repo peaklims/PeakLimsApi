@@ -9,6 +9,8 @@ public class PeakLimsOptions
     public RabbitMqOptions RabbitMq { get; set; } = new RabbitMqOptions();
     public ConnectionStringOptions ConnectionStrings { get; set; } = new ConnectionStringOptions();
     public AuthOptions Auth { get; set; } = new AuthOptions();
+    public string JaegerHost { get; set; } = String.Empty;
+    public string LocalstackPort { get; set; } = String.Empty;
     
     public class RabbitMqOptions
     {
@@ -76,5 +78,15 @@ public static class PeakLimsOptionsExtensions
         return configuration
             .GetSection(PeakLimsOptions.AuthOptions.SectionName)
             .Get<PeakLimsOptions.AuthOptions>();
+    }
+    
+    public static string GetJaegerHost(this IConfiguration configuration)
+    {
+        return configuration.GetSection("JaegerHost").Value;
+    }
+    
+    public static string GetLocalstackPort(this IConfiguration configuration)
+    {
+        return configuration.GetSection("LocalstackPort").Value;
     }
 }
