@@ -19,6 +19,8 @@ public static class WebAppServiceConfiguration
 {
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
+        builder.Services.Configure<PeakLimsOptions>(builder.Configuration.GetSection(PeakLimsOptions.SectionName));
+
         builder.Services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         builder.Services.AddSingleton(Log.Logger);
         builder.Services.AddProblemDetails(ProblemDetailsConfigurationExtension.ConfigureProblemDetails)

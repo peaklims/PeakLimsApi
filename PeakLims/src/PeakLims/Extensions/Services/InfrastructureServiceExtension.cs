@@ -14,7 +14,9 @@ using Resources.HangfireUtilities;
 
 public static class ServiceRegistration
 {
-    public static void AddInfrastructure(this IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services, 
+        IWebHostEnvironment env, 
+        IConfiguration configuration)
     {
         // DbContext -- Do Not Delete
         var connectionString = configuration.GetConnectionStringOptions().PeakLims;
@@ -35,6 +37,7 @@ public static class ServiceRegistration
         services.SetupHangfire(env);
 
         // Auth -- Do Not Delete
+        var serviceProvider = services.BuildServiceProvider();
         var authOptions = configuration.GetAuthOptions();
         if (!env.IsEnvironment(Consts.Testing.FunctionalTestingEnvName))
         {

@@ -15,6 +15,7 @@ using Testcontainers.RabbitMq;
 using Microsoft.Extensions.Logging;
 using Testcontainers.LocalStack;
 using Xunit;
+using static Configurations.PeakLimsOptions;
 
 [CollectionDefinition(nameof(TestBase))]
 public class TestingWebApplicationFactoryCollection : ICollectionFixture<TestingWebApplicationFactory> { }
