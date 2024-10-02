@@ -48,7 +48,7 @@ public static class OpenTelemetryServiceExtension
                     .AddEntityFrameworkCoreInstrumentation()
                     .AddJaegerExporter(o =>
                     {
-                        o.AgentHost = configuration.GetJaegerHost();
+                        o.AgentHost = configuration.GetJaegerHostValue();
                         o.AgentPort = 58157;
                         o.MaxPayloadSizeInBytes = 4096;
                         o.ExportProcessorType = ExportProcessorType.Batch;
