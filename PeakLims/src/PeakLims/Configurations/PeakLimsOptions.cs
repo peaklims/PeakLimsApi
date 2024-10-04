@@ -82,11 +82,11 @@ public static class PeakLimsOptionsExtensions
     
     public static string GetJaegerHost(this IConfiguration configuration)
     {
-        return configuration.GetSection("JaegerHost").Value;
+        return configuration.GetSection(nameof(PeakLimsOptions.JaegerHost)).Value;
     }
     
     public static string GetLocalstackPort(this IConfiguration configuration)
     {
-        return configuration.GetSection("LocalstackPort").Value;
+        return configuration.GetSection(nameof(PeakLimsOptions.LocalstackPort)).Value;
     }
 }
