@@ -220,6 +220,12 @@ public static class Extensions
         return result.MustBeFoundOrThrow();
     }
 
+    public static IQueryable<User> GetUserAggregate(this PeakLimsDbContext dbContext)
+    {
+        return dbContext.Users
+            .Include(u => u.Roles);
+    }
+
     public static IQueryable<Accession> GetAccessionAggregate(this PeakLimsDbContext dbContext)
     {
         return dbContext.Accessions

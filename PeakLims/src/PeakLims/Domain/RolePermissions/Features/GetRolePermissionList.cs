@@ -1,53 +1,37 @@
 namespace PeakLims.Domain.RolePermissions.Features;
 
+using Databases;
+using Dtos;
 using Exceptions;
-using PeakLims.Domain.RolePermissions.Dtos;
-using PeakLims.Domain.RolePermissions.Services;
-using PeakLims.Wrappers;
-using PeakLims.Resources;
-using PeakLims.Services;
-using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using QueryKit;
 using QueryKit.Configuration;
+using Resources;
+using Wrappers;
 
 public static class GetRolePermissionList
 {
-    public sealed class Query : IRequest<PagedList<RolePermissionDto>>
+    public sealed record Query(RolePermissionParametersDto QueryParameters) : IRequest<PagedList<RolePermissionDto>>;
+
+    public sealed class Handler(PeakLimsDbContext dbContext, IHeimGuardClient heimGuard)
+        : IRequestHandler<Query, PagedList<RolePermissionDto>>
     {
-        public readonly RolePermissionParametersDto QueryParameters;
-
-        public Query(RolePermissionParametersDto queryParameters)
-        {
-            QueryParameters = queryParameters;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Query, PagedList<RolePermissionDto>>
-    {
-        private readonly IRolePermissionRepository _rolePermissionRepository;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IRolePermissionRepository rolePermissionRepository, IHeimGuardClient heimGuard)
-        {
-            _rolePermissionRepository = rolePermissionRepository;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<PagedList<RolePermissionDto>> Handle(Query request, CancellationToken cancellationToken)
         {
+            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanReadRolePermissions);
+
+            var collection = dbContext.RolePermissions.AsNoTracking();
+
             var queryKitConfig = new CustomQueryKitConfiguration();
             var queryKitData = new QueryKitData()
             {
                 Filters = request.QueryParameters.Filters,
-                SortOrder = request.QueryParameters.SortOrder ?? "-CreatedOn",
+                SortOrder = request.QueryParameters.SortOrder,
                 Configuration = queryKitConfig
             };
-
-            var collection = _rolePermissionRepository.Query().AsNoTracking();
             var appliedCollection = collection.ApplyQueryKit(queryKitData);
             var dtoCollection = appliedCollection.ToRolePermissionDtoQueryable();
 

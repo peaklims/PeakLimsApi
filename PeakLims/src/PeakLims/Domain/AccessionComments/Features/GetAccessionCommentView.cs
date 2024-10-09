@@ -3,13 +3,12 @@ namespace PeakLims.Domain.AccessionComments.Features;
 using AccessionCommentStatuses;
 using Accessions;
 using Accessions.Services;
+using Databases;
 using Dtos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PeakLims.Services;
 using Users;
-using Users.Dtos;
-using Users.Services;
 
 public static class GetAccessionCommentView
 {
@@ -18,7 +17,8 @@ public static class GetAccessionCommentView
         public readonly Guid AccessionId = AccessionId;
     }
 
-    public sealed class Handler(IUserRepository userRepository, IAccessionRepository accessionRepository, 
+    public sealed class Handler(IAccessionRepository accessionRepository,
+            PeakLimsDbContext dbContext,
             ICurrentUserService currentUserService)
         : IRequestHandler<Query, AccessionCommentViewDto>
     {
@@ -42,7 +42,8 @@ public static class GetAccessionCommentView
                 .Distinct()
                 .ToList();
 
-            var distinctUserList = await userRepository.Query()
+            var distinctUserList = await dbContext.Users
+                .AsNoTracking()
                 .Where(x => distinctAccessionCommentUserIdList.Contains(x.Identifier))
                 .ToListAsync(cancellationToken);
 

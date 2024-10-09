@@ -1,33 +1,24 @@
 namespace PeakLims.Services;
 
+using Databases;
 using Domain.RolePermissions;
 using Domain.Roles;
 using Domain.Users.Dtos;
 using Domain.Users.Features;
-using Domain.Users.Services;
 using Domain.Users;
 using Exceptions;
-using PeakLims.Domain.RolePermissions.Services;
 using PeakLims.Domain;
 using HeimGuard;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-public sealed class UserPolicyHandler : IUserPolicyHandler
+public sealed class UserPolicyHandler(
+    ICurrentUserService currentUserService,
+    PeakLimsDbContext dbContext,
+    IMediator mediator)
+    : IUserPolicyHandler
 {
-    private readonly IRolePermissionRepository _rolePermissionRepository;
-    private readonly ICurrentUserService _currentUserService;
-    private readonly IUserRepository _userRepository;
-    private readonly IMediator _mediator;
 
-    public UserPolicyHandler(IRolePermissionRepository rolePermissionRepository, ICurrentUserService currentUserService, IUserRepository userRepository, IMediator mediator)
-    {
-        _rolePermissionRepository = rolePermissionRepository;
-        _currentUserService = currentUserService;
-        _userRepository = userRepository;
-        _mediator = mediator;
-    }
-    
     public async Task<IEnumerable<string>> GetUserPermissions()
     {
         var roles = await GetRoles();
@@ -36,9 +27,9 @@ public sealed class UserPolicyHandler : IUserPolicyHandler
         if(roles.Contains(Role.SuperAdmin().Value))
             return Permissions.List();
         
-        var permissions = await _rolePermissionRepository.Query()
-            .Where(rp => roles.Contains(rp.Role))
-            .Select(rp => rp.Permission)
+        var permissions = await dbContext.RolePermissions
+            .Where(x => roles.Contains(x.Role))
+            .Select(x => x.Permission)
             .Distinct()
             .ToArrayAsync();
 
@@ -53,7 +44,7 @@ public sealed class UserPolicyHandler : IUserPolicyHandler
         if (roles.Contains(Role.SuperAdmin().Value))
             return true;
         
-        return await _rolePermissionRepository.Query()
+        return await dbContext.RolePermissions
             .Where(rp => roles.Contains(rp.Role))
             .Select(rp => rp.Permission)
             .AnyAsync(x => x == permission);
@@ -61,18 +52,22 @@ public sealed class UserPolicyHandler : IUserPolicyHandler
 
     private async Task<string[]> GetRoles()
     {
-        var claimsPrincipal = _currentUserService.User;
+        var claimsPrincipal = currentUserService.User;
         if (claimsPrincipal == null) throw new ArgumentNullException(nameof(claimsPrincipal));
         
-        var nameIdentifier = _currentUserService.UserIdentifier;
-        var usersExist = _userRepository.Query().Any();
+        var nameIdentifier = currentUserService.UserIdentifier;
+        var usersExist = dbContext.Users.Any();
         
         if (!usersExist)
             await SeedRootUser(nameIdentifier);
 
         var roles = !string.IsNullOrEmpty(nameIdentifier) 
-            ? _userRepository.GetRolesByUserIdentifier(nameIdentifier).ToArray() 
-            : Array.Empty<string>();
+            ? dbContext.UserRoles
+                .Include(x => x.User)
+                .Where(x => x.User.Identifier == nameIdentifier)
+                .Select(x => x.Role.Value)
+                .ToArray()
+            : [];
 
         if (roles.Length == 0)
             throw new NoRolesAssignedException();
@@ -84,18 +79,18 @@ public sealed class UserPolicyHandler : IUserPolicyHandler
     {
         var rootUser = new UserForCreationDto()
         {
-            Username = _currentUserService.Username,
-            Email = _currentUserService.Email,
-            FirstName = _currentUserService.FirstName,
-            LastName = _currentUserService.LastName,
+            Username = currentUserService.Username,
+            Email = currentUserService.Email,
+            FirstName = currentUserService.FirstName,
+            LastName = currentUserService.LastName,
             Identifier = userId
         };
 
         var userCommand = new AddUser.Command(rootUser, true);
-        var createdUser = await _mediator.Send(userCommand);
+        var createdUser = await mediator.Send(userCommand);
 
         var roleCommand = new AddUserRole.Command(createdUser.Id, Role.SuperAdmin().Value, true);
-        await _mediator.Send(roleCommand);
+        await mediator.Send(roleCommand);
         
     }
 }

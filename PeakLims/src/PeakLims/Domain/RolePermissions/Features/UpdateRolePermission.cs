@@ -1,51 +1,28 @@
 namespace PeakLims.Domain.RolePermissions.Features;
 
+using Databases;
+using Dtos;
 using Exceptions;
-using PeakLims.Domain.RolePermissions;
-using PeakLims.Domain.RolePermissions.Dtos;
-using PeakLims.Domain.RolePermissions.Services;
-using PeakLims.Services;
-using PeakLims.Domain.RolePermissions.Models;
-using PeakLims.Domain;
 using HeimGuard;
 using Mappings;
 using MediatR;
 
 public static class UpdateRolePermission
 {
-    public sealed class Command : IRequest
+    public sealed record Command(Guid RolePermissionId, RolePermissionForUpdateDto UpdatedRolePermissionData) : IRequest;
+
+    public sealed class Handler(PeakLimsDbContext dbContext, IHeimGuardClient heimGuard)
+        : IRequestHandler<Command>
     {
-        public readonly Guid Id;
-        public readonly RolePermissionForUpdateDto UpdatedRolePermissionData;
-
-        public Command(Guid id, RolePermissionForUpdateDto updatedRolePermissionData)
-        {
-            Id = id;
-            UpdatedRolePermissionData = updatedRolePermissionData;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Command>
-    {
-        private readonly IRolePermissionRepository _rolePermissionRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IRolePermissionRepository rolePermissionRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _rolePermissionRepository = rolePermissionRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var rolePermissionToUpdate = await _rolePermissionRepository.GetById(request.Id, cancellationToken: cancellationToken);
+            await heimGuard.MustHavePermission<ForbiddenAccessException>(Permissions.CanUpdateRolePermissions);
+
+            var rolePermissionToUpdate = await dbContext.RolePermissions.GetById(request.RolePermissionId, cancellationToken);
             var rolePermissionToAdd = request.UpdatedRolePermissionData.ToRolePermissionForUpdate();
             rolePermissionToUpdate.Update(rolePermissionToAdd);
 
-            _rolePermissionRepository.Update(rolePermissionToUpdate);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }
