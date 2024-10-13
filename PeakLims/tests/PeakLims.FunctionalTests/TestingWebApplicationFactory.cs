@@ -40,7 +40,7 @@ public class TestingWebApplicationFactory : WebApplicationFactory<Program>, IAsy
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .Build();
-            functionalConfig.GetSection("JaegerHost").Value = "localhost";
+            functionalConfig.GetSection("PeakLims:JaegerHost").Value = "localhost";
             configurationBuilder.AddConfiguration(functionalConfig);
         });
 
@@ -74,7 +74,7 @@ public class TestingWebApplicationFactory : WebApplicationFactory<Program>, IAsy
         Environment.SetEnvironmentVariable($"{RabbitMqOptions.SectionName}__{RabbitMqOptions.PortKey}", _rmqContainer.GetConnectionString());
         
         var localstackPort = DockerUtilities.GetFreePort();
-        Environment.SetEnvironmentVariable($"LocalstackPort", localstackPort.ToString());
+        Environment.SetEnvironmentVariable($"PeakLims:LocalstackPort", localstackPort.ToString());
         _localStackContainer = new LocalStackBuilder()
             .WithPortBinding(localstackPort, 4566)
             .Build();

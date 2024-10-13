@@ -55,7 +55,7 @@ public class TestFixture : IAsyncLifetime
         builder.Configuration.GetSection(RabbitMqOptions.SectionName)[RabbitMqOptions.PortKey] = _rmqContainer.GetConnectionString();
 
         var localstackPort = DockerUtilities.GetFreePort();
-        builder.Configuration["LocalstackPort"] = localstackPort.ToString();
+        builder.Configuration["PeakLims:LocalstackPort"] = localstackPort.ToString();
         _localStackContainer = new LocalStackBuilder()
             .WithPortBinding(localstackPort, 4566)
             .Build();
