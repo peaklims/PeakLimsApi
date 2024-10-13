@@ -19,7 +19,10 @@ public sealed class AccessionCommentConfiguration : IEntityTypeConfiguration<Acc
 
         builder.Property(x => x.Status)
             .HasConversion(x => x.Value, x => new AccessionCommentStatus(x));
-        
+
+        builder.HasIndex(x => x.Status);
+        builder.HasIndex(x => x.CreatedBy);
+
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>
         // {

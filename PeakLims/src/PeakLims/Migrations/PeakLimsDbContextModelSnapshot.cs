@@ -155,8 +155,14 @@ namespace PeakLims.Migrations
                     b.HasIndex("AccessionId")
                         .HasDatabaseName("ix_accession_comments_accession_id");
 
+                    b.HasIndex("CreatedBy")
+                        .HasDatabaseName("ix_accession_comments_created_by");
+
                     b.HasIndex("ParentCommentId")
                         .HasDatabaseName("ix_accession_comments_parent_comment_id");
+
+                    b.HasIndex("Status")
+                        .HasDatabaseName("ix_accession_comments_status");
 
                     b.ToTable("accession_comments", (string)null);
                 });
@@ -982,6 +988,9 @@ namespace PeakLims.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_users");
+
+                    b.HasIndex("Identifier")
+                        .HasDatabaseName("ix_users_identifier");
 
                     b.ToTable("users", (string)null);
                 });

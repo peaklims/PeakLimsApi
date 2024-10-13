@@ -17,5 +17,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Email)
             .HasConversion(x => x.Value, x => new Email(x))
             .HasColumnName("email");
+        
+        builder.HasIndex(x => x.Identifier);
     }
 }

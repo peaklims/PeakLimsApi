@@ -516,9 +516,19 @@ namespace PeakLims.Migrations
                 column: "accession_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_accession_comments_created_by",
+                table: "accession_comments",
+                column: "created_by");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_accession_comments_parent_comment_id",
                 table: "accession_comments",
                 column: "parent_comment_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_accession_comments_status",
+                table: "accession_comments",
+                column: "status");
 
             migrationBuilder.CreateIndex(
                 name: "ix_accession_contacts_accession_id",
@@ -599,6 +609,11 @@ namespace PeakLims.Migrations
                 name: "ix_user_roles_user_id",
                 table: "user_roles",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_users_identifier",
+                table: "users",
+                column: "identifier");
         }
 
         /// <inheritdoc />
