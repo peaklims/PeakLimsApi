@@ -3,7 +3,6 @@ namespace PeakLims.Domain.Accessions.Features;
 using Exceptions;
 using PeakLims.Domain.Accessions.Dtos;
 using PeakLims.Domain.Accessions.Services;
-using PeakLims.Wrappers;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;

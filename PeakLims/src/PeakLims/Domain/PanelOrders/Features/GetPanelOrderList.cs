@@ -2,7 +2,6 @@ namespace PeakLims.Domain.PanelOrders.Features;
 
 using PeakLims.Domain.PanelOrders.Dtos;
 using PeakLims.Domain.PanelOrders.Services;
-using PeakLims.Wrappers;
 using PeakLims.Exceptions;
 using PeakLims.Resources;
 using PeakLims.Domain;

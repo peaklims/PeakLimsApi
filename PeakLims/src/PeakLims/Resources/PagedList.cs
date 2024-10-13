@@ -1,4 +1,4 @@
-namespace PeakLims.Wrappers;
+namespace PeakLims.Resources;
 
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;

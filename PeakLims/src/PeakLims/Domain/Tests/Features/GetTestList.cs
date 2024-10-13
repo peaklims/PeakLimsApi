@@ -3,7 +3,6 @@ namespace PeakLims.Domain.Tests.Features;
 using Exceptions;
 using PeakLims.Domain.Tests.Dtos;
 using PeakLims.Domain.Tests.Services;
-using PeakLims.Wrappers;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;

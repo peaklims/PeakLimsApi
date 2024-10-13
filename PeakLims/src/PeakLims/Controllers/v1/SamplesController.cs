@@ -2,7 +2,6 @@ namespace PeakLims.Controllers.v1;
 
 using PeakLims.Domain.Samples.Features;
 using PeakLims.Domain.Samples.Dtos;
-using PeakLims.Wrappers;
 using PeakLims.Domain;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;

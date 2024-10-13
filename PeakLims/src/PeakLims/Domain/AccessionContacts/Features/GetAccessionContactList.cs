@@ -3,7 +3,6 @@ namespace PeakLims.Domain.AccessionContacts.Features;
 using Exceptions;
 using PeakLims.Domain.AccessionContacts.Dtos;
 using PeakLims.Domain.AccessionContacts.Services;
-using PeakLims.Wrappers;
 using PeakLims.Resources;
 using PeakLims.Domain;
 using HeimGuard;

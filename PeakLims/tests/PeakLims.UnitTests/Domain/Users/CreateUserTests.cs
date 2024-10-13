@@ -3,7 +3,6 @@ namespace PeakLims.UnitTests.Domain.Users;
 using PeakLims.Domain.Users.DomainEvents;
 using PeakLims.Domain.Emails;
 using PeakLims.Domain.Users;
-using PeakLims.Wrappers;
 using PeakLims.Domain.Users.Models;
 using PeakLims.SharedTestHelpers.Fakes.User;
 using Bogus;

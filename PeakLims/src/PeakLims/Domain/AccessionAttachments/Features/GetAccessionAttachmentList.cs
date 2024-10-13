@@ -2,7 +2,6 @@ namespace PeakLims.Domain.AccessionAttachments.Features;
 
 using PeakLims.Domain.AccessionAttachments.Dtos;
 using PeakLims.Domain.AccessionAttachments.Services;
-using PeakLims.Wrappers;
 using PeakLims.Exceptions;
 using PeakLims.Resources;
 using PeakLims.Domain;

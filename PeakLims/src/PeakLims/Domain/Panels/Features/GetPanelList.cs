@@ -3,7 +3,6 @@ namespace PeakLims.Domain.Panels.Features;
 using Exceptions;
 using PeakLims.Domain.Panels.Dtos;
 using PeakLims.Domain.Panels.Services;
-using PeakLims.Wrappers;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;

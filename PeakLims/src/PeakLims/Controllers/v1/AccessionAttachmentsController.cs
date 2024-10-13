@@ -2,7 +2,6 @@ namespace PeakLims.Controllers.v1;
 
 using PeakLims.Domain.AccessionAttachments.Features;
 using PeakLims.Domain.AccessionAttachments.Dtos;
-using PeakLims.Wrappers;
 using PeakLims.Domain;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;

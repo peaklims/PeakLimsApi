@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using QueryKit;
 using QueryKit.Configuration;
 using Resources;
-using Wrappers;
 
 public static class GetUserList
 {

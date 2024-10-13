@@ -2,7 +2,6 @@ namespace PeakLims.UnitTests.Domain.RolePermissions;
 
 using PeakLims.Domain;
 using PeakLims.Domain.RolePermissions;
-using PeakLims.Wrappers;
 using PeakLims.Domain.RolePermissions.Models;
 using PeakLims.Domain.Roles;
 using Bogus;

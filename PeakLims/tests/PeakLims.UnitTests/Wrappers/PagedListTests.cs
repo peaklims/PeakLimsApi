@@ -1,7 +1,7 @@
 namespace PeakLims.UnitTests.Wrappers;
 
-using PeakLims.Wrappers;
 using FluentAssertions;
+using Resources;
 using Xunit;
 
 public class PagedListTests

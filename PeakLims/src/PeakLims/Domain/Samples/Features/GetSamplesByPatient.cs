@@ -4,7 +4,6 @@ using Databases;
 using Exceptions;
 using PeakLims.Domain.Samples.Dtos;
 using PeakLims.Domain.Samples.Services;
-using PeakLims.Wrappers;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;

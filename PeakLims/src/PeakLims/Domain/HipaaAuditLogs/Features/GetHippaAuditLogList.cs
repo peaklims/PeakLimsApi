@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using QueryKit;
 using QueryKit.Configuration;
-using Wrappers;
 
 public static class GetHipaaAuditLogList
 {

@@ -3,7 +3,6 @@ namespace PeakLims.Domain.Patients.Features;
 using Exceptions;
 using PeakLims.Domain.Patients.Dtos;
 using PeakLims.Domain.Patients.Services;
-using PeakLims.Wrappers;
 using PeakLims.Resources;
 using PeakLims.Services;
 using PeakLims.Domain;
