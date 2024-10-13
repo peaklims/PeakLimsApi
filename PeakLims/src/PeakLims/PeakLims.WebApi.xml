@@ -339,6 +339,26 @@
             Updates an entire existing Patient.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.PeakOrganizationsController.GetPeakOrganizations(PeakLims.Domain.PeakOrganizations.Dtos.PeakOrganizationParametersDto)">
+            <summary>
+            Gets a list of all PeakOrganizations.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PeakOrganizationsController.GetPeakOrganization(System.Guid)">
+            <summary>
+            Gets a single PeakOrganization by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PeakOrganizationsController.AddPeakOrganization(PeakLims.Domain.PeakOrganizations.Dtos.PeakOrganizationForCreationDto)">
+            <summary>
+            Creates a new PeakOrganization record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PeakOrganizationsController.UpdatePeakOrganization(System.Guid,PeakLims.Domain.PeakOrganizations.Dtos.PeakOrganizationForUpdateDto)">
+            <summary>
+            Updates an entire existing PeakOrganization.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PermissionsController.GetPermissions">
             <summary>
             Gets a list of all available permissions.
@@ -577,6 +597,11 @@
         <member name="M:PeakLims.Databases.EntityConfigurations.PatientConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Patients.Patient})">
             <summary>
             The database configuration for Patients. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.PeakOrganizationConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.PeakOrganizations.PeakOrganization})">
+            <summary>
+            The database configuration for PeakOrganizations. 
             </summary>
         </member>
         <member name="M:PeakLims.Databases.EntityConfigurations.RolePermissionConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.RolePermissions.RolePermission})">

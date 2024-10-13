@@ -10,13 +10,6 @@ using Xunit;
 
 public class UpdateHealthcareOrganizationContactTests
 {
-    private readonly Faker _faker;
-
-    public UpdateHealthcareOrganizationContactTests()
-    {
-        _faker = new Faker();
-    }
-    
     [Fact]
     public void can_update_healthcareOrganizationContact()
     {

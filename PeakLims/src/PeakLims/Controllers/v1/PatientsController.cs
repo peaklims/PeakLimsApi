@@ -14,16 +14,8 @@ using MediatR;
 [ApiController]
 [Route("api/patients")]
 [ApiVersion("1.0")]
-public sealed class PatientsController: ControllerBase
+public sealed class PatientsController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public PatientsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-    
-
     /// <summary>
     /// Gets a list of all Patients.
     /// </summary>
@@ -32,7 +24,7 @@ public sealed class PatientsController: ControllerBase
     public async Task<IActionResult> GetPatients([FromQuery] PatientParametersDto patientParametersDto)
     {
         var query = new GetPatientList.Query(patientParametersDto);
-        var queryResponse = await _mediator.Send(query);
+        var queryResponse = await mediator.Send(query);
 
         var paginationMetadata = new
         {
@@ -61,7 +53,7 @@ public sealed class PatientsController: ControllerBase
     public async Task<IActionResult> SearchExistingPatients([FromQuery] PatientParametersDto patientParametersDto)
     {
         var query = new SearchExistingPatients.Query(patientParametersDto);
-        var queryResponse = await _mediator.Send(query);
+        var queryResponse = await mediator.Send(query);
 
         var paginationMetadata = new
         {
@@ -91,7 +83,7 @@ public sealed class PatientsController: ControllerBase
     public async Task<ActionResult<PatientDto>> GetPatient(Guid id)
     {
         var query = new GetPatient.Query(id);
-        var queryResponse = await _mediator.Send(query);
+        var queryResponse = await mediator.Send(query);
         return Ok(queryResponse);
     }
 
@@ -104,7 +96,7 @@ public sealed class PatientsController: ControllerBase
     public async Task<ActionResult<PatientDto>> AddPatient([FromBody]PatientForCreationDto patientForCreation)
     {
         var command = new AddPatient.Command(patientForCreation);
-        var commandResponse = await _mediator.Send(command);
+        var commandResponse = await mediator.Send(command);
 
         return CreatedAtRoute("GetPatient",
             new { commandResponse.Id },
@@ -120,7 +112,7 @@ public sealed class PatientsController: ControllerBase
     public async Task<IActionResult> UpdatePatient(Guid id, PatientForUpdateDto patient)
     {
         var command = new UpdatePatient.Command(id, patient);
-        await _mediator.Send(command);
+        await mediator.Send(command);
         return NoContent();
     }
 

@@ -134,6 +134,23 @@ namespace PeakLims.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "peak_organizations",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: true),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "text", nullable: true),
+                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_modified_by = table.Column<string>(type: "text", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_peak_organizations", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "role_permissions",
                 columns: table => new
                 {
@@ -633,6 +650,9 @@ namespace PeakLims.Migrations
 
             migrationBuilder.DropTable(
                 name: "panel_test");
+
+            migrationBuilder.DropTable(
+                name: "peak_organizations");
 
             migrationBuilder.DropTable(
                 name: "role_permissions");
