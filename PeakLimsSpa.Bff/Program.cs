@@ -1,5 +1,6 @@
 using Duende.Bff;
 using Duende.Bff.Yarp;
+using Hellang.Middleware.ProblemDetails;
 using PeakLimsSpa.Bff;
 using Serilog;
 
@@ -60,6 +61,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseProblemDetails();
 
 // adds route matching to the middleware pipeline. This middleware looks at the set of endpoints defined in the app, and selects the best match based on the request.
 app.UseRouting();
