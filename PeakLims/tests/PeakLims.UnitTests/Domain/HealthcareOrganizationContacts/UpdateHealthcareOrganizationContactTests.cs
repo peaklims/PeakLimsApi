@@ -31,7 +31,7 @@ public class UpdateHealthcareOrganizationContactTests
         fakeHealthcareOrganizationContact.FirstName.Should().Be(updatedHealthcareOrganizationContact.FirstName);
         fakeHealthcareOrganizationContact.LastName.Should().Be(updatedHealthcareOrganizationContact.LastName);
         fakeHealthcareOrganizationContact.Email.Should().Be(updatedHealthcareOrganizationContact.Email);
-        fakeHealthcareOrganizationContact.Npi.Should().Be(updatedHealthcareOrganizationContact.Npi);
+        fakeHealthcareOrganizationContact.Npi.Value.Should().Be(updatedHealthcareOrganizationContact.Npi);
     }
     
     [Fact]

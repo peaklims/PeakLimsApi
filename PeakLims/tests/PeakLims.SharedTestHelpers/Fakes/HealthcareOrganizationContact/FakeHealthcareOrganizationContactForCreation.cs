@@ -1,6 +1,8 @@
 namespace PeakLims.SharedTestHelpers.Fakes.HealthcareOrganizationContact;
 
 using AutoBogus;
+using Domain.Npis;
+using Npi;
 using PeakLims.Domain.HealthcareOrganizationContacts;
 using PeakLims.Domain.HealthcareOrganizationContacts.Models;
 
@@ -8,5 +10,6 @@ public sealed class FakeHealthcareOrganizationContactForCreation : AutoFaker<Hea
 {
     public FakeHealthcareOrganizationContactForCreation()
     {
+        RuleFor(x => x.Npi, _ => NPI.Of(NpiGenerator.GenerateRandomNpi()));
     }
 }

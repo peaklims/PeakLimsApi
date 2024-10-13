@@ -30,7 +30,7 @@ public class CreateHealthcareOrganizationContactTests
         fakeHealthcareOrganizationContact.FirstName.Should().Be(healthcareOrganizationContactToCreate.FirstName);
         fakeHealthcareOrganizationContact.LastName.Should().Be(healthcareOrganizationContactToCreate.LastName);
         fakeHealthcareOrganizationContact.Email.Should().Be(healthcareOrganizationContactToCreate.Email);
-        fakeHealthcareOrganizationContact.Npi.Should().Be(healthcareOrganizationContactToCreate.Npi);
+        fakeHealthcareOrganizationContact.Npi.Value.Should().Be(healthcareOrganizationContactToCreate.Npi);
     }
 
     [Fact]

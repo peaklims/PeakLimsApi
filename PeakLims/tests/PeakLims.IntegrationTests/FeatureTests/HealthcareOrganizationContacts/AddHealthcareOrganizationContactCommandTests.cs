@@ -41,7 +41,7 @@ public class AddHealthcareOrganizationContactCommandTests : TestBase
         healthcareOrganizationContactCreated.FirstName.Should().Be(fakeHealthcareOrganizationContactOne.FirstName);
         healthcareOrganizationContactCreated.LastName.Should().Be(fakeHealthcareOrganizationContactOne.LastName);
         healthcareOrganizationContactCreated.Email.Should().Be(fakeHealthcareOrganizationContactOne.Email);
-        healthcareOrganizationContactCreated.Npi.Should().Be(fakeHealthcareOrganizationContactOne.Npi);
+        healthcareOrganizationContactCreated.Npi.Value.Should().Be(fakeHealthcareOrganizationContactOne.Npi);
         healthcareOrganizationContactCreated.HealthcareOrganization.Id.Should().Be(fakeHealthcareOrganizationContactOne.HealthcareOrganizationId);
     }
 

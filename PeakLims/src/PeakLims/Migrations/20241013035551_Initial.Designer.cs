@@ -12,7 +12,7 @@ using PeakLims.Databases;
 namespace PeakLims.Migrations
 {
     [DbContext(typeof(PeakLimsDbContext))]
-    [Migration("20241013031825_Initial")]
+    [Migration("20241013035551_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -374,10 +374,6 @@ namespace PeakLims.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("text")
                         .HasColumnName("last_name");
-
-                    b.Property<string>("Npi")
-                        .HasColumnType("text")
-                        .HasColumnName("npi");
 
                     b.HasKey("Id")
                         .HasName("pk_healthcare_organization_contacts");
@@ -1193,7 +1189,29 @@ namespace PeakLims.Migrations
                         .HasForeignKey("HealthcareOrganizationId")
                         .HasConstraintName("fk_healthcare_organization_contacts_healthcare_organizations_h");
 
+                    b.OwnsOne("PeakLims.Domain.Npis.NPI", "Npi", b1 =>
+                        {
+                            b1.Property<Guid>("HealthcareOrganizationContactId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("text")
+                                .HasColumnName("npi");
+
+                            b1.HasKey("HealthcareOrganizationContactId");
+
+                            b1.ToTable("healthcare_organization_contacts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HealthcareOrganizationContactId")
+                                .HasConstraintName("fk_healthcare_organization_contacts_healthcare_organization_co");
+                        });
+
                     b.Navigation("HealthcareOrganization");
+
+                    b.Navigation("Npi")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PeakLims.Domain.PanelOrders.PanelOrder", b =>

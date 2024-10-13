@@ -372,10 +372,6 @@ namespace PeakLims.Migrations
                         .HasColumnType("text")
                         .HasColumnName("last_name");
 
-                    b.Property<string>("Npi")
-                        .HasColumnType("text")
-                        .HasColumnName("npi");
-
                     b.HasKey("Id")
                         .HasName("pk_healthcare_organization_contacts");
 
@@ -1190,7 +1186,29 @@ namespace PeakLims.Migrations
                         .HasForeignKey("HealthcareOrganizationId")
                         .HasConstraintName("fk_healthcare_organization_contacts_healthcare_organizations_h");
 
+                    b.OwnsOne("PeakLims.Domain.Npis.NPI", "Npi", b1 =>
+                        {
+                            b1.Property<Guid>("HealthcareOrganizationContactId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("text")
+                                .HasColumnName("npi");
+
+                            b1.HasKey("HealthcareOrganizationContactId");
+
+                            b1.ToTable("healthcare_organization_contacts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HealthcareOrganizationContactId")
+                                .HasConstraintName("fk_healthcare_organization_contacts_healthcare_organization_co");
+                        });
+
                     b.Navigation("HealthcareOrganization");
+
+                    b.Navigation("Npi")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PeakLims.Domain.PanelOrders.PanelOrder", b =>

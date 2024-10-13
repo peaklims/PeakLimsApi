@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using Npis;
 using PeakLims.Domain.HealthcareOrganizations;
 using PeakLims.Domain.HealthcareOrganizations.Models;
 
@@ -18,7 +19,7 @@ public class HealthcareOrganizationContact : BaseEntity
     public string Email { get; private set; }
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
-    public string Npi { get; private set; }
+    public NPI Npi { get; private set; }
     
     public HealthcareOrganization HealthcareOrganization { get; }
 
@@ -32,7 +33,7 @@ public class HealthcareOrganizationContact : BaseEntity
         newHealthcareOrganizationContact.FirstName = healthcareOrganizationContactForCreation.FirstName;
         newHealthcareOrganizationContact.LastName = healthcareOrganizationContactForCreation.LastName;
         newHealthcareOrganizationContact.Email = healthcareOrganizationContactForCreation.Email;
-        newHealthcareOrganizationContact.Npi = healthcareOrganizationContactForCreation.Npi;
+        newHealthcareOrganizationContact.Npi = NPI.Of(healthcareOrganizationContactForCreation.Npi);
 
         newHealthcareOrganizationContact.QueueDomainEvent(new HealthcareOrganizationContactCreated(){ HealthcareOrganizationContact = newHealthcareOrganizationContact });
         
@@ -44,7 +45,7 @@ public class HealthcareOrganizationContact : BaseEntity
         FirstName = healthcareOrganizationContactForUpdate.FirstName;
         LastName =healthcareOrganizationContactForUpdate.LastName;
         Email = healthcareOrganizationContactForUpdate.Email;
-        Npi = healthcareOrganizationContactForUpdate.Npi;
+        Npi = NPI.Of(healthcareOrganizationContactForUpdate.Npi);
 
         QueueDomainEvent(new HealthcareOrganizationContactUpdated(){ Id = Id });
         return this;

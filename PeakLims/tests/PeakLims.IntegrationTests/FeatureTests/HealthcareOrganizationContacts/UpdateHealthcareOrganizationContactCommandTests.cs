@@ -34,7 +34,7 @@ public class UpdateHealthcareOrganizationContactCommandTests : TestBase
         updatedHealthcareOrganizationContact.FirstName.Should().Be(updatedHealthcareOrganizationContactDto.FirstName);
         updatedHealthcareOrganizationContact.LastName.Should().Be(updatedHealthcareOrganizationContactDto.LastName);
         updatedHealthcareOrganizationContact.Email.Should().Be(updatedHealthcareOrganizationContactDto.Email);
-        updatedHealthcareOrganizationContact.Npi.Should().Be(updatedHealthcareOrganizationContactDto.Npi);
+        updatedHealthcareOrganizationContact.Npi.Value.Should().Be(updatedHealthcareOrganizationContactDto.Npi);
     }
 
     [Fact(Skip = "need to redo permission granularity")]
