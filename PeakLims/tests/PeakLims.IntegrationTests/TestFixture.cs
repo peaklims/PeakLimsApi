@@ -6,7 +6,6 @@ using PeakLims.Extensions.Services;
 using PeakLims.Databases;
 using PeakLims.Resources;
 using PeakLims.SharedTestHelpers.Utilities;
-using Configurations;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Hangfire;
@@ -20,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Testcontainers.LocalStack;
-using static Configurations.PeakLimsOptions;
+using static Resources.PeakLimsOptions;
 
 [CollectionDefinition(nameof(TestFixture))]
 public class TestFixtureCollection : ICollectionFixture<TestFixture> {}

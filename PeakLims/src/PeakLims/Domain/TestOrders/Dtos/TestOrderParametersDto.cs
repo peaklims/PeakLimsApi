@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.TestOrders.Dtos;
 
-using PeakLims.Dtos;
+using Resources;
 
 public sealed class TestOrderParametersDto : BasePaginationParameters
 {

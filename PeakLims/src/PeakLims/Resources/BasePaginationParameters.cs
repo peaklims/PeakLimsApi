@@ -1,4 +1,4 @@
-namespace PeakLims.Dtos
+namespace PeakLims.Resources
 {
     public abstract class BasePaginationParameters
     {

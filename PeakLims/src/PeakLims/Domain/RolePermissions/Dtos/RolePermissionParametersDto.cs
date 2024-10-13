@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.RolePermissions.Dtos;
 
-using PeakLims.Dtos;
+using Resources;
 
 public sealed class RolePermissionParametersDto : BasePaginationParameters
 {

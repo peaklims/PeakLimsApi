@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.AccessionContacts.Dtos;
 
-using PeakLims.Dtos;
+using Resources;
 
 public sealed class AccessionContactParametersDto : BasePaginationParameters
 {

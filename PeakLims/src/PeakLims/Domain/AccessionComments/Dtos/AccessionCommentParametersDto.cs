@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.AccessionComments.Dtos;
 
-using PeakLims.Dtos;
+using Resources;
 
 public sealed class AccessionCommentParametersDto : BasePaginationParameters
 {

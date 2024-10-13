@@ -2,7 +2,6 @@ namespace PeakLims.Extensions.Application;
 
 using PeakLims.Middleware;
 using PeakLims.Services;
-using Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Resources;

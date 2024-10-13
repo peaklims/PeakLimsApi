@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Patients.Dtos;
 
-using PeakLims.Dtos;
+using Resources;
 
 public sealed class SearchExistingPatientsDto : BasePaginationParameters
 {

@@ -3,7 +3,6 @@ namespace PeakLims.FunctionalTests;
 using PeakLims.Resources;
 using PeakLims.SharedTestHelpers.Utilities;
 using WebMotions.Fake.Authentication.JwtBearer;
-using Configurations;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +14,7 @@ using Testcontainers.RabbitMq;
 using Microsoft.Extensions.Logging;
 using Testcontainers.LocalStack;
 using Xunit;
-using static Configurations.PeakLimsOptions;
+using static Resources.PeakLimsOptions;
 
 [CollectionDefinition(nameof(TestBase))]
 public class TestingWebApplicationFactoryCollection : ICollectionFixture<TestingWebApplicationFactory> { }

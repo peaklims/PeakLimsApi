@@ -3,7 +3,6 @@ namespace PeakLims.Databases;
 using PeakLims.Domain;
 using PeakLims.Databases.EntityConfigurations;
 using PeakLims.Services;
-using Configurations;
 using MediatR;
 using PeakLims.Domain.RolePermissions;
 using PeakLims.Domain.Users;

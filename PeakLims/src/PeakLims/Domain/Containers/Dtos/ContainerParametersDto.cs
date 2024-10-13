@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Containers.Dtos;
 
-using PeakLims.Dtos;
+using Resources;
 
 public sealed class ContainerParametersDto : BasePaginationParameters
 {

@@ -1,6 +1,4 @@
-namespace PeakLims.Configurations;
-
-using Microsoft.Extensions.Options;
+namespace PeakLims.Resources;
 
 public class PeakLimsOptions
 {

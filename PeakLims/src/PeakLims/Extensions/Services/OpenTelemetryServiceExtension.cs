@@ -1,11 +1,11 @@
 namespace PeakLims.Extensions.Services;
 
 using PeakLims.Services;
-using Configurations;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Resources;
 
 public static class OpenTelemetryServiceExtension
 {

@@ -2,7 +2,6 @@ namespace PeakLims.Extensions.Services;
 
 using PeakLims.Middleware;
 using PeakLims.Services;
-using Configurations;
 using System.Text.Json.Serialization;
 using Serilog;
 using FluentValidation.AspNetCore;

@@ -1,7 +1,6 @@
 namespace PeakLims.Extensions.Services;
 
 using PeakLims.Services;
-using Configurations;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +11,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
+using Resources;
 
 public static class SwaggerServiceExtension
 {

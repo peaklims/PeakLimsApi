@@ -1,6 +1,5 @@
 namespace PeakLims.Domain.HipaaAuditLogs.Dtos;
 
-using PeakLims.Dtos;
 using PeakLims.Resources;
 
 public sealed class HipaaAuditLogParametersDto : BasePaginationParameters

@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.HealthcareOrganizationContacts.Dtos;
 
-using PeakLims.Dtos;
+using Resources;
 
 public sealed class HealthcareOrganizationContactParametersDto : BasePaginationParameters
 {
