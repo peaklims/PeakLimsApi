@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using ContainerStatuses;
+using PeakOrganizations;
 using SampleTypes;
 
 public class Container : BaseEntity
@@ -16,6 +17,8 @@ public class Container : BaseEntity
     public SampleType UsedFor { get; private set; }
 
     public ContainerStatus Status { get; private set; }
+    
+    public PeakOrganization Organization { get; }
     public Guid OrganizationId { get; private set;  }
 
     public string Type { get; private set; }

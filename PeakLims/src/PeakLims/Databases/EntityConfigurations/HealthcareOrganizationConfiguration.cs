@@ -16,6 +16,10 @@ public sealed class HealthcareOrganizationConfiguration : IEntityTypeConfigurati
         builder.HasMany(x => x.HealthcareOrganizationContacts)
             .WithOne(x => x.HealthcareOrganization);
         
+        builder.HasOne(e => e.Organization)
+            .WithMany()
+            .HasForeignKey(e => e.OrganizationId);
+        
         builder.Property(x => x.Status)
             .HasConversion(x => x.Value, x => new HealthcareOrganizationStatus(x));
 

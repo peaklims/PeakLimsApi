@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using PeakOrganizations;
 using TestStatuses;
 
 public class Test : BaseEntity
@@ -24,6 +25,7 @@ public class Test : BaseEntity
 
     public int TurnAroundTime { get; private set; }
     
+    public PeakOrganization Organization { get; }
     public Guid OrganizationId { get; private set; }
 
     public TestStatus Status { get; private set; }

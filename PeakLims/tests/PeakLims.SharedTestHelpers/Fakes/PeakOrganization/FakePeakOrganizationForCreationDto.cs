@@ -8,5 +8,6 @@ public sealed class FakePeakOrganizationForCreationDto : AutoFaker<PeakOrganizat
 {
     public FakePeakOrganizationForCreationDto()
     {
+        RuleFor(x => x.Name, f => f.Company.CompanyName());
     }
 }

@@ -274,6 +274,9 @@ namespace PeakLims.Migrations
                     b.HasIndex("HealthcareOrganizationId")
                         .HasDatabaseName("ix_accessions_healthcare_organization_id");
 
+                    b.HasIndex("OrganizationId")
+                        .HasDatabaseName("ix_accessions_organization_id");
+
                     b.HasIndex("PatientId")
                         .HasDatabaseName("ix_accessions_patient_id");
 
@@ -427,6 +430,9 @@ namespace PeakLims.Migrations
                     b.HasKey("Id")
                         .HasName("pk_healthcare_organizations");
 
+                    b.HasIndex("OrganizationId")
+                        .HasDatabaseName("ix_healthcare_organizations_organization_id");
+
                     b.ToTable("healthcare_organizations", (string)null);
                 });
 
@@ -487,6 +493,9 @@ namespace PeakLims.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_hipaa_audit_logs");
+
+                    b.HasIndex("OrganizationId")
+                        .HasDatabaseName("ix_hipaa_audit_logs_organization_id");
 
                     b.ToTable("hipaa_audit_logs", (string)null);
                 });
@@ -600,6 +609,9 @@ namespace PeakLims.Migrations
                     b.HasKey("Id")
                         .HasName("pk_panels");
 
+                    b.HasIndex("OrganizationId")
+                        .HasDatabaseName("ix_panels_organization_id");
+
                     b.ToTable("panels", (string)null);
                 });
 
@@ -663,6 +675,9 @@ namespace PeakLims.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_patients");
+
+                    b.HasIndex("OrganizationId")
+                        .HasDatabaseName("ix_patients_organization_id");
 
                     b.ToTable("patients", (string)null);
                 });
@@ -969,6 +984,9 @@ namespace PeakLims.Migrations
                     b.HasKey("Id")
                         .HasName("pk_tests");
 
+                    b.HasIndex("OrganizationId")
+                        .HasDatabaseName("ix_tests_organization_id");
+
                     b.ToTable("tests", (string)null);
                 });
 
@@ -1184,6 +1202,13 @@ namespace PeakLims.Migrations
                         .HasForeignKey("HealthcareOrganizationId")
                         .HasConstraintName("fk_accessions_healthcare_organizations_healthcare_organization");
 
+                    b.HasOne("PeakLims.Domain.PeakOrganizations.PeakOrganization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_accessions_peak_organizations_organization_id");
+
                     b.HasOne("PeakLims.Domain.Patients.Patient", "Patient")
                         .WithMany("Accessions")
                         .HasForeignKey("PatientId")
@@ -1209,6 +1234,8 @@ namespace PeakLims.Migrations
                         });
 
                     b.Navigation("HealthcareOrganization");
+
+                    b.Navigation("Organization");
 
                     b.Navigation("Patient");
 
@@ -1248,6 +1275,30 @@ namespace PeakLims.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PeakLims.Domain.HealthcareOrganizations.HealthcareOrganization", b =>
+                {
+                    b.HasOne("PeakLims.Domain.PeakOrganizations.PeakOrganization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_healthcare_organizations_peak_organizations_organization_id");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.HipaaAuditLogs.HipaaAuditLog", b =>
+                {
+                    b.HasOne("PeakLims.Domain.PeakOrganizations.PeakOrganization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_hipaa_audit_logs_peak_organizations_organization_id");
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("PeakLims.Domain.PanelOrders.PanelOrder", b =>
                 {
                     b.HasOne("PeakLims.Domain.Accessions.Accession", "Accession")
@@ -1265,8 +1316,27 @@ namespace PeakLims.Migrations
                     b.Navigation("Panel");
                 });
 
+            modelBuilder.Entity("PeakLims.Domain.Panels.Panel", b =>
+                {
+                    b.HasOne("PeakLims.Domain.PeakOrganizations.PeakOrganization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_panels_peak_organizations_organization_id");
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("PeakLims.Domain.Patients.Patient", b =>
                 {
+                    b.HasOne("PeakLims.Domain.PeakOrganizations.PeakOrganization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_patients_peak_organizations_organization_id");
+
                     b.OwnsOne("PeakLims.Domain.Lifespans.Lifespan", "Lifespan", b1 =>
                         {
                             b1.Property<Guid>("PatientId")
@@ -1292,6 +1362,8 @@ namespace PeakLims.Migrations
 
                     b.Navigation("Lifespan")
                         .IsRequired();
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("PeakLims.Domain.Samples.Sample", b =>
@@ -1391,6 +1463,18 @@ namespace PeakLims.Migrations
                     b.Navigation("Sample");
 
                     b.Navigation("Test");
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.Tests.Test", b =>
+                {
+                    b.HasOne("PeakLims.Domain.PeakOrganizations.PeakOrganization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_tests_peak_organizations_organization_id");
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("PeakLims.Domain.Users.UserRole", b =>

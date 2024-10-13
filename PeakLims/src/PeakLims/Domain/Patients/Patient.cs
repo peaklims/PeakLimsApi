@@ -12,6 +12,7 @@ using Ethnicities;
 using Lifespans;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
+using PeakOrganizations;
 using Races;
 using Sexes;
 using ValidationException = Exceptions.ValidationException;
@@ -32,6 +33,7 @@ public class Patient : BaseEntity
 
     public string InternalId { get; }
     
+    public PeakOrganization Organization { get; }
     public Guid OrganizationId { get; private set;  }
 
     private readonly List<Sample> _sample = new();

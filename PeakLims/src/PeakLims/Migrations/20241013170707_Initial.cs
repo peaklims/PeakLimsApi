@@ -44,96 +44,6 @@ namespace PeakLims.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "healthcare_organizations",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: true),
-                    email = table.Column<string>(type: "text", nullable: true),
-                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    status = table.Column<string>(type: "text", nullable: true),
-                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    created_by = table.Column<string>(type: "text", nullable: true),
-                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "text", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_healthcare_organizations", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "hipaa_audit_logs",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    concept = table.Column<string>(type: "text", nullable: true),
-                    data = table.Column<string>(type: "jsonb", nullable: true),
-                    action_by = table.Column<string>(type: "text", nullable: true),
-                    occurred_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    identifier = table.Column<Guid>(type: "uuid", nullable: false),
-                    action = table.Column<string>(type: "text", nullable: true),
-                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    created_by = table.Column<string>(type: "text", nullable: true),
-                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "text", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_hipaa_audit_logs", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "panels",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    panel_code = table.Column<string>(type: "text", nullable: true),
-                    panel_name = table.Column<string>(type: "text", nullable: true),
-                    type = table.Column<string>(type: "text", nullable: true),
-                    version = table.Column<int>(type: "integer", nullable: false),
-                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    status = table.Column<string>(type: "text", nullable: true),
-                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    created_by = table.Column<string>(type: "text", nullable: true),
-                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "text", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_panels", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "patients",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    first_name = table.Column<string>(type: "text", nullable: true),
-                    last_name = table.Column<string>(type: "text", nullable: true),
-                    known_age = table.Column<int>(type: "integer", nullable: true),
-                    date_of_birth = table.Column<DateOnly>(type: "date", nullable: true),
-                    sex = table.Column<string>(type: "text", nullable: true),
-                    race = table.Column<string>(type: "text", nullable: true),
-                    ethnicity = table.Column<string>(type: "text", nullable: true),
-                    internal_id = table.Column<string>(type: "text", nullable: false, defaultValueSql: "concat('PAT', nextval('\"PAT\"'))"),
-                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    created_by = table.Column<string>(type: "text", nullable: true),
-                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "text", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_patients", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "peak_organizations",
                 columns: table => new
                 {
@@ -169,6 +79,141 @@ namespace PeakLims.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "users",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    identifier = table.Column<string>(type: "text", nullable: true),
+                    first_name = table.Column<string>(type: "text", nullable: true),
+                    last_name = table.Column<string>(type: "text", nullable: true),
+                    email = table.Column<string>(type: "text", nullable: true),
+                    username = table.Column<string>(type: "text", nullable: true),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "text", nullable: true),
+                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_modified_by = table.Column<string>(type: "text", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_users", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "healthcare_organizations",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: true),
+                    email = table.Column<string>(type: "text", nullable: true),
+                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    status = table.Column<string>(type: "text", nullable: true),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "text", nullable: true),
+                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_modified_by = table.Column<string>(type: "text", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_healthcare_organizations", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_healthcare_organizations_peak_organizations_organization_id",
+                        column: x => x.organization_id,
+                        principalTable: "peak_organizations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "hipaa_audit_logs",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    concept = table.Column<string>(type: "text", nullable: true),
+                    data = table.Column<string>(type: "jsonb", nullable: true),
+                    action_by = table.Column<string>(type: "text", nullable: true),
+                    occurred_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    identifier = table.Column<Guid>(type: "uuid", nullable: false),
+                    action = table.Column<string>(type: "text", nullable: true),
+                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "text", nullable: true),
+                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_modified_by = table.Column<string>(type: "text", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_hipaa_audit_logs", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_hipaa_audit_logs_peak_organizations_organization_id",
+                        column: x => x.organization_id,
+                        principalTable: "peak_organizations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "panels",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    panel_code = table.Column<string>(type: "text", nullable: true),
+                    panel_name = table.Column<string>(type: "text", nullable: true),
+                    type = table.Column<string>(type: "text", nullable: true),
+                    version = table.Column<int>(type: "integer", nullable: false),
+                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    status = table.Column<string>(type: "text", nullable: true),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "text", nullable: true),
+                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_modified_by = table.Column<string>(type: "text", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_panels", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_panels_peak_organizations_organization_id",
+                        column: x => x.organization_id,
+                        principalTable: "peak_organizations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "patients",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    first_name = table.Column<string>(type: "text", nullable: true),
+                    last_name = table.Column<string>(type: "text", nullable: true),
+                    known_age = table.Column<int>(type: "integer", nullable: true),
+                    date_of_birth = table.Column<DateOnly>(type: "date", nullable: true),
+                    sex = table.Column<string>(type: "text", nullable: true),
+                    race = table.Column<string>(type: "text", nullable: true),
+                    ethnicity = table.Column<string>(type: "text", nullable: true),
+                    internal_id = table.Column<string>(type: "text", nullable: false, defaultValueSql: "concat('PAT', nextval('\"PAT\"'))"),
+                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "text", nullable: true),
+                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_modified_by = table.Column<string>(type: "text", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_patients", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_patients_peak_organizations_organization_id",
+                        column: x => x.organization_id,
+                        principalTable: "peak_organizations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tests",
                 columns: table => new
                 {
@@ -190,18 +235,21 @@ namespace PeakLims.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_tests", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_tests_peak_organizations_organization_id",
+                        column: x => x.organization_id,
+                        principalTable: "peak_organizations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "users",
+                name: "user_roles",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    identifier = table.Column<string>(type: "text", nullable: true),
-                    first_name = table.Column<string>(type: "text", nullable: true),
-                    last_name = table.Column<string>(type: "text", nullable: true),
-                    email = table.Column<string>(type: "text", nullable: true),
-                    username = table.Column<string>(type: "text", nullable: true),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    role = table.Column<string>(type: "text", nullable: true),
                     created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     created_by = table.Column<string>(type: "text", nullable: true),
                     last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -210,7 +258,12 @@ namespace PeakLims.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_users", x => x.id);
+                    table.PrimaryKey("pk_user_roles", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_user_roles_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -268,6 +321,12 @@ namespace PeakLims.Migrations
                         column: x => x.patient_id,
                         principalTable: "patients",
                         principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_accessions_peak_organizations_organization_id",
+                        column: x => x.organization_id,
+                        principalTable: "peak_organizations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -334,29 +393,6 @@ namespace PeakLims.Migrations
                         principalTable: "tests",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "user_roles",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    role = table.Column<string>(type: "text", nullable: true),
-                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    created_by = table.Column<string>(type: "text", nullable: true),
-                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "text", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_user_roles", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_user_roles_users_user_id",
-                        column: x => x.user_id,
-                        principalTable: "users",
-                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -563,6 +599,11 @@ namespace PeakLims.Migrations
                 column: "healthcare_organization_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_accessions_organization_id",
+                table: "accessions",
+                column: "organization_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_accessions_patient_id",
                 table: "accessions",
                 column: "patient_id");
@@ -571,6 +612,16 @@ namespace PeakLims.Migrations
                 name: "ix_healthcare_organization_contacts_healthcare_organization_id",
                 table: "healthcare_organization_contacts",
                 column: "healthcare_organization_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_healthcare_organizations_organization_id",
+                table: "healthcare_organizations",
+                column: "organization_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_hipaa_audit_logs_organization_id",
+                table: "hipaa_audit_logs",
+                column: "organization_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_panel_orders_accession_id",
@@ -586,6 +637,16 @@ namespace PeakLims.Migrations
                 name: "ix_panel_test_tests_id",
                 table: "panel_test",
                 column: "tests_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_panels_organization_id",
+                table: "panels",
+                column: "organization_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_patients_organization_id",
+                table: "patients",
+                column: "organization_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_samples_container_id",
@@ -623,6 +684,11 @@ namespace PeakLims.Migrations
                 column: "test_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_tests_organization_id",
+                table: "tests",
+                column: "organization_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_user_roles_user_id",
                 table: "user_roles",
                 column: "user_id");
@@ -650,9 +716,6 @@ namespace PeakLims.Migrations
 
             migrationBuilder.DropTable(
                 name: "panel_test");
-
-            migrationBuilder.DropTable(
-                name: "peak_organizations");
 
             migrationBuilder.DropTable(
                 name: "role_permissions");
@@ -692,6 +755,9 @@ namespace PeakLims.Migrations
 
             migrationBuilder.DropTable(
                 name: "patients");
+
+            migrationBuilder.DropTable(
+                name: "peak_organizations");
 
             migrationBuilder.DropSequence(
                 name: "ACC");

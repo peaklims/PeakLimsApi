@@ -14,6 +14,10 @@ public sealed class HipaaAuditLogConfiguration : IEntityTypeConfiguration<HipaaA
     public void Configure(EntityTypeBuilder<HipaaAuditLog> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
+        
+        builder.HasOne(e => e.Organization)
+            .WithMany()
+            .HasForeignKey(e => e.OrganizationId);
 
         // Property Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
 

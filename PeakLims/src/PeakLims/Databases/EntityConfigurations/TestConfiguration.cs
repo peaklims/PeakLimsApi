@@ -13,6 +13,9 @@ public sealed class TestConfiguration : IEntityTypeConfiguration<Test>
     public void Configure(EntityTypeBuilder<Test> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
+        builder.HasOne(e => e.Organization)
+            .WithMany()
+            .HasForeignKey(e => e.OrganizationId);
 
         builder.Property(x => x.Status)
             .HasConversion(x => x.Value, x => new TestStatus(x));

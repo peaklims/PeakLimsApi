@@ -19,6 +19,10 @@ public sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
         builder.HasMany(x => x.Samples)
             .WithOne(x => x.Patient);
         
+        builder.HasOne(e => e.Organization)
+            .WithMany()
+            .HasForeignKey(e => e.OrganizationId);
+        
         builder.Property(o => o.InternalId)
             .HasDefaultValueSql($"concat('{Consts.DatabaseSequences.PatientInternalIdPrefix}', nextval('\"{Consts.DatabaseSequences.PatientInternalIdPrefix}\"'))")
             .IsRequired();

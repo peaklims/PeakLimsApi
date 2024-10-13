@@ -12,6 +12,7 @@ using PeakLims.Domain.Patients;
 using PeakLims.Domain.Patients.Models;
 using PeakLims.Domain.HealthcareOrganizations;
 using PeakLims.Domain.TestOrders;
+using PeakOrganizations;
 using TestOrders.Features;
 using Tests;
 
@@ -24,6 +25,7 @@ public class Accession : BaseEntity
     // public Guid? PatientId { get; }
     public Patient Patient { get; private set; }
     
+    public PeakOrganization Organization { get; }
     public Guid OrganizationId { get; private set;  }
 
     public HealthcareOrganization HealthcareOrganization { get; private set; }

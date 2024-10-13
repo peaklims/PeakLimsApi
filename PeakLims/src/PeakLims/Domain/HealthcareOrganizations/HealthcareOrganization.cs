@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using HealthcareOrganizationStatuses;
+using PeakOrganizations;
 
 public class HealthcareOrganization : BaseEntity
 {
@@ -17,10 +18,12 @@ public class HealthcareOrganization : BaseEntity
 
     public string Email { get; private set; }
     
+    public PeakOrganization Organization { get; }
     /// <summary>
     /// The tenant organization id that this healthcare organization belongs to
     /// </summary>
     public Guid OrganizationId { get; private set; }
+
     
     public HealthcareOrganizationStatus Status { get; private set; }
 

@@ -42,4 +42,9 @@ public abstract class BaseEntity
         if(!DomainEvents.Contains(@event))
             DomainEvents.Add(@event);
     }
+    
+    public void OverrideId(Guid id)
+    {
+        Id = id;
+    }
 }

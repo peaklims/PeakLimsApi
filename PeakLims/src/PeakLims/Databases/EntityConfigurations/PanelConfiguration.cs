@@ -15,6 +15,9 @@ public sealed class PanelConfiguration : IEntityTypeConfiguration<Panel>
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
         builder.HasMany(x => x.Tests)
             .WithMany(x => x.Panels);
+        builder.HasOne(e => e.Organization)
+            .WithMany()
+            .HasForeignKey(e => e.OrganizationId);
 
         builder.Property(x => x.Status)
             .HasConversion(x => x.Value, x => new PanelStatus(x));

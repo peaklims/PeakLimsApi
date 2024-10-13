@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using SharedTestHelpers.Fakes.PeakOrganization;
 using Testcontainers.LocalStack;
 using static Resources.PeakLimsOptions;
 
@@ -72,6 +73,13 @@ public class TestFixture : IAsyncLifetime
 
         var provider = services.BuildServiceProvider();
         BaseScopeFactory = provider.GetService<IServiceScopeFactory>();
+        
+        var dbContext = provider.GetService<PeakLimsDbContext>();
+        var testingOrganization = new FakePeakOrganizationBuilder().Build();
+        testingOrganization.OverrideId(TestingConsts.DefaultTestingOrganizationId);
+        await dbContext.PeakOrganizations.AddAsync(testingOrganization);
+        await dbContext.SaveChangesAsync();
+        
         SetupDateAssertions();
     }
     

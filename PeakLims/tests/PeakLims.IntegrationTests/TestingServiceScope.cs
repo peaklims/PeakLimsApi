@@ -4,6 +4,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Databases;
+using Domain.PeakOrganizations;
+using Domain.PeakOrganizations.Models;
 using Exceptions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,8 @@ using HeimGuard;
 using Microsoft.AspNetCore.Http;
 using NSubstitute.ExceptionExtensions;
 using SharedTestHelpers.Fakes.ClaimsPrincipal;
+using SharedTestHelpers.Fakes.PeakOrganization;
+using SharedTestHelpers.Utilities;
 
 public class TestingServiceScope 
 {
@@ -80,6 +84,14 @@ public class TestingServiceScope
         context.Add(entity);
 
         await context.SaveChangesAsync();
+    }
+
+    public void Add<TEntity>(TEntity entity)
+        where TEntity : class
+    {
+        var context = _scope.ServiceProvider.GetService<PeakLimsDbContext>();
+        context.Add(entity);
+        context.SaveChanges();
     }
     
     public async Task<bool> FileExistsInS3Async(string bucketName, string key)

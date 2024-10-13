@@ -10,6 +10,7 @@ using Exceptions;
 using PanelStatuses;
 using PeakLims.Domain.Tests;
 using PeakLims.Domain.Tests.Models;
+using PeakOrganizations;
 using Services;
 using TestOrders.Services;
 using TestStatuses;
@@ -24,6 +25,7 @@ public class Panel : BaseEntity
 
     public int Version { get; private set; }
     
+    public PeakOrganization Organization { get; }
     public Guid OrganizationId { get; private set; }
 
     public PanelStatus Status { get; private set; }

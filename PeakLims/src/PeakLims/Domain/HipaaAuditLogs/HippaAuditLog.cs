@@ -7,7 +7,7 @@ using PeakLims.Domain.HipaaAuditLogs.Models;
 using PeakLims.Domain.HipaaAuditLogs.DomainEvents;
 using PeakLims.Domain.AuditLogConcepts;
 using PeakLims.Domain.AuditLogActions;
-
+using PeakOrganizations;
 
 public class HipaaAuditLog : BaseEntity
 {
@@ -23,6 +23,7 @@ public class HipaaAuditLog : BaseEntity
 
    public AuditLogAction Action { get; private set; }
    
+   public PeakOrganization Organization { get; }
    public Guid OrganizationId { get; private set; }
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
