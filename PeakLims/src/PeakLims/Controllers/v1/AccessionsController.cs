@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
+using Asp.Versioning;
 
 [ApiController]
-[Route("api/accessions")]
+[Route("api/v{v:apiVersion}/accessions")]
 [ApiVersion("1.0")]
 public sealed class AccessionsController: ControllerBase
 {

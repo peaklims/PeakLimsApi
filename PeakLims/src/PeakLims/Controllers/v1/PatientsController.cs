@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
+using Asp.Versioning;
 
 [ApiController]
-[Route("api/patients")]
+[Route("api/v{v:apiVersion}/patients")]
 [ApiVersion("1.0")]
 public sealed class PatientsController(IMediator mediator) : ControllerBase
 {

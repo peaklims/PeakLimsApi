@@ -5,9 +5,10 @@ using Exceptions;
 using HeimGuard;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Asp.Versioning;
 
 [ApiController]
-[Route("api/permissions")]
+[Route("api/v{v:apiVersion}/permissions")]
 [ApiVersion("1.0")]
 public sealed class PermissionsController: ControllerBase
 {

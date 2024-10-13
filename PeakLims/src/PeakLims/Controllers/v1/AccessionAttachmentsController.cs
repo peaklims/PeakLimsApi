@@ -10,20 +10,13 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
+using Asp.Versioning;
 
 [ApiController]
-[Route("api/accessionattachments")]
+[Route("api/v{v:apiVersion}/accessionattachments")]
 [ApiVersion("1.0")]
-public sealed class AccessionAttachmentsController: ControllerBase
+public sealed class AccessionAttachmentsController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public AccessionAttachmentsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-    
-
     /// <summary>
     /// Gets a list of all AccessionAttachments.
     /// </summary>
@@ -32,7 +25,7 @@ public sealed class AccessionAttachmentsController: ControllerBase
     public async Task<IActionResult> GetAccessionAttachments([FromQuery] AccessionAttachmentParametersDto accessionAttachmentParametersDto)
     {
         var query = new GetAccessionAttachmentList.Query(accessionAttachmentParametersDto);
-        var queryResponse = await _mediator.Send(query);
+        var queryResponse = await mediator.Send(query);
 
         var paginationMetadata = new
         {
@@ -62,7 +55,7 @@ public sealed class AccessionAttachmentsController: ControllerBase
     public async Task<ActionResult<AccessionAttachmentDto>> GetAccessionAttachment(Guid accessionAttachmentId)
     {
         var query = new GetAccessionAttachment.Query(accessionAttachmentId);
-        var queryResponse = await _mediator.Send(query);
+        var queryResponse = await mediator.Send(query);
         return Ok(queryResponse);
     }
 
@@ -76,7 +69,7 @@ public sealed class AccessionAttachmentsController: ControllerBase
     public async Task<IActionResult> UploadAccessionAttachmentFile(Guid accessionId, [FromForm] UploadAccessionAttachmentDto data)
     {
         var command = new UploadAccessionAttachmentFile.Command(accessionId, data.File);
-        await _mediator.Send(command);
+        await mediator.Send(command);
         return NoContent();
     }
     
@@ -89,7 +82,7 @@ public sealed class AccessionAttachmentsController: ControllerBase
     public async Task<IActionResult> UpdateAccessionAttachment(Guid accessionAttachmentId, AccessionAttachmentForUpdateDto accessionAttachment)
     {
         var command = new UpdateAccessionAttachment.Command(accessionAttachmentId, accessionAttachment);
-        await _mediator.Send(command);
+        await mediator.Send(command);
         return NoContent();
     }
 
@@ -102,7 +95,7 @@ public sealed class AccessionAttachmentsController: ControllerBase
     public async Task<ActionResult> DeleteAccessionAttachment(Guid accessionAttachmentId)
     {
         var command = new DeleteAccessionAttachment.Command(accessionAttachmentId);
-        await _mediator.Send(command);
+        await mediator.Send(command);
         return NoContent();
     }
 

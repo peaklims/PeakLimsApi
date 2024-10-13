@@ -12,9 +12,10 @@ using System.Threading;
 using Domain.Panels.Features;
 using Domain.TestOrderCancellationReasons;
 using MediatR;
+using Asp.Versioning;
 
 [ApiController]
-[Route("api/testorders")]
+[Route("api/v{v:apiVersion}/testorders")]
 [ApiVersion("1.0")]
 public sealed class TestOrdersController: ControllerBase
 {

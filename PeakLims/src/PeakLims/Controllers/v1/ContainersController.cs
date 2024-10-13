@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
+using Asp.Versioning;
 
 [ApiController]
-[Route("api/containers")]
+[Route("api/v{v:apiVersion}/containers")]
 [ApiVersion("1.0")]
 public sealed class ContainersController: ControllerBase
 {

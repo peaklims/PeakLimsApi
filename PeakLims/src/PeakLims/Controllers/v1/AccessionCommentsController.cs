@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
+using Asp.Versioning;
 using MediatR;
 using Services;
 
 [ApiController]
-[Route("api/accessioncomments")]
+[Route("api/v{v:apiVersion}/accessioncomments")]
 [ApiVersion("1.0")]
 public sealed class AccessionCommentsController(IMediator mediator,
     ICurrentUserService currentUserService) : ControllerBase

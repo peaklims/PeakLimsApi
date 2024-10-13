@@ -11,9 +11,10 @@ using System.Threading.Tasks;
 using System.Threading;
 using Domain.Accessions.Features;
 using MediatR;
+using Asp.Versioning;
 
 [ApiController]
-[Route("api/panels")]
+[Route("api/v{v:apiVersion}/panels")]
 [ApiVersion("1.0")]
 public sealed class PanelsController: ControllerBase
 {

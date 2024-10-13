@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
+using Asp.Versioning;
 
 [ApiController]
-[Route("api/tests")]
+[Route("api/v{v:apiVersion}/tests")]
 [ApiVersion("1.0")]
 public sealed class TestsController: ControllerBase
 {
