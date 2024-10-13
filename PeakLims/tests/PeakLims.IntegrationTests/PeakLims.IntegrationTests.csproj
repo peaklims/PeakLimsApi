@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoBogus.Conventions" Version="2.13.1" />
     <PackageReference Include="AutoBogusLifesupport" Version="2.14.0" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.403.1" />
     <PackageReference Include="Bogus" Version="35.6.1" />
