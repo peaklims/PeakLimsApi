@@ -77,14 +77,18 @@ public static class PeakLimsOptionsExtensions
             .GetSection(PeakLimsOptions.AuthOptions.SectionName)
             .Get<PeakLimsOptions.AuthOptions>();
     }
-    
+
     public static string GetJaegerHost(this IConfiguration configuration)
     {
-        return configuration.GetSection(nameof(PeakLimsOptions.JaegerHost)).Value;
+        return configuration
+            .GetSection(PeakLimsOptions.SectionName)
+            .GetSection(nameof(PeakLimsOptions.JaegerHost)).Value;
     }
     
     public static string GetLocalstackPort(this IConfiguration configuration)
     {
-        return configuration.GetSection(nameof(PeakLimsOptions.LocalstackPort)).Value;
+        return configuration
+            .GetSection(PeakLimsOptions.SectionName)
+            .GetSection(nameof(PeakLimsOptions.LocalstackPort)).Value;
     }
 }
