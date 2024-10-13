@@ -23,6 +23,8 @@ public class Panel : BaseEntity
     public string Type { get; private set; }
 
     public int Version { get; private set; }
+    
+    public Guid OrganizationId { get; private set; }
 
     public PanelStatus Status { get; private set; }
 
@@ -43,6 +45,7 @@ public class Panel : BaseEntity
         newPanel.Type = panelForCreation.Type;
         newPanel.Version = 1;
         newPanel.Status = PanelStatus.Draft();
+        newPanel.OrganizationId = panelForCreation.OrganizationId;
 
         newPanel.QueueDomainEvent(new PanelCreated(){ Panel = newPanel });
         

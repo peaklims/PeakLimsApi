@@ -37,4 +37,18 @@ public static class ClientExtensions
             })
         );
     }
+    
+    public static void AddTenantMapper(this Client client)
+    {
+        var tenantMapper = client.Name.Apply(clientName =>
+            new UserAttributeProtocolMapper($"tenant-mapper-{clientName}", new UserAttributeProtocolMapperArgs
+            {
+                RealmId = client.RealmId,
+                ClientId = client.Id,
+                Name = "tenant-mapper",
+                UserAttribute = "organization-id",
+                ClaimName = "organization_id"
+            })
+        );
+    }
 }

@@ -12,27 +12,27 @@ using PeakLims.Databases;
 namespace PeakLims.Migrations
 {
     [DbContext(typeof(PeakLimsDbContext))]
-    [Migration("20240116020259_PanelOrdersOffOfAccession")]
-    partial class PanelOrdersOffOfAccession
+    [Migration("20241013022738_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.HasSequence("ACC")
-                .StartsAt(10005702L);
+            modelBuilder.HasSequence<int>("ACC")
+                .StartsAt(100005702L);
 
-            modelBuilder.HasSequence("PAT")
-                .StartsAt(10045702L);
+            modelBuilder.HasSequence<int>("PAT")
+                .StartsAt(100045702L);
 
-            modelBuilder.HasSequence("SAM")
-                .StartsAt(10000202L);
+            modelBuilder.HasSequence<int>("SAM")
+                .StartsAt(100000202L);
 
             modelBuilder.Entity("PanelTest", b =>
                 {
@@ -257,6 +257,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uuid")
                         .HasColumnName("patient_id");
@@ -299,6 +303,10 @@ namespace PeakLims.Migrations
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
 
                     b.Property<string>("Status")
                         .HasColumnType("text")
@@ -409,6 +417,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
                     b.Property<string>("Status")
                         .HasColumnType("text")
                         .HasColumnName("status");
@@ -469,6 +481,10 @@ namespace PeakLims.Migrations
                     b.Property<DateTimeOffset>("OccurredAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("occurred_at");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
 
                     b.HasKey("Id")
                         .HasName("pk_hipaa_audit_logs");
@@ -558,6 +574,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
                     b.Property<string>("PanelCode")
                         .HasColumnType("text")
                         .HasColumnName("panel_code");
@@ -629,6 +649,10 @@ namespace PeakLims.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("text")
                         .HasColumnName("last_name");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
 
                     b.Property<string>("Race")
                         .HasColumnType("text")
@@ -878,6 +902,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("text")
                         .HasColumnName("methodology");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
                     b.Property<string>("Platform")
                         .HasColumnType("text")
                         .HasColumnName("platform");
@@ -1101,7 +1129,7 @@ namespace PeakLims.Migrations
                         .HasConstraintName("fk_accession_contacts_accessions_accession_id");
 
                     b.HasOne("PeakLims.Domain.HealthcareOrganizationContacts.HealthcareOrganizationContact", "HealthcareOrganizationContact")
-                        .WithMany("Accessions")
+                        .WithMany()
                         .HasForeignKey("HealthcareOrganizationContactId")
                         .HasConstraintName("fk_accession_contacts_healthcare_organization_contacts_healthc");
 
@@ -1330,11 +1358,6 @@ namespace PeakLims.Migrations
             modelBuilder.Entity("PeakLims.Domain.Containers.Container", b =>
                 {
                     b.Navigation("Samples");
-                });
-
-            modelBuilder.Entity("PeakLims.Domain.HealthcareOrganizationContacts.HealthcareOrganizationContact", b =>
-                {
-                    b.Navigation("Accessions");
                 });
 
             modelBuilder.Entity("PeakLims.Domain.HealthcareOrganizations.HealthcareOrganization", b =>

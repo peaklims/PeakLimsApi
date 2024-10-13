@@ -8,17 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 using PeakLims.Domain.Accessions.Features;
 using PeakLims.SharedTestHelpers.Fakes.HealthcareOrganization;
+using SharedTestHelpers.Fakes.Accession;
 using static TestFixture;
 
 public class ManageOrganizationOnAccessionCommandTests : TestBase
 {
-    private readonly Faker _faker;
-
-    public ManageOrganizationOnAccessionCommandTests()
-    {
-        _faker = new Faker();
-    }
-    
     [Fact]
     public async Task can_manage_org()
     {
@@ -26,7 +20,7 @@ public class ManageOrganizationOnAccessionCommandTests : TestBase
         var testingServiceScope = new TestingServiceScope();
         var org = new FakeHealthcareOrganizationBuilder().Build();
         await testingServiceScope.InsertAsync(org);
-        var accession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
         await testingServiceScope.InsertAsync(accession);
 
         // Act - set

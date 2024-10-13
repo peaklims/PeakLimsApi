@@ -1,5 +1,6 @@
 namespace PeakLims.IntegrationTests;
 
+using System.Security.Claims;
 using Amazon.S3;
 using PeakLims.Extensions.Services;
 using PeakLims.Databases;
@@ -74,7 +75,7 @@ public class TestFixture : IAsyncLifetime
         BaseScopeFactory = provider.GetService<IServiceScopeFactory>();
         SetupDateAssertions();
     }
-
+    
     private static async Task RunMigration(string connectionString)
     {
         var options = new DbContextOptionsBuilder<PeakLimsDbContext>()

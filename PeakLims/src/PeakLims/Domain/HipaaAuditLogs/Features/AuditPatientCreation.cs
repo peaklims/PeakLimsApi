@@ -15,6 +15,7 @@ using Services;
 public class AuditPatientCreation(
     IHipaaAuditLogRepository hipaaAuditLogRepository,
     IPatientRepository patientRepository,
+    ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork)
     : INotificationHandler<PatientCreated>
 {
@@ -32,7 +33,8 @@ public class AuditPatientCreation(
                 Identifier = patient.Id,
                 Data = JsonSerializer.Serialize(patient.ToPatientAuditLogEntry()),
                 ActionBy = patient.CreatedBy,
-                Action = AuditLogAction.Added()
+                Action = AuditLogAction.Added(),
+                OrganizationId = currentUserService.GetOrganizationId()
             };
             var auditLogItem = HipaaAuditLog.Create(auditLogItemForCreation);
             await hipaaAuditLogRepository.Add(auditLogItem, cancellationToken);

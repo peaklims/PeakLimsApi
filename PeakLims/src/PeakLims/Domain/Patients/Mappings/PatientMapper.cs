@@ -9,7 +9,14 @@ using Riok.Mapperly.Abstractions;
 [Mapper]
 public static partial class PatientMapper
 {
-    public static partial PatientForCreation ToPatientForCreation(this PatientForCreationDto patientForCreationDto);
+    [MapperIgnoreTarget(nameof(PatientForCreation.OrganizationId))]
+    private static partial PatientForCreation ToPatientForCreation(this PatientForCreationDto patientForCreationDto);
+
+    [MapperIgnoreTarget(nameof(PatientForCreation.OrganizationId))]
+    public static PatientForCreation ToPatientForCreation(this PatientForCreationDto patientForCreationDto,
+        Guid organizationId)
+        => patientForCreationDto.ToPatientForCreation()! with { OrganizationId = organizationId };
+    
     public static partial PatientForUpdate ToPatientForUpdate(this PatientForUpdateDto patientForUpdateDto);
     
     [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth) }, new[] { nameof(PatientDto.DateOfBirth) })]

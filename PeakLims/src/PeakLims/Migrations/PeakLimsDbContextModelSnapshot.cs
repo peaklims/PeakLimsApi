@@ -17,19 +17,19 @@ namespace PeakLims.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.HasSequence("ACC")
-                .StartsAt(10005702L);
+            modelBuilder.HasSequence<int>("ACC")
+                .StartsAt(100005702L);
 
-            modelBuilder.HasSequence("PAT")
-                .StartsAt(10045702L);
+            modelBuilder.HasSequence<int>("PAT")
+                .StartsAt(100045702L);
 
-            modelBuilder.HasSequence("SAM")
-                .StartsAt(10000202L);
+            modelBuilder.HasSequence<int>("SAM")
+                .StartsAt(100000202L);
 
             modelBuilder.Entity("PanelTest", b =>
                 {
@@ -254,6 +254,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
                     b.Property<Guid?>("PatientId")
                         .HasColumnType("uuid")
                         .HasColumnName("patient_id");
@@ -296,6 +300,10 @@ namespace PeakLims.Migrations
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
 
                     b.Property<string>("Status")
                         .HasColumnType("text")
@@ -406,6 +414,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
                     b.Property<string>("Status")
                         .HasColumnType("text")
                         .HasColumnName("status");
@@ -466,6 +478,10 @@ namespace PeakLims.Migrations
                     b.Property<DateTimeOffset>("OccurredAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("occurred_at");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
 
                     b.HasKey("Id")
                         .HasName("pk_hipaa_audit_logs");
@@ -555,6 +571,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
                     b.Property<string>("PanelCode")
                         .HasColumnType("text")
                         .HasColumnName("panel_code");
@@ -626,6 +646,10 @@ namespace PeakLims.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("text")
                         .HasColumnName("last_name");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
 
                     b.Property<string>("Race")
                         .HasColumnType("text")
@@ -874,6 +898,10 @@ namespace PeakLims.Migrations
                     b.Property<string>("Methodology")
                         .HasColumnType("text")
                         .HasColumnName("methodology");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
 
                     b.Property<string>("Platform")
                         .HasColumnType("text")

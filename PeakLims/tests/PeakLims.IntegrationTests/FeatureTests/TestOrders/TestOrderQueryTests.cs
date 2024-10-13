@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.Accession;
+using SharedTestHelpers.Fakes.Test;
 
 public class TestOrderQueryTests : TestBase
 {
@@ -17,19 +19,23 @@ public class TestOrderQueryTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeTestOrderOne = new FakeTestOrderBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeTestOrderOne);
+        var test = new FakeTestBuilder().Build().Activate();
+        var accession = new FakeAccessionBuilder()
+            .WithTest(test)
+            .Build();
+        await testingServiceScope.InsertAsync(accession);
+        var testOrder = accession.TestOrders.First();
 
         // Act
-        var query = new GetTestOrder.Query(fakeTestOrderOne.Id);
-        var testOrder = await testingServiceScope.SendAsync(query);
+        var query = new GetTestOrder.Query(testOrder.Id);
+        var dbTestOrder = await testingServiceScope.SendAsync(query);
 
         // Assert
-        testOrder.Status.Should().Be(fakeTestOrderOne.Status);
-        testOrder.DueDate.Should().Be(fakeTestOrderOne.DueDate);
-        testOrder.TatSnapshot.Should().Be(fakeTestOrderOne.TatSnapshot);
-        testOrder.CancellationReason.Should().Be(fakeTestOrderOne.CancellationReason);
-        testOrder.CancellationComments.Should().Be(fakeTestOrderOne.CancellationComments);
+        dbTestOrder.Status.Should().Be(testOrder.Status);
+        dbTestOrder.DueDate.Should().Be(testOrder.DueDate);
+        dbTestOrder.TatSnapshot.Should().Be(testOrder.TatSnapshot);
+        dbTestOrder.CancellationReason.Should().Be(testOrder.CancellationReason);
+        dbTestOrder.CancellationComments.Should().Be(testOrder.CancellationComments);
     }
 
     [Fact]

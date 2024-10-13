@@ -23,6 +23,8 @@ public class Accession : BaseEntity
 
     // public Guid? PatientId { get; }
     public Patient Patient { get; private set; }
+    
+    public Guid OrganizationId { get; private set;  }
 
     public HealthcareOrganization HealthcareOrganization { get; private set; }
 
@@ -44,11 +46,13 @@ public class Accession : BaseEntity
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
 
-    public static Accession Create()
+    public static Accession Create(Guid organizationId)
     {
         var newAccession = new Accession();
+        ValidationException.ThrowWhenEmpty(organizationId, "Please provide an organization id.");
 
         newAccession.Status = AccessionStatus.Draft();
+        newAccession.OrganizationId = organizationId;
 
         newAccession.QueueDomainEvent(new AccessionCreated(){ Accession = newAccession });
         
@@ -122,6 +126,7 @@ public class Accession : BaseEntity
         // TODO unit test
         GuardIfInFinalState("Test orders");
 
+        testOrder.UpdateIsDeleted(true);
         // TODO if test order status is not in one of the pending states, guard
         _testOrders.Remove(testOrder);
     }
@@ -232,10 +237,10 @@ public class Accession : BaseEntity
         
         var panelOrder = PanelOrder.Create(panel);
         _panelOrders.Add(panelOrder);
-        // foreach (var panelOrderTestOrder in panelOrder.TestOrders)
-        // {
-        //     _testOrders.Add(panelOrderTestOrder);
-        // }
+        foreach (var panelOrderTestOrder in panelOrder.TestOrders)
+        {
+            _testOrders.Add(panelOrderTestOrder);
+        }
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
         return panelOrder;
     }

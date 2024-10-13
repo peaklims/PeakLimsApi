@@ -8,6 +8,7 @@ using Domain;
 
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.HealthcareOrganization;
 
 public class HealthcareOrganizationContactListQueryTests : TestBase
 {
@@ -17,11 +18,13 @@ public class HealthcareOrganizationContactListQueryTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeHealthcareOrganizationContactOne = new FakeHealthcareOrganizationContactBuilder().Build();
-        var fakeHealthcareOrganizationContactTwo = new FakeHealthcareOrganizationContactBuilder().Build();
+        var org = new FakeHealthcareOrganizationBuilder().Build();
+        var healthcareOrganizationContactOne = new FakeHealthcareOrganizationContactBuilder().Build();
+        var healthcareOrganizationContactTwo = new FakeHealthcareOrganizationContactBuilder().Build();
+        org.AddContact(healthcareOrganizationContactOne)
+            .AddContact(healthcareOrganizationContactTwo);
+        await testingServiceScope.InsertAsync(org);
         var queryParameters = new HealthcareOrganizationContactParametersDto();
-
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationContactOne, fakeHealthcareOrganizationContactTwo);
 
         // Act
         var query = new GetHealthcareOrganizationContactList.Query(queryParameters);

@@ -259,11 +259,6 @@
             Gets a single PanelOrder by ID.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.PanelOrdersController.AddPanelOrder(PeakLims.Domain.PanelOrders.Dtos.PanelOrderForCreationDto)">
-            <summary>
-            Creates a new PanelOrder record.
-            </summary>
-        </member>
         <member name="M:PeakLims.Controllers.v1.PanelOrdersController.DeletePanelOrder(System.Guid)">
             <summary>
             Deletes an existing PanelOrder record.
@@ -644,69 +639,26 @@
             Two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">(ISO 3166-1 alpha-2)</a>.
             </summary>
         </member>
+        <member name="P:PeakLims.Domain.HealthcareOrganizations.HealthcareOrganization.OrganizationId">
+            <summary>
+            The tenant organization id that this healthcare organization belongs to
+            </summary>
+        </member>
         <member name="M:PeakLims.Extensions.Services.WebAppServiceConfiguration.AddBoundaryServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Reflection.Assembly[])">
             <summary>
             Registers all services in the assembly of the given interface.
             </summary>
         </member>
-        <member name="T:PeakLims.Migrations.initial">
+        <member name="T:PeakLims.Migrations.Initial">
             <inheritdoc />
         </member>
-        <member name="M:PeakLims.Migrations.initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:PeakLims.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:PeakLims.Migrations.initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:PeakLims.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:PeakLims.Migrations.initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.AddAuditLog">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAuditLog.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAuditLog.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.AddAuditLog.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.RemovePanelOrderStatus">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.RemovePanelOrderStatus.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.RemovePanelOrderStatus.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.RemovePanelOrderStatus.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.PanelOrdersOffOfAccession">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrdersOffOfAccession.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrdersOffOfAccession.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrdersOffOfAccession.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.MaybeContactCleanup">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.MaybeContactCleanup.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.MaybeContactCleanup.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.MaybeContactCleanup.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:PeakLims.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

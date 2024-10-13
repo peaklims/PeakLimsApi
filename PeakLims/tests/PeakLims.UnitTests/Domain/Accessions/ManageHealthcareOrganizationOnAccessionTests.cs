@@ -26,7 +26,7 @@ public class ManageHealthcareOrganizationOnAccessionTests
     public void can_manage_healthcareOrganization()
     {
         // Arrange
-        var accession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
         var healthcareOrganization = new FakeHealthcareOrganizationBuilder().Build();
         
         // Act - add
@@ -47,7 +47,7 @@ public class ManageHealthcareOrganizationOnAccessionTests
     public void can_not_add_inactive_org()
     {
         // Arrange
-        var accession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
         var healthcareOrganization = new FakeHealthcareOrganizationBuilder().Build();
         healthcareOrganization.Deactivate();
         

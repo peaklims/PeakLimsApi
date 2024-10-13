@@ -20,14 +20,8 @@ public class RemoveTestOrderFromAccessionCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakePatientOne = new FakePatientBuilder().Build();
-        await testingServiceScope.InsertAsync(fakePatientOne);
-        var fakeHealthcareOrganizationOne = new FakeHealthcareOrganizationBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationOne);
 
         var test = new FakeTestBuilder().Build().Activate();
-        await testingServiceScope.InsertAsync(test);
-        
         var fakeAccessionOne = new FakeAccessionBuilder()
             .WithTest(test)
             .Build();

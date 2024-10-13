@@ -30,20 +30,13 @@ using Exceptions;
 using Microsoft.EntityFrameworkCore.Query;
 using Resources;
 
-public sealed class PeakLimsDbContext : DbContext
+public sealed class PeakLimsDbContext(
+    DbContextOptions<PeakLimsDbContext> options,
+    ICurrentUserService currentUserService,
+    IMediator mediator,
+    IDateTimeProvider dateTimeProvider)
+    : DbContext(options)
 {
-    private readonly ICurrentUserService _currentUserService;
-    private readonly IMediator _mediator;
-    private readonly IDateTimeProvider _dateTimeProvider;
-
-    public PeakLimsDbContext(
-        DbContextOptions<PeakLimsDbContext> options, ICurrentUserService currentUserService, IMediator mediator, IDateTimeProvider dateTimeProvider) : base(options)
-    {
-        _currentUserService = currentUserService;
-        _mediator = mediator;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
     #region DbSet Region - Do Not Delete
     public DbSet<HipaaAuditLog> HipaaAuditLogs { get; set; }
     public DbSet<PanelOrder> PanelOrders { get; set; }
@@ -68,16 +61,16 @@ public sealed class PeakLimsDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.HasSequence<long>(Consts.DatabaseSequences.PatientInternalIdPrefix)
-            .StartsAt(10045702) // people don't like a nice round starting number
+        modelBuilder.HasSequence<int>(Consts.DatabaseSequences.PatientInternalIdPrefix)
+            .StartsAt(100045702) // people don't like a nice round starting number
             .IncrementsBy(1);
         
-        modelBuilder.HasSequence<long>(Consts.DatabaseSequences.AccessionNumberPrefix)
-            .StartsAt(10005702) // people don't like a nice round starting number
+        modelBuilder.HasSequence<int>(Consts.DatabaseSequences.AccessionNumberPrefix)
+            .StartsAt(100005702) // people don't like a nice round starting number
             .IncrementsBy(1);
         
-        modelBuilder.HasSequence<long>(Consts.DatabaseSequences.SampleNumberPrefix)
-            .StartsAt(10000202) // people don't like a nice round starting number
+        modelBuilder.HasSequence<int>(Consts.DatabaseSequences.SampleNumberPrefix)
+            .StartsAt(100000202) // people don't like a nice round starting number
             .IncrementsBy(1);
 
         modelBuilder.FilterSoftDeletedRecords();
@@ -105,6 +98,35 @@ public sealed class PeakLimsDbContext : DbContext
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
         #endregion Entity Database Config Region - Only delete if you don't want to automatically add configurations
+    
+        modelBuilder.Entity<Patient>()
+            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<Accession>()
+            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<Sample>()
+            .HasQueryFilter(e => !e.IsDeleted && e.Patient.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<Container>()
+            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<HealthcareOrganization>()
+            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<HealthcareOrganizationContact>()
+            .HasQueryFilter(e => !e.IsDeleted && e.HealthcareOrganization.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<AccessionComment>()
+            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<AccessionContact>()
+            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<AccessionAttachment>()
+            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<HipaaAuditLog>()
+            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<TestOrder>()
+            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<PanelOrder>()
+            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<Test>()
+            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<Panel>()
+            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
     }
 
     public override int SaveChanges()
@@ -135,29 +157,29 @@ public sealed class PeakLimsDbContext : DbContext
             var events = entity.DomainEvents.ToArray();
             entity.DomainEvents.Clear();
             foreach (var entityDomainEvent in events)
-                await _mediator.Publish(entityDomainEvent);
+                await mediator.Publish(entityDomainEvent);
         }
     }
         
     private void UpdateAuditFields()
     {
-        var now = _dateTimeProvider.DateTimeUtcNow;
+        var now = dateTimeProvider.DateTimeUtcNow;
         foreach (var entry in ChangeTracker.Entries<BaseEntity>())
         {
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.UpdateCreationProperties(now, _currentUserService?.UserIdentifier);
-                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserIdentifier);
+                    entry.Entity.UpdateCreationProperties(now, currentUserService?.UserIdentifier);
+                    entry.Entity.UpdateModifiedProperties(now, currentUserService?.UserIdentifier);
                     break;
 
                 case EntityState.Modified:
-                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserIdentifier);
+                    entry.Entity.UpdateModifiedProperties(now, currentUserService?.UserIdentifier);
                     break;
                 
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
-                    entry.Entity.UpdateModifiedProperties(now, _currentUserService?.UserIdentifier);
+                    entry.Entity.UpdateModifiedProperties(now, currentUserService?.UserIdentifier);
                     entry.Entity.UpdateIsDeleted(true);
                     break;
             }

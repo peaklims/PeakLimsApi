@@ -5,23 +5,17 @@ using FluentAssertions;
 using PeakLims.Domain.Accessions;
 using PeakLims.SharedTestHelpers.Fakes.Panel;
 using PeakLims.SharedTestHelpers.Fakes.Test;
+using SharedTestHelpers.Fakes.Accession;
 using Xunit;
 using ValidationException = Exceptions.ValidationException;
 
 public class ManagePanelOrderOnAccessionTests
 {
-    private readonly Faker _faker;
-
-    public ManagePanelOrderOnAccessionTests()
-    {
-        _faker = new Faker();
-    }
-
     [Fact]
     public void can_manage_panel_order()
     {
         // Arrange
-        var fakeAccession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
 
         var test = new FakeTestBuilder()
             .Build()
@@ -32,35 +26,35 @@ public class ManagePanelOrderOnAccessionTests
             .Activate();
         
         // Act - Add
-        fakeAccession.AddPanel(panel);
+        accession.AddPanel(panel);
 
         // Assert - Add
-        fakeAccession.PanelOrders
+        accession.PanelOrders
             .SelectMany(x => x.TestOrders)
             .ToList()
             .Count
             .Should()
             .Be(1);
         
-        var testOrder = fakeAccession.PanelOrders
+        var testOrder = accession.PanelOrders
             .SelectMany(x => x.TestOrders).FirstOrDefault();
         testOrder.Test.TestCode.Should().Be(test.TestCode);
         testOrder.PanelOrder.Panel.PanelCode.Should().Be(panel.PanelCode);
         
         // Act - Can remove idempotently
-        fakeAccession.RemovePanelOrder(testOrder.PanelOrder)
+        accession.RemovePanelOrder(testOrder.PanelOrder)
             .RemovePanelOrder(testOrder.PanelOrder)
             .RemovePanelOrder(testOrder.PanelOrder);
 
         // Assert - Remove
-        fakeAccession.TestOrders.Count.Should().Be(0);
+        accession.TestOrders.Count.Should().Be(0);
     }
     
     [Fact]
     public void can_not_add_inactive_panel()
     {
         // Arrange
-        var fakeAccession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
 
         var test = new FakeTestBuilder()
             .Build()
@@ -71,7 +65,7 @@ public class ManagePanelOrderOnAccessionTests
             .AddTest(test);
         
         // Act
-        var act = () => fakeAccession.AddPanel(panel);
+        var act = () => accession.AddPanel(panel);
 
         // Assert
         act.Should().Throw<ValidationException>()
@@ -82,7 +76,7 @@ public class ManagePanelOrderOnAccessionTests
     public void can_not_add_panel_order_with_inactive_test()
     {
         // Arrange
-        var fakeAccession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
 
         var test = new FakeTestBuilder()
             .Build()
@@ -95,7 +89,7 @@ public class ManagePanelOrderOnAccessionTests
         test.Deactivate();
         
         // Act
-        var act = () => fakeAccession.AddPanel(panel);
+        var act = () => accession.AddPanel(panel);
 
         // Assert
         act.Should().Throw<ValidationException>()

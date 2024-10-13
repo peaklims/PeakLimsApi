@@ -44,6 +44,24 @@ public class AccessionCommentQueryTests : TestBase
         await act.Should().ThrowAsync<NotFoundException>();
     }
 
+    [Fact]
+    public async Task can_exclude_comment_from_another_org()
+    {
+        // Arrange
+        var testingServiceScope = new TestingServiceScope();
+        var fakeAccessionCommentOne = new FakeAccessionCommentBuilder().Build();
+        await testingServiceScope.InsertAsync(fakeAccessionCommentOne);
+        
+        testingServiceScope.SetRandomUserInNewOrg();
+
+        // Act
+        var query = new GetAccessionComment.Query(fakeAccessionCommentOne.Id);
+        var act = async () => await testingServiceScope.SendAsync(query);
+
+        // Assert
+        await act.Should().ThrowAsync<NotFoundException>();
+    }
+
     [Fact(Skip = "need to redo permission granularity")]
     public async Task must_be_permitted()
     {

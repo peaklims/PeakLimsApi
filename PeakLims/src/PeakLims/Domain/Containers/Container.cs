@@ -16,6 +16,7 @@ public class Container : BaseEntity
     public SampleType UsedFor { get; private set; }
 
     public ContainerStatus Status { get; private set; }
+    public Guid OrganizationId { get; private set;  }
 
     public string Type { get; private set; }
     public bool CanStore(SampleType sampleType) => UsedFor == sampleType;
@@ -32,6 +33,7 @@ public class Container : BaseEntity
         newContainer.UsedFor = SampleType.Of(containerForCreation.UsedFor);
         newContainer.Status = ContainerStatus.Active();
         newContainer.Type = containerForCreation.Type;
+        newContainer.OrganizationId = containerForCreation.OrganizationId;
 
         newContainer.QueueDomainEvent(new ContainerCreated(){ Container = newContainer });
         

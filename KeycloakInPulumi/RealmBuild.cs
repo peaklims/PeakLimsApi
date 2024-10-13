@@ -27,6 +27,7 @@ class RealmBuild : Stack
             "https://oauth.pstmn.io");
         peakLimsPostmanMachineClient.ExtendDefaultScopes(peaklimsScope.Name);
         peakLimsPostmanMachineClient.AddAudienceMapper("peak_lims");
+        peakLimsPostmanMachineClient.AddTenantMapper();
         
         var peakLimsPostmanCodeClient = ClientFactory.CreateCodeFlowClient(realm.Id,
             "peak_lims.postman.code", 
@@ -38,6 +39,7 @@ class RealmBuild : Stack
             );
         peakLimsPostmanCodeClient.ExtendDefaultScopes(peaklimsScope.Name);
         peakLimsPostmanCodeClient.AddAudienceMapper("peak_lims");
+        peakLimsPostmanCodeClient.AddTenantMapper();
         
         var peakLimsSwaggerClient = ClientFactory.CreateCodeFlowClient(realm.Id,
             "peak_lims.swagger", 
@@ -49,24 +51,7 @@ class RealmBuild : Stack
             );
         peakLimsSwaggerClient.ExtendDefaultScopes(peaklimsScope.Name);
         peakLimsSwaggerClient.AddAudienceMapper("peak_lims");
-        
-        var peakLimsNextClient = ClientFactory.CreateCodeFlowClient(realm.Id,
-            "peak_lims.next", 
-            "063c2754-b258-47a4-92bc-22a609e7ca13", 
-            "PeakLims Next",
-            "http://localhost:6488",
-            redirectUris: new InputList<string>() 
-                {
-                "http://localhost:6488/*",
-                },
-            webOrigins: new InputList<string>() 
-                {
-                "https://localhost:5227",
-                "http://localhost:6488",
-                }
-            );
-        peakLimsNextClient.ExtendDefaultScopes(peaklimsScope.Name);
-        peakLimsNextClient.AddAudienceMapper("peak_lims");
+        peakLimsSwaggerClient.AddTenantMapper();
         
         var peakLimsSpaClient = ClientFactory.CreateCodeFlowClient(realm.Id,
             "peak_lims.spa", 
@@ -85,6 +70,7 @@ class RealmBuild : Stack
         );
         peakLimsSpaClient.ExtendDefaultScopes(peaklimsScope.Name);
         peakLimsSpaClient.AddAudienceMapper("peak_lims");
+        peakLimsSpaClient.AddTenantMapper();
         
         var bob = new User("bob", new UserArgs
         {
@@ -99,6 +85,10 @@ class RealmBuild : Stack
                 Value = "bob",
                 Temporary = true,
             },
+            Attributes =
+            {
+                { "organization-id", "84c294a2-ac18-418f-b4e0-d86ce6b64d1d" }
+            }
         });
 
         var alice = new User("alice", new UserArgs
@@ -114,6 +104,10 @@ class RealmBuild : Stack
                 Value = "alice",
                 Temporary = true,
             },
+            Attributes =
+            {
+                { "organization-id", "84c294a2-ac18-418f-b4e0-d86ce6b64d1d" }
+            }
         });
     }
 }

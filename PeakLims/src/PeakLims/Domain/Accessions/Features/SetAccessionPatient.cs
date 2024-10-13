@@ -19,7 +19,7 @@ public static class SetAccessionPatient
     public sealed class Handler(
         PeakLimsDbContext dbContext, 
         IUnitOfWork unitOfWork,
-        IHeimGuardClient heimGuard,
+        ICurrentUserService currentUserService,
         IPatientRepository patientRepository)
         : IRequestHandler<Command>
     {
@@ -34,8 +34,8 @@ public static class SetAccessionPatient
             {
                 if (request.PatientForCreationDto == null)
                     throw new ArgumentNullException(nameof(request.PatientForCreationDto));
-                
-                var newPatientToCreate = request.PatientForCreationDto.ToPatientForCreation();
+
+                var newPatientToCreate = request.PatientForCreationDto.ToPatientForCreation(currentUserService.GetOrganizationId());
                 var newPatient = Patient.Create(newPatientToCreate);
                 await patientRepository.Add(newPatient, cancellationToken);
                 accession.SetPatient(newPatient);

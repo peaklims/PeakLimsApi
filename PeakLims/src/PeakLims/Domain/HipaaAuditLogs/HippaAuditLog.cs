@@ -22,6 +22,8 @@ public class HipaaAuditLog : BaseEntity
     public Guid Identifier { get; private set; }
 
    public AuditLogAction Action { get; private set; }
+   
+   public Guid OrganizationId { get; private set; }
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
@@ -36,6 +38,7 @@ public class HipaaAuditLog : BaseEntity
         newHipaaAuditLog.Action = AuditLogAction.Of(hipaaAuditLogForCreation.Action);
         newHipaaAuditLog.OccurredAt = TimeProvider.System.GetUtcNow();
         newHipaaAuditLog.Identifier = hipaaAuditLogForCreation.Identifier;
+        newHipaaAuditLog.OrganizationId = hipaaAuditLogForCreation.OrganizationId;
 
         if(!newHipaaAuditLog.Concept.CanPerformAction(newHipaaAuditLog.Action))
             throw new ValidationException($"Invalid action for concept {newHipaaAuditLog.Concept.Value}");

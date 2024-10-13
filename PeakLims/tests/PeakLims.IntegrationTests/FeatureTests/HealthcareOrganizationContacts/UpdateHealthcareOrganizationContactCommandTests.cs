@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.HealthcareOrganization;
 
 public class UpdateHealthcareOrganizationContactCommandTests : TestBase
 {
@@ -18,12 +19,11 @@ public class UpdateHealthcareOrganizationContactCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeHealthcareOrganizationContactOne = new FakeHealthcareOrganizationContactBuilder().Build();
+        var org = new FakeHealthcareOrganizationBuilder().Build();
+        var healthcareOrganizationContact = new FakeHealthcareOrganizationContactBuilder().Build();
+        org.AddContact(healthcareOrganizationContact);
+        await testingServiceScope.InsertAsync(org);
         var updatedHealthcareOrganizationContactDto = new FakeHealthcareOrganizationContactForUpdateDto().Generate();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationContactOne);
-
-        var healthcareOrganizationContact = await testingServiceScope.ExecuteDbContextAsync(db => db.HealthcareOrganizationContacts
-            .FirstOrDefaultAsync(h => h.Id == fakeHealthcareOrganizationContactOne.Id));
 
         // Act
         var command = new UpdateHealthcareOrganizationContact.Command(healthcareOrganizationContact.Id, updatedHealthcareOrganizationContactDto);

@@ -2,10 +2,13 @@ namespace PeakLims.SharedTestHelpers.Fakes.HealthcareOrganization;
 
 using PeakLims.Domain.HealthcareOrganizations;
 using PeakLims.Domain.HealthcareOrganizations.Models;
+using Utilities;
 
 public class FakeHealthcareOrganizationBuilder
 {
-    private HealthcareOrganizationForCreation _creationData = new FakeHealthcareOrganizationForCreation().Generate();
+    private HealthcareOrganizationForCreation _creationData = new FakeHealthcareOrganizationForCreation()
+        .RuleFor(x => x.OrganizationId, TestingConsts.DefaultTestingOrganizationId)
+        .Generate();
 
     public FakeHealthcareOrganizationBuilder WithModel(HealthcareOrganizationForCreation model)
     {

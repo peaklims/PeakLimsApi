@@ -11,5 +11,6 @@ public sealed class PatientDto
     public string Race { get; set; }
     public string Ethnicity { get; set; }
     public string InternalId { get; set; }
+    public Guid OrganizationId { get; set; }
 
 }

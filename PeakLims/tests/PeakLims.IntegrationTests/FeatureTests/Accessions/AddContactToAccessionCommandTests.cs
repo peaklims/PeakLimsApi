@@ -26,8 +26,10 @@ public class AddContactToAccessionCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
+        var org = new FakeHealthcareOrganizationBuilder().Build();
         var orgContact = new FakeHealthcareOrganizationContactBuilder().Build();
-        await testingServiceScope.InsertAsync(orgContact);
+        org.AddContact(orgContact);
+        await testingServiceScope.InsertAsync(org);
         
         var accession = new FakeAccessionBuilder().Build();
         await testingServiceScope.InsertAsync(accession);

@@ -5,6 +5,9 @@ using PeakLims.Domain.PanelOrders.Features;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Threading.Tasks;
+using SharedTestHelpers.Fakes.Accession;
+using SharedTestHelpers.Fakes.Panel;
+using SharedTestHelpers.Fakes.Test;
 
 public class DeletePanelOrderCommandTests : TestBase
 {
@@ -13,10 +16,15 @@ public class DeletePanelOrderCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var panelOrderOne = new FakePanelOrderBuilder().Build();
-        await testingServiceScope.InsertAsync(panelOrderOne);
-        var panelOrder = await testingServiceScope.ExecuteDbContextAsync(db => db.PanelOrders
-            .FirstOrDefaultAsync(p => p.Id == panelOrderOne.Id));
+        
+        var test = new FakeTestBuilder().Build().Activate();
+        var panel = new FakePanelBuilder().Build()
+            .AddTest(test)
+            .Activate();
+        
+        var accession = new FakeAccessionBuilder().Build();
+        var panelOrder = accession.AddPanel(panel);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
         var command = new DeletePanelOrder.Command(panelOrder.Id);
@@ -47,10 +55,15 @@ public class DeletePanelOrderCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var panelOrderOne = new FakePanelOrderBuilder().Build();
-        await testingServiceScope.InsertAsync(panelOrderOne);
-        var panelOrder = await testingServiceScope.ExecuteDbContextAsync(db => db.PanelOrders
-            .FirstOrDefaultAsync(p => p.Id == panelOrderOne.Id));
+        
+        var test = new FakeTestBuilder().Build().Activate();
+        var panel = new FakePanelBuilder().Build()
+            .AddTest(test)
+            .Activate();
+        
+        var accession = new FakeAccessionBuilder().Build();
+        var panelOrder = accession.AddPanel(panel);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
         var command = new DeletePanelOrder.Command(panelOrder.Id);

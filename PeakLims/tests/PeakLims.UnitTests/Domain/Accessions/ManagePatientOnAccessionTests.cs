@@ -26,7 +26,7 @@ public class ManagePatientOnAccessionTests
     public void can_manage_patient()
     {
         // Arrange
-        var accession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
         var patient = new FakePatientBuilder().Build();
         
         // Act - Add

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Domain.SampleStatuses;
 using Exceptions;
 using SharedTestHelpers.Fakes.Container;
+using SharedTestHelpers.Fakes.Patient;
 
 public class UpdateSampleCommandTests : TestBase
 {
@@ -20,12 +21,12 @@ public class UpdateSampleCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeSampleOne = new FakeSampleBuilder().Build();
+        var sample = new FakeSampleBuilder().Build();
+        var patient = new FakePatientBuilder()
+            .Build()
+            .AddSample(sample);
+        await testingServiceScope.InsertAsync(patient);
         var updatedSampleDto = new FakeSampleForUpdateDto().Generate();
-        await testingServiceScope.InsertAsync(fakeSampleOne);
-
-        var sample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
-            .FirstOrDefaultAsync(s => s.Id == fakeSampleOne.Id));
 
         // Act
         var command = new UpdateSample.Command(sample.Id, updatedSampleDto);
@@ -52,16 +53,16 @@ public class UpdateSampleCommandTests : TestBase
         var container = new FakeContainerBuilder().Build();
         await testingServiceScope.InsertAsync(container);
         
-        var fakeSampleOne = new FakeSampleBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeSampleOne);
+        var sample = new FakeSampleBuilder().Build();
+        var patient = new FakePatientBuilder()
+            .Build()
+            .AddSample(sample);
+        await testingServiceScope.InsertAsync(patient);
         
         var updatedSampleDto = new FakeSampleForUpdateDto()
             .RuleFor(x => x.Type, f => container.UsedFor.Value)
             .Generate();
         updatedSampleDto.ContainerId = container.Id;
-
-        var sample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
-            .FirstOrDefaultAsync(s => s.Id == fakeSampleOne.Id));
 
         // Act
         var command = new UpdateSample.Command(sample.Id, updatedSampleDto);

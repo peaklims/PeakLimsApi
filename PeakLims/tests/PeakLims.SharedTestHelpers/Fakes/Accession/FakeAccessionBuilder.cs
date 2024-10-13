@@ -13,13 +13,15 @@ using Patient;
 using PeakLims.Domain.Accessions;
 using Sample;
 using Test;
+using Utilities;
 
 public class FakeAccessionBuilder
 {
-    private List<Test> _tests = new List<Test>();
+    private readonly List<Test> _tests = [];
     private Patient _patient = new FakePatientBuilder().Build();
     private HealthcareOrganization _healthcareOrganization = null;
     private AccessionContact _accessionContact = null;
+    private Guid _organizationId = TestingConsts.DefaultTestingOrganizationId;
     
     public FakeAccessionBuilder WithTest(Test test)
     {
@@ -30,6 +32,18 @@ public class FakeAccessionBuilder
     public FakeAccessionBuilder WithPatient(Patient patient)
     {
         _patient = patient;
+        return this;
+    }
+    
+    public FakeAccessionBuilder WithoutPatient()
+    {
+        _patient = null;
+        return this;
+    }
+    
+    public FakeAccessionBuilder WithOrganizationId(Guid organizationId)
+    {
+        _organizationId = organizationId;
         return this;
     }
 
@@ -59,7 +73,7 @@ public class FakeAccessionBuilder
 
     public Accession Build()
     {
-        var result = Accession.Create();
+        var result = Accession.Create(_organizationId);
         foreach (var test in _tests)
         {
             result.AddTest(test);

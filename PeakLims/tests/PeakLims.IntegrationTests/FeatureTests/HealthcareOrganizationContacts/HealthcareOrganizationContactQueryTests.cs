@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.HealthcareOrganization;
 
 public class HealthcareOrganizationContactQueryTests : TestBase
 {
@@ -17,18 +18,20 @@ public class HealthcareOrganizationContactQueryTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeHealthcareOrganizationContactOne = new FakeHealthcareOrganizationContactBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationContactOne);
+        var org = new FakeHealthcareOrganizationBuilder().Build();
+        var healthcareOrganizationContact = new FakeHealthcareOrganizationContactBuilder().Build();
+        org.AddContact(healthcareOrganizationContact);
+        await testingServiceScope.InsertAsync(org);
 
         // Act
-        var query = new GetHealthcareOrganizationContact.Query(fakeHealthcareOrganizationContactOne.Id);
-        var healthcareOrganizationContact = await testingServiceScope.SendAsync(query);
+        var query = new GetHealthcareOrganizationContact.Query(healthcareOrganizationContact.Id);
+        var healthcareOrganizationContactResponse = await testingServiceScope.SendAsync(query);
 
         // Assert
-        healthcareOrganizationContact.FirstName.Should().Be(fakeHealthcareOrganizationContactOne.FirstName);
-        healthcareOrganizationContact.LastName.Should().Be(fakeHealthcareOrganizationContactOne.LastName);
-        healthcareOrganizationContact.Email.Should().Be(fakeHealthcareOrganizationContactOne.Email);
-        healthcareOrganizationContact.Npi.Should().Be(fakeHealthcareOrganizationContactOne.Npi);
+        healthcareOrganizationContactResponse.FirstName.Should().Be(healthcareOrganizationContact.FirstName);
+        healthcareOrganizationContactResponse.LastName.Should().Be(healthcareOrganizationContact.LastName);
+        healthcareOrganizationContactResponse.Email.Should().Be(healthcareOrganizationContact.Email);
+        healthcareOrganizationContactResponse.Npi.Should().Be(healthcareOrganizationContact.Npi);
     }
 
     [Fact]

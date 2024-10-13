@@ -48,25 +48,17 @@ public class RemoveTestFromPanelCommandTests : TestBase
         var test = new FakeTestBuilder()
             .Build()
             .Activate();
-        var secondTest = new FakeTestBuilder()
+        var panel = new FakePanelBuilder()
+            .WithTest(test)
             .Build()
             .Activate();
-        await testingServiceScope.InsertAsync(secondTest);
-        var panel = new FakePanelBuilder().WithTest(test)
-            .Build()
-            .Activate();
-
-        var fakePatientOne = new FakePatientBuilder().Build();
-        await testingServiceScope.InsertAsync(fakePatientOne);
-        var fakeHealthcareOrganizationOne = new FakeHealthcareOrganizationBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationOne);
+        
         var accession = new FakeAccessionBuilder().Build();
+        accession.AddPanel(panel);
         await testingServiceScope.InsertAsync(accession);
-        var panelOrder = accession.AddPanel(panel);
-        await testingServiceScope.InsertAsync(panelOrder);
 
         // Act
-        var command = new RemoveTestFromPanel.Command(panel.Id, secondTest.Id);
+        var command = new RemoveTestFromPanel.Command(panel.Id, test.Id);
         var act = () => testingServiceScope.SendAsync(command);
 
         // Assert

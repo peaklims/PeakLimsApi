@@ -17,13 +17,6 @@ using static TestFixture;
 
 public class ManagePatientOnAccessionCommandTests : TestBase
 {
-    private readonly Faker _faker;
-
-    public ManagePatientOnAccessionCommandTests()
-    {
-        _faker = new Faker();
-    }
-    
     [Fact]
     public async Task can_manage_existing_patients()
     {
@@ -31,7 +24,9 @@ public class ManagePatientOnAccessionCommandTests : TestBase
         var testingServiceScope = new TestingServiceScope();
         var patient = new FakePatientBuilder().Build();
         await testingServiceScope.InsertAsync(patient);
-        var accession = Accession.Create();
+        var accession = new FakeAccessionBuilder()
+            .WithoutPatient()
+            .Build();
         await testingServiceScope.InsertAsync(accession);
 
         // Act - set
@@ -58,7 +53,7 @@ public class ManagePatientOnAccessionCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var accession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
         await testingServiceScope.InsertAsync(accession);
         var patientToAdd = new FakePatientForCreationDto().Generate();
 

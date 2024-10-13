@@ -23,6 +23,8 @@ public class Test : BaseEntity
     public int Version { get; private set; }
 
     public int TurnAroundTime { get; private set; }
+    
+    public Guid OrganizationId { get; private set; }
 
     public TestStatus Status { get; private set; }
 
@@ -42,6 +44,7 @@ public class Test : BaseEntity
         newTest.Version = 1;
         newTest.TurnAroundTime = testForCreation.TurnAroundTime;
         newTest.Status = TestStatus.Draft();
+        newTest.OrganizationId = testForCreation.OrganizationId;
 
         newTest.QueueDomainEvent(new TestCreated(){ Test = newTest });
         

@@ -14,7 +14,7 @@ using Services;
 
 public class AuditPatientDeleted(
     IHipaaAuditLogRepository hipaaAuditLogRepository,
-    IPatientRepository patientRepository,
+    ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork)
     : INotificationHandler<PatientDeleted>
 {
@@ -29,7 +29,8 @@ public class AuditPatientDeleted(
                 Concept = AuditLogConcept.Patient(),
                 Identifier = notification.Id,
                 ActionBy = notification.ActionBy,
-                Action = AuditLogAction.Deleted()
+                Action = AuditLogAction.Deleted(),
+                OrganizationId = currentUserService.GetOrganizationId()
             };
             var auditLogItem = HipaaAuditLog.Create(auditLogItemForCreation);
             await hipaaAuditLogRepository.Add(auditLogItem, cancellationToken);

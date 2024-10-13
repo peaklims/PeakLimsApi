@@ -22,7 +22,7 @@ public class Patient : BaseEntity
 
     public string LastName { get; private set; }
     
-    public virtual Lifespan Lifespan { get; private set; }
+    public Lifespan Lifespan { get; private set; }
 
     public Sex Sex { get; private set; }
 
@@ -31,6 +31,8 @@ public class Patient : BaseEntity
     public Ethnicity Ethnicity { get; private set; }
 
     public string InternalId { get; }
+    
+    public Guid OrganizationId { get; private set;  }
 
     private readonly List<Sample> _sample = new();
     // public IReadOnlyCollection<Sample> Samples => _sample.AsReadOnly();
@@ -49,10 +51,12 @@ public class Patient : BaseEntity
         ValidationException.ThrowWhenNullOrWhitespace(patientForCreation.LastName, "Please provide a last name.");
         ValidationException.ThrowWhenNullOrWhitespace(patientForCreation.Sex, "Please provide a sex.");
         ValidationException.MustNot(patientForCreation.Age == null && patientForCreation.DateOfBirth == null, 
-            "Please provide a valid age or birth date.");
+            "Please provide a valid age and birth date.");
+        ValidationException.ThrowWhenEmpty(patientForCreation.OrganizationId, "Please provide an organization id.");
 
         newPatient.FirstName = patientForCreation.FirstName;
         newPatient.LastName = patientForCreation.LastName;
+        newPatient.OrganizationId = patientForCreation.OrganizationId;
         newPatient.Lifespan = new Lifespan(patientForCreation.Age, patientForCreation.DateOfBirth);
         newPatient.Sex = Sex.Of(patientForCreation.Sex);
         newPatient.Race = Race.Of(patientForCreation.Race);
@@ -86,6 +90,15 @@ public class Patient : BaseEntity
     {
         _sample.Remove(sample);
         return this;
+    }
+
+    public Patient OverrideOrganizationId(Guid organizationId)
+    {
+        OrganizationId = organizationId;
+
+        QueueDomainEvent(new PatientUpdated(){ Id = Id });
+        return this;
+        
     }
 
     // Add Prop Methods Marker -- Deleting this comment will cause the add props utility to be incomplete

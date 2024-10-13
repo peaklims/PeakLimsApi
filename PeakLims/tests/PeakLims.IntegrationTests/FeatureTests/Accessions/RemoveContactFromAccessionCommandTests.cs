@@ -26,9 +26,12 @@ public class RemoveContactFromAccessionCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
+        var org = new FakeHealthcareOrganizationBuilder().Build();
         var orgContactOne = new FakeHealthcareOrganizationContactBuilder().Build();
         var orgContactTwo = new FakeHealthcareOrganizationContactBuilder().Build();
-        await testingServiceScope.InsertAsync(orgContactOne, orgContactTwo);
+        org.AddContact(orgContactOne)
+            .AddContact(orgContactTwo);
+        await testingServiceScope.InsertAsync(org);
         
         var accession = new FakeAccessionBuilder().Build();
         await testingServiceScope.InsertAsync(accession);

@@ -16,7 +16,6 @@ public static class RemoveTestOrderFromAccession
 
     public sealed class Handler(
         IUnitOfWork unitOfWork,
-        IHeimGuardClient heimGuard,
         PeakLimsDbContext dbContext,
         ITestOrderRepository testOrderRepository)
         : IRequestHandler<Command>
@@ -29,9 +28,6 @@ public static class RemoveTestOrderFromAccession
             
             var testOrderToRemove = await testOrderRepository.GetById(request.TestOrderId, true, cancellationToken);
             accession.RemoveTestOrder(testOrderToRemove);
-            await unitOfWork.CommitChanges(cancellationToken);
-            
-            testOrderRepository.CleanupOrphanedTestOrders();
             await unitOfWork.CommitChanges(cancellationToken);
         }
     }

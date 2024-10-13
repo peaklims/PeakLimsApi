@@ -6,6 +6,9 @@ using Domain;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using SharedTestHelpers.Fakes.Accession;
+using SharedTestHelpers.Fakes.Panel;
+using SharedTestHelpers.Fakes.Test;
 
 public class PanelOrderQueryTests : TestBase
 {
@@ -14,16 +17,23 @@ public class PanelOrderQueryTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var panelOrderOne = new FakePanelOrderBuilder().Build();
-        await testingServiceScope.InsertAsync(panelOrderOne);
+        
+        var test = new FakeTestBuilder().Build().Activate();
+        var panel = new FakePanelBuilder().Build()
+            .AddTest(test)
+            .Activate();
+        
+        var accession = new FakeAccessionBuilder().Build();
+        var panelOrder = accession.AddPanel(panel);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
-        var query = new GetPanelOrder.Query(panelOrderOne.Id);
-        var panelOrder = await testingServiceScope.SendAsync(query);
+        var query = new GetPanelOrder.Query(panelOrder.Id);
+        var dbPanelOrder = await testingServiceScope.SendAsync(query);
 
         // Assert
-        panelOrder.CancellationReason.Should().Be(panelOrderOne.CancellationReason);
-        panelOrder.CancellationComments.Should().Be(panelOrderOne.CancellationComments);
+        dbPanelOrder.CancellationReason.Should().Be(panelOrder.CancellationReason);
+        dbPanelOrder.CancellationComments.Should().Be(panelOrder.CancellationComments);
     }
 
     [Fact]

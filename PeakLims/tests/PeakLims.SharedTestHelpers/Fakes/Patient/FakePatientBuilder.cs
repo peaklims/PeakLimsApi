@@ -2,10 +2,13 @@ namespace PeakLims.SharedTestHelpers.Fakes.Patient;
 
 using PeakLims.Domain.Patients;
 using PeakLims.Domain.Patients.Models;
+using Utilities;
 
 public class FakePatientBuilder
 {
-    private PatientForCreation _creationData = new FakePatientForCreation().Generate();
+    private PatientForCreation _creationData = new FakePatientForCreation()
+        .RuleFor(x => x.OrganizationId, TestingConsts.DefaultTestingOrganizationId)
+        .Generate();
 
     public FakePatientBuilder WithModel(PatientForCreation model)
     {

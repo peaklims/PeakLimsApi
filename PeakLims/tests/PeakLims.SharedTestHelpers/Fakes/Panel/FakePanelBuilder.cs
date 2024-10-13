@@ -4,11 +4,14 @@ using Domain.Tests;
 using PeakLims.Domain.Panels;
 using PeakLims.Domain.Panels.Models;
 using Test;
+using Utilities;
 
 public class FakePanelBuilder
 {
-    private PanelForCreation _creationData = new FakePanelForCreation().Generate();
-    private List<Test> _tests = new List<Test>();
+    private PanelForCreation _creationData = new FakePanelForCreation()
+        .RuleFor(x => x.OrganizationId, TestingConsts.DefaultTestingOrganizationId)
+        .Generate();
+    private readonly List<Test> _tests = new List<Test>();
 
     public FakePanelBuilder WithModel(PanelForCreation model)
     {

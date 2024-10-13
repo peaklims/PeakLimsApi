@@ -1,6 +1,6 @@
 namespace PeakLims.Domain.Patients.Models;
 
-public sealed class PatientForCreation
+public sealed record PatientForCreation
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -9,5 +9,5 @@ public sealed class PatientForCreation
     public string Sex { get; set; }
     public string Race { get; set; }
     public string Ethnicity { get; set; }
-
+    public Guid OrganizationId { get; set; }
 }

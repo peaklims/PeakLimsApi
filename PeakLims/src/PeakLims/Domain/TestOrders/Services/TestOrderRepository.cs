@@ -8,31 +8,30 @@ using PeakLims.Services;
 
 public interface ITestOrderRepository : IGenericRepository<TestOrder>
 {
-    void CleanupOrphanedTestOrders();
     bool HasPanelAssignedToAccession(Panel panel);
 }
 
-public sealed class TestOrderRepository : GenericRepository<TestOrder>, ITestOrderRepository
+public sealed class TestOrderRepository(PeakLimsDbContext dbContext)
+    : GenericRepository<TestOrder>(dbContext), ITestOrderRepository
 {
-    private readonly PeakLimsDbContext _dbContext;
-
-    public TestOrderRepository(PeakLimsDbContext dbContext) : base(dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    public void CleanupOrphanedTestOrders()
-    {
-        var testOrders = _dbContext.TestOrders.Where(x => x.Accession == null && x.PanelOrder == null).ToList();
-        _dbContext.TestOrders.RemoveRange(testOrders);
-    }
+    private readonly PeakLimsDbContext _dbContext = dbContext;
 
     public bool HasPanelAssignedToAccession(Panel panel)
     {
-        return _dbContext.TestOrders
+        var tos = _dbContext.TestOrders
             .Include(x => x.Accession)
             .Include(x => x.PanelOrder)
             .ThenInclude(x => x.Panel)
+            .Include(x => x.PanelOrder)
+            .ThenInclude(x => x.Accession)
+            .ToList();
+        var response = _dbContext.TestOrders
+            .Include(x => x.Accession)
+            .Include(x => x.PanelOrder)
+            .ThenInclude(x => x.Panel)
+            .Include(x => x.PanelOrder)
+            .ThenInclude(x => x.Accession)
             .Any(x => x.PanelOrder.Panel == panel);
+        return response;
     }
 }

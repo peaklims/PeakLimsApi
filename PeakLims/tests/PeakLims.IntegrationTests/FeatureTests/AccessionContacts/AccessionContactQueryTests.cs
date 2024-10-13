@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.Accession;
 
 public class AccessionContactQueryTests : TestBase
 {
@@ -17,16 +18,36 @@ public class AccessionContactQueryTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeAccessionContactOne = new FakeAccessionContactBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeAccessionContactOne);
+        var accession = new FakeAccessionBuilder().Build();
+        var accessionContact = new FakeAccessionContactBuilder().Build();
+        accession.AddContact(accessionContact);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
-        var query = new GetAccessionContact.Query(fakeAccessionContactOne.Id);
-        var accessionContact = await testingServiceScope.SendAsync(query);
+        var query = new GetAccessionContact.Query(accessionContact.Id);
+        var accessionContactResponse = await testingServiceScope.SendAsync(query);
 
         // Assert
-        accessionContact.TargetType.Should().Be(fakeAccessionContactOne.TargetType);
-        accessionContact.TargetValue.Should().Be(fakeAccessionContactOne.TargetValue);
+        accessionContactResponse.TargetType.Should().Be(accessionContact.TargetType);
+        accessionContactResponse.TargetValue.Should().Be(accessionContact.TargetValue);
+    }
+
+    [Fact]
+    public async Task can_exclude_contact_from_another_org()
+    {
+        // Arrange
+        var testingServiceScope = new TestingServiceScope();
+        var accessionContact = new FakeAccessionContactBuilder().Build();
+        await testingServiceScope.InsertAsync(accessionContact);
+        
+        testingServiceScope.SetRandomUserInNewOrg();
+
+        // Act
+        var query = new GetAccessionContact.Query(accessionContact.Id);
+        var act = async () => await testingServiceScope.SendAsync(query);
+
+        // Assert
+        await act.Should().ThrowAsync<NotFoundException>();
     }
 
     [Fact]

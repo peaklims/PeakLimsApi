@@ -13,20 +13,14 @@ public interface ICurrentUserService : IPeakLimsScopedService
     string? Username { get; }
     string? ClientId { get; }
     bool IsMachine { get; }
+    Guid? OrganizationId { get; }
+    Guid GetOrganizationId();
 }
 
-public sealed class CurrentUserService : ICurrentUserService
+public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor, IJobContextAccessor jobContextAccessor)
+    : ICurrentUserService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IJobContextAccessor _jobContextAccessor;
-
-    public CurrentUserService(IHttpContextAccessor httpContextAccessor, IJobContextAccessor jobContextAccessor)
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _jobContextAccessor = jobContextAccessor;
-    }
-
-    public ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User ?? CreatePrincipalFromJobContextUserId();
+    public ClaimsPrincipal? User => httpContextAccessor.HttpContext?.User ?? CreatePrincipalFromJobContextUserId();
     public string? UserIdentifier => User?.FindFirstValue(ClaimTypes.NameIdentifier);
     public string? Email => User?.FindFirstValue(ClaimTypes.Email);
     public string? FirstName => User?.FindFirstValue(ClaimTypes.GivenName);
@@ -40,10 +34,20 @@ public sealed class CurrentUserService : ICurrentUserService
         ?.FirstOrDefault(x => x.Type is "client_id" or "clientId")
         ?.Value;
     public bool IsMachine => ClientId != null;
+    public Guid? OrganizationId
+    {
+        get
+        {
+            var organizationId = User?.FindFirstValue("organization_id");
+            var hasTenantId = Guid.TryParse(organizationId, out var result);
+            return hasTenantId ? result : null;
+        }
+    }
+    public Guid GetOrganizationId() => OrganizationId ?? throw new InvalidOperationException("Invalid organization id (null)");
     
     private ClaimsPrincipal? CreatePrincipalFromJobContextUserId()
     {
-        var userId = _jobContextAccessor?.UserContext?.User;
+        var userId = jobContextAccessor?.UserContext?.User;
         if (string.IsNullOrEmpty(userId))
         {
             return null;

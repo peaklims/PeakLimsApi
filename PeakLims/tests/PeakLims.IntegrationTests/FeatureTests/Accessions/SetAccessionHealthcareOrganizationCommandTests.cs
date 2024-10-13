@@ -24,13 +24,13 @@ public class SetAccessionHealthcareOrganizationCommandTests : TestBase
         var fakeHealthcareOrganizationOne = new FakeHealthcareOrganizationBuilder().Build();
         await testingServiceScope.InsertAsync(fakeHealthcareOrganizationOne);
 
-        var fakeAccessionOne = Accession.Create();
-        await testingServiceScope.InsertAsync(fakeAccessionOne);
+        var accession = new FakeAccessionBuilder().Build();
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
-        var command = new SetAccessionHealthcareOrganization.Command(fakeAccessionOne.Id, fakeHealthcareOrganizationOne.Id);
+        var command = new SetAccessionHealthcareOrganization.Command(accession.Id, fakeHealthcareOrganizationOne.Id);
         await testingServiceScope.SendAsync(command);
-        var updatedAccession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions.FirstOrDefaultAsync(a => a.Id == fakeAccessionOne.Id));
+        var updatedAccession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions.FirstOrDefaultAsync(a => a.Id == accession.Id));
 
         // Assert
         updatedAccession.HealthcareOrganization.Id.Should().Be(fakeHealthcareOrganizationOne.Id);

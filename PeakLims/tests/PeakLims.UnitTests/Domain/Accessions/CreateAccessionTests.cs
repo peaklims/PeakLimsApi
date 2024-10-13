@@ -11,22 +11,17 @@ using Xunit;
 
 public class CreateAccessionTests
 {
-    private readonly Faker _faker;
+    private readonly Faker _faker = new();
 
-    public CreateAccessionTests()
-    {
-        _faker = new Faker();
-    }
-    
     [Fact]
     public void can_create_valid_accession()
     {
         // Arrange
         // Act
-        var fakeAccession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
 
         // Assert
-        fakeAccession.Status.Should().Be(AccessionStatus.Draft());
+        accession.Status.Should().Be(AccessionStatus.Draft());
     }
 
     [Fact]
@@ -34,10 +29,10 @@ public class CreateAccessionTests
     {
         // Arrange
         // Act
-        var fakeAccession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
 
         // Assert
-        fakeAccession.DomainEvents.Count.Should().Be(1);
-        fakeAccession.DomainEvents.FirstOrDefault().Should().BeOfType(typeof(AccessionCreated));
+        accession.DomainEvents.Count.Should().Be(1);
+        accession.DomainEvents.FirstOrDefault().Should().BeOfType(typeof(AccessionCreated));
     }
 }

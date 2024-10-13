@@ -9,4 +9,5 @@ public sealed record HipaaAuditLogForCreation
     public string ActionBy { get; set; }
     public string Action { get; set; }
     public Guid Identifier { get; set; }
+    public Guid OrganizationId { get; set; }
 }

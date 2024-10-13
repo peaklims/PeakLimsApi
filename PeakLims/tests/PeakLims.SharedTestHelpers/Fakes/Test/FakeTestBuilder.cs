@@ -2,10 +2,13 @@ namespace PeakLims.SharedTestHelpers.Fakes.Test;
 
 using PeakLims.Domain.Tests;
 using PeakLims.Domain.Tests.Models;
+using Utilities;
 
 public class FakeTestBuilder
 {
-    private TestForCreation _creationData = new FakeTestForCreation().Generate();
+    private TestForCreation _creationData = new FakeTestForCreation()
+        .RuleFor(x => x.OrganizationId, TestingConsts.DefaultTestingOrganizationId)
+        .Generate();
 
     public FakeTestBuilder WithModel(TestForCreation model)
     {

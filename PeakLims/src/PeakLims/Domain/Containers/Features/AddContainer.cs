@@ -13,36 +13,24 @@ using MediatR;
 
 public static class AddContainer
 {
-    public sealed class Command : IRequest<ContainerDto>
+    public sealed class Command(ContainerForCreationDto containerToAdd) : IRequest<ContainerDto>
     {
-        public readonly ContainerForCreationDto ContainerToAdd;
-
-        public Command(ContainerForCreationDto containerToAdd)
-        {
-            ContainerToAdd = containerToAdd;
-        }
+        public readonly ContainerForCreationDto ContainerToAdd = containerToAdd;
     }
 
-    public sealed class Handler : IRequestHandler<Command, ContainerDto>
+    public sealed class Handler(
+        IContainerRepository containerRepository,
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUserService)
+        : IRequestHandler<Command, ContainerDto>
     {
-        private readonly IContainerRepository _containerRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IContainerRepository containerRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _containerRepository = containerRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<ContainerDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var containerToAdd = request.ContainerToAdd.ToContainerForCreation();
+            var containerToAdd = request.ContainerToAdd.ToContainerForCreation(currentUserService.GetOrganizationId());
             var container = Container.Create(containerToAdd);
 
-            await _containerRepository.Add(container, cancellationToken);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            await containerRepository.Add(container, cancellationToken);
+            await unitOfWork.CommitChanges(cancellationToken);
 
             return container.ToContainerDto();
         }

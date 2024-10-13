@@ -12,7 +12,7 @@ public static partial class AccessionMapper
     public static partial AccessionDto ToAccessionDto(this Accession accession);
     public static partial IQueryable<AccessionDto> ToAccessionDtoQueryable(this IQueryable<Accession> accession);
     
-    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(AccessionWorklistDto.PatientDto.Age) })]
+    [MapProperty([nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age)], [nameof(AccessionWorklistDto.PatientDto.Age)])]
     private static partial AccessionWorklistDto.PatientDto ToAccessionWorklistDtoPatientDto(this Patient accessionAttachment);
     
     public static IQueryable<AccessionWorklistDto> ToAccessionWorklistDtoQueryable(this IQueryable<Accession> accession)
@@ -33,8 +33,10 @@ public static partial class AccessionMapper
             });
     }
     
-    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth) }, new[] { nameof(AccessionPageViewDto.PatientDto.DateOfBirth) })]
-    [MapProperty(new[] { nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age) }, new[] { nameof(AccessionPageViewDto.PatientDto.Age) })]
+    [MapProperty([nameof(Patient.Lifespan), nameof(Patient.Lifespan.DateOfBirth)], [nameof(AccessionPageViewDto.PatientDto.DateOfBirth)
+    ])]
+    [MapProperty([nameof(Patient.Lifespan), nameof(Patient.Lifespan.Age)], [nameof(AccessionPageViewDto.PatientDto.Age)
+    ])]
     private static partial AccessionPageViewDto.PatientDto ToAccessionPageViewDtoPatientDto(this Patient accessionAttachment);
     
     public static AccessionPageViewDto ToEditableAccessionDto(this Accession accession, IFileStorage fileStorage)

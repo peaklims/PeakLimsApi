@@ -7,6 +7,7 @@ using Domain;
 using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using SharedTestHelpers.Fakes.Accession;
 
 public class UpdateAccessionAttachmentCommandTests : TestBase
 {
@@ -15,12 +16,12 @@ public class UpdateAccessionAttachmentCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var accessionAttachmentOne = new FakeAccessionAttachmentBuilder().Build();
         var updatedAccessionAttachmentDto = new FakeAccessionAttachmentForUpdateDto().Generate();
-        await testingServiceScope.InsertAsync(accessionAttachmentOne);
 
-        var accessionAttachment = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionAttachments
-            .FirstOrDefaultAsync(a => a.Id == accessionAttachmentOne.Id));
+        var accessionAttachment = new FakeAccessionAttachmentBuilder().Build();
+        var accession = new FakeAccessionBuilder().Build();
+        accession.AddAccessionAttachment(accessionAttachment);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
         var command = new UpdateAccessionAttachment.Command(accessionAttachment.Id, updatedAccessionAttachmentDto);

@@ -8,6 +8,8 @@ using Domain;
 
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.Accession;
+using SharedTestHelpers.Fakes.Test;
 
 public class TestOrderListQueryTests : TestBase
 {
@@ -17,11 +19,14 @@ public class TestOrderListQueryTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeTestOrderOne = new FakeTestOrderBuilder().Build();
-        var fakeTestOrderTwo = new FakeTestOrderBuilder().Build();
-        var queryParameters = new TestOrderParametersDto();
 
-        await testingServiceScope.InsertAsync(fakeTestOrderOne, fakeTestOrderTwo);
+        var accession = new FakeAccessionBuilder()
+            .WithTest(new FakeTestBuilder().Build().Activate())
+            .WithTest(new FakeTestBuilder().Build().Activate())
+            .Build();
+        await testingServiceScope.InsertAsync(accession);
+        
+        var queryParameters = new TestOrderParametersDto();
 
         // Act
         var query = new GetTestOrderList.Query(queryParameters);

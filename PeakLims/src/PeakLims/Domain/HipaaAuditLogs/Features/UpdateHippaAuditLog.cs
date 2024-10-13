@@ -15,27 +15,20 @@ public static class UpdateHipaaAuditLog
 {
     public sealed record Command(Guid HipaaAuditLogId, HipaaAuditLogForUpdateDto UpdatedHipaaAuditLogData) : IRequest;
 
-    public sealed class Handler : IRequestHandler<Command>
+    public sealed class Handler(
+        IHipaaAuditLogRepository hipaaAuditLogRepository,
+        IUnitOfWork unitOfWork)
+        : IRequestHandler<Command>
     {
-        private readonly IHipaaAuditLogRepository _hipaaAuditLogRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IHipaaAuditLogRepository hipaaAuditLogRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _hipaaAuditLogRepository = hipaaAuditLogRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
 
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var hipaaAuditLogToUpdate = await _hipaaAuditLogRepository.GetById(request.HipaaAuditLogId, cancellationToken: cancellationToken);
+            var hipaaAuditLogToUpdate = await hipaaAuditLogRepository.GetById(request.HipaaAuditLogId, cancellationToken: cancellationToken);
             var hipaaAuditLogToAdd = request.UpdatedHipaaAuditLogData.ToHipaaAuditLogForUpdate();
             hipaaAuditLogToUpdate.Update(hipaaAuditLogToAdd);
 
-            _hipaaAuditLogRepository.Update(hipaaAuditLogToUpdate);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            hipaaAuditLogRepository.Update(hipaaAuditLogToUpdate);
+            await unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }

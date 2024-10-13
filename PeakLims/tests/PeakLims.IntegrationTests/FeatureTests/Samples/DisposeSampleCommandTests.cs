@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Domain.SampleStatuses;
 using SharedTestHelpers.Fakes.Container;
+using SharedTestHelpers.Fakes.Patient;
 
 public class DisposeSampleCommandTests : TestBase
 {
@@ -19,11 +20,11 @@ public class DisposeSampleCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeSampleOne = new FakeSampleBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeSampleOne);
-
-        var sample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
-            .FirstOrDefaultAsync(s => s.Id == fakeSampleOne.Id));
+        var sample = new FakeSampleBuilder().Build();
+        var patient = new FakePatientBuilder()
+            .Build()
+            .AddSample(sample);
+        await testingServiceScope.InsertAsync(patient);
 
         // Act
         var command = new DisposeSample.Command(sample.Id);

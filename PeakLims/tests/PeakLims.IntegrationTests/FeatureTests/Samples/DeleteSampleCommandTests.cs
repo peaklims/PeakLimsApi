@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.Patient;
 
 public class DeleteSampleCommandTests : TestBase
 {
@@ -16,10 +17,11 @@ public class DeleteSampleCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeSampleOne = new FakeSampleBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeSampleOne);
-        var sample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
-            .FirstOrDefaultAsync(s => s.Id == fakeSampleOne.Id));
+        var sample = new FakeSampleBuilder().Build();
+        var patient = new FakePatientBuilder()
+            .Build()
+            .AddSample(sample);
+        await testingServiceScope.InsertAsync(patient);
 
         // Act
         var command = new DeleteSample.Command(sample.Id);
@@ -50,10 +52,11 @@ public class DeleteSampleCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeSampleOne = new FakeSampleBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeSampleOne);
-        var sample = await testingServiceScope.ExecuteDbContextAsync(db => db.Samples
-            .FirstOrDefaultAsync(s => s.Id == fakeSampleOne.Id));
+        var sample = new FakeSampleBuilder().Build();
+        var patient = new FakePatientBuilder()
+            .Build()
+            .AddSample(sample);
+        await testingServiceScope.InsertAsync(patient);
 
         // Act
         var command = new DeleteSample.Command(sample.Id);

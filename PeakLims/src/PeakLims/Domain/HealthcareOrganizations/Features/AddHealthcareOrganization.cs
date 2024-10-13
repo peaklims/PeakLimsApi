@@ -13,36 +13,26 @@ using MediatR;
 
 public static class AddHealthcareOrganization
 {
-    public sealed class Command : IRequest<HealthcareOrganizationDto>
+    public sealed class Command(HealthcareOrganizationForCreationDto healthcareOrganizationToAdd)
+        : IRequest<HealthcareOrganizationDto>
     {
-        public readonly HealthcareOrganizationForCreationDto HealthcareOrganizationToAdd;
-
-        public Command(HealthcareOrganizationForCreationDto healthcareOrganizationToAdd)
-        {
-            HealthcareOrganizationToAdd = healthcareOrganizationToAdd;
-        }
+        public readonly HealthcareOrganizationForCreationDto HealthcareOrganizationToAdd = healthcareOrganizationToAdd;
     }
 
-    public sealed class Handler : IRequestHandler<Command, HealthcareOrganizationDto>
+    public sealed class Handler(
+        IHealthcareOrganizationRepository healthcareOrganizationRepository,
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUserService)
+        : IRequestHandler<Command, HealthcareOrganizationDto>
     {
-        private readonly IHealthcareOrganizationRepository _healthcareOrganizationRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IHealthcareOrganizationRepository healthcareOrganizationRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _healthcareOrganizationRepository = healthcareOrganizationRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<HealthcareOrganizationDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var healthcareOrganizationToAdd = request.HealthcareOrganizationToAdd.ToHealthcareOrganizationForCreation();
+            var healthcareOrganizationToAdd = request.HealthcareOrganizationToAdd
+                .ToHealthcareOrganizationForCreation(currentUserService.GetOrganizationId());
             var healthcareOrganization = HealthcareOrganization.Create(healthcareOrganizationToAdd);
 
-            await _healthcareOrganizationRepository.Add(healthcareOrganization, cancellationToken);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            await healthcareOrganizationRepository.Add(healthcareOrganization, cancellationToken);
+            await unitOfWork.CommitChanges(cancellationToken);
 
             return healthcareOrganization.ToHealthcareOrganizationDto();
         }

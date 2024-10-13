@@ -1,5 +1,6 @@
 namespace PeakLims.IntegrationTests;
 
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Databases;
@@ -10,7 +11,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
 using static TestFixture;
 using HeimGuard;
+using Microsoft.AspNetCore.Http;
 using NSubstitute.ExceptionExtensions;
+using SharedTestHelpers.Fakes.ClaimsPrincipal;
 
 public class TestingServiceScope 
 {
@@ -19,6 +22,10 @@ public class TestingServiceScope
     public TestingServiceScope()
     {
         _scope = BaseScopeFactory.CreateScope();
+        
+        var userClaim = new FakeClaimsPrincipalBuilder().Build();
+        SetUser(userClaim);
+        
         SetUserIsPermitted();
     }
 
@@ -26,6 +33,24 @@ public class TestingServiceScope
     {
         var service = _scope.ServiceProvider.GetService<TScopedService>();
         return service;
+    }
+
+    public void SetUser(ClaimsPrincipal user)
+    {
+        var httpContextAccessor = BaseScopeFactory.CreateScope()
+            .ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+        httpContextAccessor.HttpContext = new DefaultHttpContext
+        {
+            User = user
+        };
+    }
+
+    public void SetRandomUserInNewOrg()
+    {
+        var userClaim = new FakeClaimsPrincipalBuilder()
+            .WithOrganizationId(Guid.NewGuid())
+            .Build();
+        SetUser(userClaim);
     }
 
     public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)

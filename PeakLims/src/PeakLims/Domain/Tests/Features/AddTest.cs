@@ -13,36 +13,18 @@ using MediatR;
 
 public static class AddTest
 {
-    public sealed class Command : IRequest<TestDto>
+    public sealed record Command(TestForCreationDto TestToAdd) : IRequest<TestDto>;
+
+    public sealed class Handler(ITestRepository testRepository, IUnitOfWork unitOfWork, ICurrentUserService currentUserService)
+        : IRequestHandler<Command, TestDto>
     {
-        public readonly TestForCreationDto TestToAdd;
-
-        public Command(TestForCreationDto testToAdd)
-        {
-            TestToAdd = testToAdd;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Command, TestDto>
-    {
-        private readonly ITestRepository _testRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(ITestRepository testRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard)
-        {
-            _testRepository = testRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<TestDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var testToAdd = request.TestToAdd.ToTestForCreation();
+            var testToAdd = request.TestToAdd.ToTestForCreation(currentUserService.GetOrganizationId());
             var test = Test.Create(testToAdd);
 
-            await _testRepository.Add(test, cancellationToken);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            await testRepository.Add(test, cancellationToken);
+            await unitOfWork.CommitChanges(cancellationToken);
 
             return test.ToTestDto();
         }

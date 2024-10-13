@@ -2,10 +2,13 @@ namespace PeakLims.SharedTestHelpers.Fakes.HipaaAuditLog;
 
 using PeakLims.Domain.HipaaAuditLogs;
 using PeakLims.Domain.HipaaAuditLogs.Models;
+using Utilities;
 
 public class FakeHipaaAuditLogBuilder
 {
-    private HipaaAuditLogForCreation _creationData = new FakeHipaaAuditLogForCreation().Generate();
+    private HipaaAuditLogForCreation _creationData = new FakeHipaaAuditLogForCreation()
+        .RuleFor(x => x.OrganizationId, TestingConsts.DefaultTestingOrganizationId)
+        .Generate();
 
     public FakeHipaaAuditLogBuilder WithModel(HipaaAuditLogForCreation model)
     {

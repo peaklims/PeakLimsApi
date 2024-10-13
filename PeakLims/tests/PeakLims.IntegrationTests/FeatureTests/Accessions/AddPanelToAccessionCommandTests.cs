@@ -58,43 +58,33 @@ public class AddPanelToAccessionCommandPanels : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var patient = new FakePatientBuilder().Build();
-        await testingServiceScope.InsertAsync(patient);
-        var fakeHealthcareOrganizationOne = new FakeHealthcareOrganizationBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationOne);
+        
         var existingText = new FakeTestBuilder().Build().Activate();
-        var fakeTest = new FakeTestBuilder().Build().Activate();
-        var fakePanel = new FakePanelBuilder().WithTest(fakeTest).Build().Activate();
-        await testingServiceScope.InsertAsync(fakePanel);
-
         var accession = new FakeAccessionBuilder().Build();
         accession.AddTest(existingText);
-        accession.SetPatient(patient);
         await testingServiceScope.InsertAsync(accession);
+        
+        var test = new FakeTestBuilder().Build().Activate();
+        var panel = new FakePanelBuilder().WithTest(test).Build().Activate();
+        await testingServiceScope.InsertAsync(panel);
 
         // Act
-        var command = new AddPanelToAccession.Command(accession.Id, fakePanel.Id);
+        var command = new AddPanelToAccession.Command(accession.Id, panel.Id);
         await testingServiceScope.SendAsync(command);
-        var panelOrders = await testingServiceScope.ExecuteDbContextAsync(db => db.PanelOrders
-            .Include(x => x.Accession)
-            .Include(x => x.Panel)
+
+        var dbAccession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .Include(x => x.TestOrders)
-            .ThenInclude(x => x.Test)
-            .Where(a => a.Accession.Id == accession.Id)
-            .ToListAsync());
-        var dbTestOrders = await testingServiceScope.ExecuteDbContextAsync(db => db.TestOrders
-            .Include(x => x.Accession)
-            .Include(x => x.Test)
-            .Where(a => a.Accession.Id == accession.Id)
-            .ToListAsync());
+                .ThenInclude(x => x.Test)
+            .Include(x => x.PanelOrders)
+                .ThenInclude(x => x.TestOrders)
+                .ThenInclude(x => x.Test)
+            .FirstOrDefaultAsync(a => a.Id == accession.Id));
         
-        var testOrders = panelOrders.SelectMany(x => x.TestOrders)
-            .Concat(dbTestOrders)
-            .ToList();
+        var testOrders = dbAccession.TestOrders;
 
         // Assert
         testOrders.Count.Should().Be(2);
         testOrders.FirstOrDefault(x => x.Test.Id == existingText.Id).PanelOrder.Should().BeNull();
-        testOrders.FirstOrDefault(x => x.Test.Id == fakeTest.Id).PanelOrder.Panel.PanelName.Should().Be(fakePanel.PanelName);
+        testOrders.FirstOrDefault(x => x.Test.Id == test.Id).PanelOrder.Panel.PanelName.Should().Be(panel.PanelName);
     }
 }

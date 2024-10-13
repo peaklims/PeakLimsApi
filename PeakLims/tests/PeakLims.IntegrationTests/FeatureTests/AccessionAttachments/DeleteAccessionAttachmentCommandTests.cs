@@ -5,6 +5,7 @@ using PeakLims.Domain.AccessionAttachments.Features;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Threading.Tasks;
+using SharedTestHelpers.Fakes.Accession;
 
 public class DeleteAccessionAttachmentCommandTests : TestBase
 {
@@ -13,10 +14,11 @@ public class DeleteAccessionAttachmentCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var accessionAttachmentOne = new FakeAccessionAttachmentBuilder().Build();
-        await testingServiceScope.InsertAsync(accessionAttachmentOne);
-        var accessionAttachment = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionAttachments
-            .FirstOrDefaultAsync(a => a.Id == accessionAttachmentOne.Id));
+
+        var accessionAttachment = new FakeAccessionAttachmentBuilder().Build();
+        var accession = new FakeAccessionBuilder().Build();
+        accession.AddAccessionAttachment(accessionAttachment);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
         var command = new DeleteAccessionAttachment.Command(accessionAttachment.Id);
@@ -47,10 +49,11 @@ public class DeleteAccessionAttachmentCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var accessionAttachmentOne = new FakeAccessionAttachmentBuilder().Build();
-        await testingServiceScope.InsertAsync(accessionAttachmentOne);
-        var accessionAttachment = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionAttachments
-            .FirstOrDefaultAsync(a => a.Id == accessionAttachmentOne.Id));
+
+        var accessionAttachment = new FakeAccessionAttachmentBuilder().Build();
+        var accession = new FakeAccessionBuilder().Build();
+        accession.AddAccessionAttachment(accessionAttachment);
+        await testingServiceScope.InsertAsync(accession);
 
         // Act
         var command = new DeleteAccessionAttachment.Command(accessionAttachment.Id);

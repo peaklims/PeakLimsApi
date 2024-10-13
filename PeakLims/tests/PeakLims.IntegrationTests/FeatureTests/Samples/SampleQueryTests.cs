@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.Patient;
 
 public class SampleQueryTests : TestBase
 {
@@ -17,23 +18,26 @@ public class SampleQueryTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeSampleOne = new FakeSampleBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeSampleOne);
+        var sample = new FakeSampleBuilder().Build();
+        var patient = new FakePatientBuilder()
+            .Build()
+            .AddSample(sample);
+        await testingServiceScope.InsertAsync(patient);
 
         // Act
-        var query = new GetSample.Query(fakeSampleOne.Id);
-        var sample = await testingServiceScope.SendAsync(query);
+        var query = new GetSample.Query(sample.Id);
+        var sampleResponse = await testingServiceScope.SendAsync(query);
 
         // Assert
-        sample.SampleNumber.Should().Be(fakeSampleOne.SampleNumber);
-        sample.ExternalId.Should().Be(fakeSampleOne.ExternalId);
-        sample.Status.Should().Be(fakeSampleOne.Status);
-        sample.Type.Should().Be(fakeSampleOne.Type);
-        sample.Quantity.Should().Be(fakeSampleOne.Quantity);
-        sample.CollectionDate.Should().Be(fakeSampleOne.CollectionDate);
-        sample.ReceivedDate.Should().Be(fakeSampleOne.ReceivedDate);
-        sample.CollectionSite.Should().Be(fakeSampleOne.CollectionSite);
-        sample.SampleNumber.Should().NotBeNull();
+        sampleResponse.SampleNumber.Should().Be(sample.SampleNumber);
+        sampleResponse.ExternalId.Should().Be(sample.ExternalId);
+        sampleResponse.Status.Should().Be(sample.Status);
+        sampleResponse.Type.Should().Be(sample.Type);
+        sampleResponse.Quantity.Should().Be(sample.Quantity);
+        sampleResponse.CollectionDate.Should().Be(sample.CollectionDate);
+        sampleResponse.ReceivedDate.Should().Be(sample.ReceivedDate);
+        sampleResponse.CollectionSite.Should().Be(sample.CollectionSite);
+        sampleResponse.SampleNumber.Should().NotBeNull();
     }
 
     [Fact]

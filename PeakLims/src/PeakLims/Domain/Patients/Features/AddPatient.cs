@@ -1,37 +1,25 @@
 namespace PeakLims.Domain.Patients.Features;
 
-using Exceptions;
 using PeakLims.Domain.Patients.Services;
 using PeakLims.Domain.Patients;
 using PeakLims.Domain.Patients.Dtos;
-using PeakLims.Domain.Patients.Models;
 using PeakLims.Services;
-using PeakLims.Domain;
-using HeimGuard;
 using Mappings;
 using MediatR;
 
 public static class AddPatient
 {
-    public sealed class Command : IRequest<PatientDto>
-    {
-        public readonly PatientForCreationDto PatientToAdd;
-
-        public Command(PatientForCreationDto patientToAdd)
-        {
-            PatientToAdd = patientToAdd;
-        }
-    }
+    public sealed record Command(PatientForCreationDto PatientToAdd) : IRequest<PatientDto>;
 
     public sealed class Handler(
         IPatientRepository patientRepository,
         IUnitOfWork unitOfWork,
-        IHeimGuardClient heimGuard)
+        ICurrentUserService currentUserService)
         : IRequestHandler<Command, PatientDto>
     {
         public async Task<PatientDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var patientToAdd = request.PatientToAdd.ToPatientForCreation();
+            var patientToAdd = request.PatientToAdd.ToPatientForCreation(currentUserService.GetOrganizationId());
             var patient = Patient.Create(patientToAdd);
 
             await patientRepository.Add(patient, cancellationToken);

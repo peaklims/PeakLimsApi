@@ -14,8 +14,10 @@ public static class RemoveTestFromPanel
 {
     public sealed record Command(Guid PanelId, Guid TestId) : IRequest;
 
-    public sealed class Handler(IPanelRepository panelRepository, ITestRepository testRepository,
-            IHeimGuardClient heimGuard, ITestOrderRepository testOrderRepository, IUnitOfWork unitOfWork)
+    public sealed class Handler(IPanelRepository panelRepository, 
+        ITestRepository testRepository, 
+        ITestOrderRepository testOrderRepository, 
+        IUnitOfWork unitOfWork)
         : IRequestHandler<Command>
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)

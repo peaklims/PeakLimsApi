@@ -55,7 +55,6 @@ public sealed class PanelOrdersController: ControllerBase
         return Ok(queryResponse);
     }
 
-
     /// <summary>
     /// Gets a single PanelOrder by ID.
     /// </summary>
@@ -67,23 +66,6 @@ public sealed class PanelOrdersController: ControllerBase
         var queryResponse = await _mediator.Send(query);
         return Ok(queryResponse);
     }
-
-
-    /// <summary>
-    /// Creates a new PanelOrder record.
-    /// </summary>
-    [Authorize]
-    [HttpPost(Name = "AddPanelOrder")]
-    public async Task<ActionResult<PanelOrderDto>> AddPanelOrder([FromBody]PanelOrderForCreationDto panelOrderForCreation)
-    {
-        var command = new AddPanelOrder.Command(panelOrderForCreation);
-        var commandResponse = await _mediator.Send(command);
-
-        return CreatedAtRoute("GetPanelOrder",
-            new { panelOrderId = commandResponse.Id },
-            commandResponse);
-    }
-
 
     /// <summary>
     /// Deletes an existing PanelOrder record.

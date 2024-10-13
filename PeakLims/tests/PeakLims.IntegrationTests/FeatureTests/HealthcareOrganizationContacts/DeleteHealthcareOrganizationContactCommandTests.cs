@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Threading.Tasks;
 using Exceptions;
+using SharedTestHelpers.Fakes.HealthcareOrganization;
 
 public class DeleteHealthcareOrganizationContactCommandTests : TestBase
 {
@@ -16,10 +17,10 @@ public class DeleteHealthcareOrganizationContactCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeHealthcareOrganizationContactOne = new FakeHealthcareOrganizationContactBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationContactOne);
-        var healthcareOrganizationContact = await testingServiceScope.ExecuteDbContextAsync(db => db.HealthcareOrganizationContacts
-            .FirstOrDefaultAsync(h => h.Id == fakeHealthcareOrganizationContactOne.Id));
+        var org = new FakeHealthcareOrganizationBuilder().Build();
+        var healthcareOrganizationContact = new FakeHealthcareOrganizationContactBuilder().Build();
+        org.AddContact(healthcareOrganizationContact);
+        await testingServiceScope.InsertAsync(org);
 
         // Act
         var command = new DeleteHealthcareOrganizationContact.Command(healthcareOrganizationContact.Id);
@@ -50,10 +51,10 @@ public class DeleteHealthcareOrganizationContactCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var fakeHealthcareOrganizationContactOne = new FakeHealthcareOrganizationContactBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationContactOne);
-        var healthcareOrganizationContact = await testingServiceScope.ExecuteDbContextAsync(db => db.HealthcareOrganizationContacts
-            .FirstOrDefaultAsync(h => h.Id == fakeHealthcareOrganizationContactOne.Id));
+        var org = new FakeHealthcareOrganizationBuilder().Build();
+        var healthcareOrganizationContact = new FakeHealthcareOrganizationContactBuilder().Build();
+        org.AddContact(healthcareOrganizationContact);
+        await testingServiceScope.InsertAsync(org);
 
         // Act
         var command = new DeleteHealthcareOrganizationContact.Command(healthcareOrganizationContact.Id);

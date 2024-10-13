@@ -17,6 +17,11 @@ public class HealthcareOrganization : BaseEntity
 
     public string Email { get; private set; }
     
+    /// <summary>
+    /// The tenant organization id that this healthcare organization belongs to
+    /// </summary>
+    public Guid OrganizationId { get; private set; }
+    
     public HealthcareOrganizationStatus Status { get; private set; }
 
     public IReadOnlyCollection<Accession> Accessions { get; }
@@ -26,7 +31,7 @@ public class HealthcareOrganization : BaseEntity
     // public IReadOnlyCollection<HealthcareOrganizationContact> HealthcareOrganizationContacts => _organizationContacts.AsReadOnly();
     // TODO readonly collection is causing issues with joins in aggreagates when joining org to things
     public List<HealthcareOrganizationContact> HealthcareOrganizationContacts => _organizationContacts;
-    
+
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
 
@@ -37,6 +42,7 @@ public class HealthcareOrganization : BaseEntity
         newHealthcareOrganization.Name = healthcareOrganizationForCreation.Name;
         newHealthcareOrganization.Email = healthcareOrganizationForCreation.Email;
         newHealthcareOrganization.Status = HealthcareOrganizationStatus.Active();
+        newHealthcareOrganization.OrganizationId = healthcareOrganizationForCreation.OrganizationId;
 
         newHealthcareOrganization.QueueDomainEvent(new HealthcareOrganizationCreated(){ HealthcareOrganization = newHealthcareOrganization });
         

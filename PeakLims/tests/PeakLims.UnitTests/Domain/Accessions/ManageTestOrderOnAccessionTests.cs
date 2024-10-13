@@ -6,59 +6,53 @@ using PeakLims.Domain.Accessions;
 using PeakLims.Domain.TestOrders;
 using PeakLims.SharedTestHelpers.Fakes.Panel;
 using PeakLims.SharedTestHelpers.Fakes.Test;
+using SharedTestHelpers.Fakes.Accession;
 using Xunit;
 using ValidationException = Exceptions.ValidationException;
 
 public class ManageTestOrderOnAccessionTests
 {
-    private readonly Faker _faker;
-
-    public ManageTestOrderOnAccessionTests()
-    {
-        _faker = new Faker();
-    }
-
     [Fact]
     public void can_manage_test_order()
     {
         // Arrange
-        var fakeAccession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
 
         var test = new FakeTestBuilder().Build().Activate();
         
         // Act - Add
-        fakeAccession.AddTest(test);
+        accession.AddTest(test);
 
         // Assert - Add
-        fakeAccession.TestOrders.Count.Should().Be(1);
-        fakeAccession.TestOrders
+        accession.TestOrders.Count.Should().Be(1);
+        accession.TestOrders
             .FirstOrDefault(x => x.Test.Id == test.Id)!
             .Test.Should().BeEquivalentTo(test);
         
         // Arrange - Remove
-        var testOrder = fakeAccession.TestOrders.FirstOrDefault(x => x.Test.Id == test.Id);
+        var testOrder = accession.TestOrders.FirstOrDefault(x => x.Test.Id == test.Id);
         
         // Act - Can remove idempotently
-        fakeAccession.RemoveTestOrder(testOrder)
+        accession.RemoveTestOrder(testOrder)
             .RemoveTestOrder(testOrder)
             .RemoveTestOrder(testOrder);
 
         // Assert - Remove
-        fakeAccession.TestOrders.Count.Should().Be(0);
+        accession.TestOrders.Count.Should().Be(0);
     }
     
     [Fact]
     public void can_not_add_test_order_with_inactive_test()
     {
         // Arrange
-        var fakeAccession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
         var test = new FakeTestBuilder()
             .Build()
             .Deactivate();
         var testOrder = TestOrder.Create(test);
         
         // Act
-        var act = () => fakeAccession.AddTest(test);
+        var act = () => accession.AddTest(test);
 
         // Assert
         act.Should().Throw<ValidationException>();
@@ -68,7 +62,7 @@ public class ManageTestOrderOnAccessionTests
     public void can_not_remove_testorder_when_part_of_panel()
     {
         // Arrange
-        var fakeAccession = Accession.Create();
+        var accession = new FakeAccessionBuilder().Build();
         var test = new FakeTestBuilder()
             .Build()
             .Activate();
@@ -76,12 +70,12 @@ public class ManageTestOrderOnAccessionTests
             .Build()
             .AddTest(test)
             .Activate();
-        fakeAccession.AddPanel(panel);
-        var testOrder = fakeAccession.PanelOrders
+        accession.AddPanel(panel);
+        var testOrder = accession.PanelOrders
             .SelectMany(x => x.TestOrders).First();
         
         // Act
-        var act = () => fakeAccession.RemoveTestOrder(testOrder);
+        var act = () => accession.RemoveTestOrder(testOrder);
 
         // Assert
          act.Should().Throw<ValidationException>()

@@ -51,15 +51,10 @@ public class AddTestToPanelCommandTests : TestBase
         var secondTest = new FakeTestBuilder().Build().Activate();
         await testingServiceScope.InsertAsync(secondTest);
         var panel = new FakePanelBuilder().WithTest(test).Build().Activate();
-
-        var fakePatientOne = new FakePatientBuilder().Build();
-        await testingServiceScope.InsertAsync(fakePatientOne);
-        var fakeHealthcareOrganizationOne = new FakeHealthcareOrganizationBuilder().Build();
-        await testingServiceScope.InsertAsync(fakeHealthcareOrganizationOne);
+        
         var accession = new FakeAccessionBuilder().Build();
+        accession.AddPanel(panel);
         await testingServiceScope.InsertAsync(accession);
-        var panelOrder = accession.AddPanel(panel);
-        await testingServiceScope.InsertAsync(panelOrder);
 
         // Act
         var command = new AddTestToPanel.Command(panel.Id, secondTest.Id);
