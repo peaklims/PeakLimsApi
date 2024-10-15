@@ -1,12 +1,16 @@
 using Duende.Bff;
 using Duende.Bff.Yarp;
 using Hellang.Middleware.ProblemDetails;
+using Hellang.Middleware.ProblemDetails.Mvc;
 using PeakLimsSpa.Bff;
+using PeakLimsSpa.Bff.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddLoggingConfiguration(builder.Environment);
 
+builder.Services.AddProblemDetails(ProblemDetailsConfigurationExtension.ConfigureProblemDetails)
+    .AddProblemDetailsConventions();
 builder.Services.AddControllers();
 builder.Services.AddBff()
     .AddRemoteApis();

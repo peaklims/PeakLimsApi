@@ -1,4 +1,4 @@
-namespace PeakLimsSpa.Bff;
+namespace PeakLimsSpa.Bff.Middleware;
 
 public class CorrelationMiddleware
 {
