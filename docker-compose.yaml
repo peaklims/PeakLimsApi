@@ -4,7 +4,7 @@ services:
   aws:
     image: localstack/localstack
     ports:
-      - '48663:4566'
+      - '48612:4566'
     environment:
       SERVICES: s3
     volumes:
@@ -13,7 +13,7 @@ services:
   keycloakdb:
     image: postgres
     ports:
-      - '58187:5432'
+      - '56111:5432'
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
@@ -38,21 +38,21 @@ services:
       # PostgreSQL JDBC driver documentation in order to use it.
       #JDBC_PARAMS: "ssl=true"
     ports:
-      - 4933:8080
+      - 56221:8080
     depends_on:
       - keycloakdb
 
-  peaklims-db:
+  peaklimsdb:
     image: postgres
     restart: always
     ports:
-      - '58147:5432'
+      - '38869:5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: dev_peaklims
     volumes:
-      - peaklims-data:/var/lib/postgresql/data
+      - peaklimsdb-data:/var/lib/postgresql/data
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -72,5 +72,5 @@ services:
 volumes:
   # compose volumes marker - do not delete
   keycloak-data:
-  peaklims-data:
+  peaklimsdb-data:
   aws-data:
