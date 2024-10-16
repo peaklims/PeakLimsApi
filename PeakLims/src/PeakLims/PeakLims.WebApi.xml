@@ -169,6 +169,11 @@
             Deletes an existing Container record.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.GaiaController.TryOrgs">
+            <summary>
+            Test Org Creation
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.HealthcareOrganizationContactsController.GetHealthcareOrganizationContacts(PeakLims.Domain.HealthcareOrganizationContacts.Dtos.HealthcareOrganizationContactParametersDto)">
             <summary>
             Gets a list of all HealthcareOrganizationContacts.

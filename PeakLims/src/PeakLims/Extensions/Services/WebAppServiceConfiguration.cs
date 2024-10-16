@@ -13,6 +13,7 @@ using Resources;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.AI;
 
 public static class WebAppServiceConfiguration
 {
@@ -29,6 +30,17 @@ public static class WebAppServiceConfiguration
         builder.Services.AddCorsService("PeakLimsCorsPolicy", builder.Environment);
         builder.OpenTelemetryRegistration(builder.Configuration, "PeakLims");
         builder.Services.AddInfrastructure(builder.Environment, builder.Configuration);
+        builder.Services.AddChatClient(chatClientBuilder =>
+        {
+            var aiOptions = builder.Configuration.GetAiOptions();
+            var endpoint = new Uri(aiOptions.Url);
+            var modelId = aiOptions.ModelName;
+            return chatClientBuilder.UseFunctionInvocation()
+                .UseLogging()
+                // .UseOpenTelemetry()
+                // .UseDistributedCache()
+                .Use(new OllamaChatClient(endpoint, modelId));
+        });
 
         builder.Services.AddControllers()
             .AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

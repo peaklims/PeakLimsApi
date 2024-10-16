@@ -7,8 +7,17 @@ public class PeakLimsOptions
     public RabbitMqOptions RabbitMq { get; set; } = new RabbitMqOptions();
     public ConnectionStringOptions ConnectionStrings { get; set; } = new ConnectionStringOptions();
     public AuthOptions Auth { get; set; } = new AuthOptions();
+    public AiOptions Ai { get; set; } = new AiOptions();
     public string JaegerHost { get; set; } = String.Empty;
     public string LocalstackPort { get; set; } = String.Empty;
+    
+    public class AiOptions
+    {
+        public const string SectionName = $"{PeakLimsOptions.SectionName}:Ai";
+            
+        public string ModelName { get; set; } = String.Empty;
+        public string Url { get; set; } = String.Empty;
+    }
     
     public class RabbitMqOptions
     {
@@ -55,6 +64,12 @@ public static class PeakLimsOptionsExtensions
         return configuration
             .GetSection(PeakLimsOptions.SectionName)
             .Get<PeakLimsOptions>();
+    }
+    public static PeakLimsOptions.AiOptions GetAiOptions(this IConfiguration configuration)
+    {
+        return configuration
+            .GetSection(PeakLimsOptions.AiOptions.SectionName)
+            .Get<PeakLimsOptions.AiOptions>();
     }
     
     public static PeakLimsOptions.RabbitMqOptions GetRabbitMqOptions(this IConfiguration configuration)
