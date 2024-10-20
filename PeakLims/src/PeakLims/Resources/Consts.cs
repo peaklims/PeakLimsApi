@@ -17,6 +17,11 @@ public static class Consts
         public const string SampleNumberPrefix = "SAM";
     }
 
+    public static class HttpClients
+    {
+        public const string KeycloakAdmin = "KeycloakAdmin";
+    }
+    
     public static class HangfireQueues
     {
         // public const string MyFirstQueue = "my-first-queue";

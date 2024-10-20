@@ -25,7 +25,8 @@ public class AuditPatientCreation(
     {
         try
         {
-            var patient = await patientRepository.GetById(notification.Patient.Id, cancellationToken: cancellationToken);
+            var patient = await patientRepository
+                .GetById(notification.Patient.Id, cancellationToken: cancellationToken);
             
             var auditLogItemForCreation = new HipaaAuditLogForCreation
             {

@@ -11,6 +11,7 @@ using PeakLims.Domain.PeakOrganizations.DomainEvents;
 public class PeakOrganization : BaseEntity
 {
     public string Name { get; private set; }
+    public string Domain { get; private set; }
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
@@ -20,6 +21,7 @@ public class PeakOrganization : BaseEntity
         var newPeakOrganization = new PeakOrganization();
 
         newPeakOrganization.Name = peakOrganizationForCreation.Name;
+        newPeakOrganization.Domain = peakOrganizationForCreation.Domain;
 
         newPeakOrganization.QueueDomainEvent(new PeakOrganizationCreated(){ PeakOrganization = newPeakOrganization });
         
@@ -29,6 +31,7 @@ public class PeakOrganization : BaseEntity
     public PeakOrganization Update(PeakOrganizationForUpdate peakOrganizationForUpdate)
     {
         Name = peakOrganizationForUpdate.Name;
+        Domain = peakOrganizationForUpdate.Domain;
 
         QueueDomainEvent(new PeakOrganizationUpdated(){ Id = Id });
         return this;

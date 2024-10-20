@@ -4,4 +4,5 @@ public sealed class HealthcareOrganizationForUpdate
 {
     public string Name { get; set; }
     public string Email { get; set; }
+    public string KnownDomain { get; set; }
 }

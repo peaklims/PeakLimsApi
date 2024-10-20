@@ -17,6 +17,8 @@ public class HealthcareOrganization : BaseEntity
     public string Name { get; private set; }
 
     public string Email { get; private set; }
+
+    public string KnownDomain { get; set; }
     
     public PeakOrganization Organization { get; }
     /// <summary>
@@ -45,6 +47,7 @@ public class HealthcareOrganization : BaseEntity
         newHealthcareOrganization.Name = healthcareOrganizationForCreation.Name;
         newHealthcareOrganization.Email = healthcareOrganizationForCreation.Email;
         newHealthcareOrganization.Status = HealthcareOrganizationStatus.Active();
+        newHealthcareOrganization.KnownDomain = healthcareOrganizationForCreation.KnownDomain;
         newHealthcareOrganization.OrganizationId = healthcareOrganizationForCreation.OrganizationId;
 
         newHealthcareOrganization.QueueDomainEvent(new HealthcareOrganizationCreated(){ HealthcareOrganization = newHealthcareOrganization });
@@ -56,6 +59,7 @@ public class HealthcareOrganization : BaseEntity
     {
         Name = healthcareOrganizationForUpdate.Name;
         Email = healthcareOrganizationForUpdate.Email;
+        KnownDomain = healthcareOrganizationForUpdate.KnownDomain;
 
         QueueDomainEvent(new HealthcareOrganizationUpdated(){ Id = Id });
         return this;
@@ -88,6 +92,15 @@ public class HealthcareOrganization : BaseEntity
             return this;
         
         _organizationContacts.Add(contact);
+        QueueDomainEvent(new HealthcareOrganizationUpdated(){ Id = Id });
+        return this;
+    }
+
+    public HealthcareOrganization AddContacts(IEnumerable<HealthcareOrganizationContact> contacts)
+    {
+        var contactsToAdd = contacts.Where(x => !HealthcareOrganizationContactAlreadyExists(x));
+        
+        _organizationContacts.AddRange(contactsToAdd);
         QueueDomainEvent(new HealthcareOrganizationUpdated(){ Id = Id });
         return this;
     }

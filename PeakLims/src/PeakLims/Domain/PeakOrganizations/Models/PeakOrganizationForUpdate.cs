@@ -5,4 +5,5 @@ using Destructurama.Attributed;
 public sealed record PeakOrganizationForUpdate
 {
     public string Name { get; set; }
+    public string Domain { get; set; }
 }

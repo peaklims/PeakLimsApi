@@ -7,6 +7,7 @@ using PeakLims.Domain.AccessionComments;
 using PeakLims.Domain.Accessions.DomainEvents;
 using AccessionStatuses;
 using Exceptions;
+using HealthcareOrganizationContacts;
 using Panels;
 using PeakLims.Domain.Patients;
 using PeakLims.Domain.Patients.Models;
@@ -131,6 +132,18 @@ public class Accession : BaseEntity
         testOrder.UpdateIsDeleted(true);
         // TODO if test order status is not in one of the pending states, guard
         _testOrders.Remove(testOrder);
+    }
+
+    public Accession AddContact(HealthcareOrganizationContact orgContact)
+    {
+        var accessionContact = AccessionContact.Create(orgContact);
+        var alreadyExists = AccessionContactAlreadyExists(accessionContact);
+        if (alreadyExists)
+            return this;
+        
+        _accessionContacts.Add(accessionContact);
+        QueueDomainEvent(new AccessionUpdated(){ Id = Id });
+        return this;
     }
 
     public Accession AddContact(AccessionContact contact)

@@ -5,4 +5,5 @@ public sealed record HealthcareOrganizationForCreation
     public string Name { get; set; }
     public string Email { get; set; }
     public Guid OrganizationId { get; set; }
+    public string KnownDomain { get; set; }
 }

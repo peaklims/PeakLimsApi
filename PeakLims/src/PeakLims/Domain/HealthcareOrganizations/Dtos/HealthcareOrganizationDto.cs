@@ -6,4 +6,5 @@ public sealed class HealthcareOrganizationDto
     public string Name { get; set; }
     public string Email { get; set; }
     public string Status { get; set; }
+    public string KnownDomain { get; set; }
 }

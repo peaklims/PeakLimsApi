@@ -12,7 +12,7 @@ using PeakLims.Databases;
 namespace PeakLims.Migrations
 {
     [DbContext(typeof(PeakLimsDbContext))]
-    [Migration("20241013170707_Initial")]
+    [Migration("20241016222903_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -409,6 +409,10 @@ namespace PeakLims.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
+
+                    b.Property<string>("KnownDomain")
+                        .HasColumnType("text")
+                        .HasColumnName("known_domain");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text")

@@ -1,5 +1,6 @@
 namespace PeakLims.Extensions.Services;
 
+using System.Net.Http.Headers;
 using PeakLims.Middleware;
 using PeakLims.Services;
 using System.Text.Json.Serialization;
@@ -11,16 +12,23 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Resources;
 using System.Reflection;
-using System.Text.Json;
-using System.Text.RegularExpressions;
+using System.Text;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
+using PeakLims.Services.External.Keycloak;
 
 public static class WebAppServiceConfiguration
 {
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<PeakLimsOptions>(builder.Configuration.GetSection(PeakLimsOptions.SectionName));
-
+        
+        builder.Services.Scan(scan => scan
+            .FromAssemblyOf<Program>()
+            .AddClasses()
+            .AsMatchingInterface()
+            .WithScopedLifetime());
+        
         builder.Services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         builder.Services.AddSingleton(Log.Logger);
         builder.Services.AddProblemDetails(ProblemDetailsConfigurationExtension.ConfigureProblemDetails)
@@ -37,11 +45,18 @@ public static class WebAppServiceConfiguration
             var modelId = aiOptions.ModelName;
             return chatClientBuilder.UseFunctionInvocation()
                 .UseLogging()
-                // .UseOpenTelemetry()
+                .UseOpenTelemetry()
                 // .UseDistributedCache()
                 .Use(new OllamaChatClient(endpoint, modelId));
         });
-
+        builder.Services.AddHttpClient(Consts.HttpClients.KeycloakAdmin, (sp, client) =>
+        {
+            // var options = sp.GetRequiredService<IOptionsSnapshot<PeakLimsOptions>>().Value;
+            // client.BaseAddress = new Uri(options.Auth.Administration.BaseApiRoute);
+            
+            // default headers
+        });
+        
         builder.Services.AddControllers()
             .AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
         builder.Services.AddApiVersioningExtension();

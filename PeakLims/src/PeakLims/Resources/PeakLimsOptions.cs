@@ -54,6 +54,14 @@ public class PeakLimsOptions
         public string TokenUrl { get; set; } = String.Empty;
         public string ClientId { get; set; } = String.Empty;
         public string ClientSecret { get; set; } = String.Empty;
+        public AuthAdministration Administration { get; set; } = new AuthAdministration();
+    }
+
+    public class AuthAdministration
+    {
+        public string ClientId { get; set; } = String.Empty;
+        public string ClientSecret { get; set; } = String.Empty;
+        public string BaseApiRoute { get; set; } = String.Empty;
     }
 }
 

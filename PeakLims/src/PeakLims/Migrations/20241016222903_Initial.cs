@@ -106,6 +106,7 @@ namespace PeakLims.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "text", nullable: true),
                     email = table.Column<string>(type: "text", nullable: true),
+                    known_domain = table.Column<string>(type: "text", nullable: true),
                     organization_id = table.Column<Guid>(type: "uuid", nullable: false),
                     status = table.Column<string>(type: "text", nullable: true),
                     created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),

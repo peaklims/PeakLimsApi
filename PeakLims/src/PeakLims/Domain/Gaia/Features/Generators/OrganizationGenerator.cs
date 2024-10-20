@@ -1,34 +1,37 @@
 namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.AI;
+using Models;
 using PeakOrganizations;
 using PeakOrganizations.Models;
+using Resources;
 using Serilog;
 
-public record OrganizationResponse
+public interface IOrganizationGenerator
 {
-    [JsonPropertyName("organizations")]
-    public List<OrganizationRecord> Organizations { get; set; } = new();
-
-    public record OrganizationRecord
-    {
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = string.Empty;
-
-        [JsonPropertyName("domain")]
-        public string Domain { get; set; } = string.Empty;
-    }
+    Task<PeakOrganization> Generate();
 }
 
-public class OrganizationGenerator(IChatClient chatClient) : SimpleGeneratorBase<OrganizationResponse>(chatClient)
+public class OrganizationGenerator(IChatClient chatClient) : IOrganizationGenerator
 {
-    private readonly IChatClient _chatClient = chatClient;
+    public async Task<PeakOrganization> Generate()
+    {
+        var organizationData = await GenerateData();
+        Log.Information("Organization: {@Organization}", organizationData);
+        var org = PeakOrganization.Create(new PeakOrganizationForCreation()
+        {
+            Name = organizationData.Name,
+            Domain = organizationData.Domain
+        });
 
+        // TODO save
+        
+        return org;
+    }
     
-    public override async IAsyncEnumerable<OrganizationResponse> GenerateCoreAsync()
+    private async Task<OrganizationResponse.OrganizationRecord> GenerateData()
     {
         var chatOptions = new ChatOptions
         {
@@ -45,36 +48,25 @@ public class OrganizationGenerator(IChatClient chatClient) : SimpleGeneratorBase
             """;
         var prompt =
             $$"""
-            Can you provide a list of 15 fake hospital or laboratory names? Here are a few examples (do not use any of these examples in your list): 
-
-            - Greater Peach Hospital
-            - Willow Creek Medical Center
-            - Prairie Valley Hospital District
-            - Riverbend Community Hospital
-            - Sunrise Health Alliance
+            Can you provide a list of 5 fake laboratory names? Here are a few examples (do not use any of these examples in your list): 
+            
+            - Redwood Genomics
+            - Greater Peach Labs
             - GenoQuantum Diagnostics
             - Genesight Medical
-            - Redwood Labs
+            - Stonebridge Labs
+            - Cardinal Diagnostics
             
-            You should also make valid email domains for each organization. For example, Greater Peach Hospital might have the domain `greaterpeachhospital.com` or `gph.com`.
+            You should also make valid email domains for each organization. For example, Greater Peach Hospital might have a `greaterpeachhospital.com` or `gph.com` domain.
             
             Make sure you return the response in valid json in the exact format below:
             
             {{jsonFormat}}
             """;
-        var chatCompletion = await _chatClient.CompleteAsync(prompt, chatOptions);
-        var parsedJson = JsonSerializer.Deserialize<OrganizationResponse>(chatCompletion.Message.Text);
-        if (parsedJson is null)
-        {
-            Log.Error("Failed to parse chat completion response: {ChatCompletion}", chatCompletion);
-            yield break;
-        }
-        
-        yield return parsedJson;
-    }
-}
+        var chatCompletion = await chatClient.CompleteAsync(prompt, chatOptions);
+        var parsedJson = JsonSerializer.Deserialize<OrganizationResponse>(chatCompletion.Message.Text, 
+            JsonSerializationOptions.LlmSerializerOptions);
 
-public abstract class SimpleGeneratorBase<T>(IChatClient chatClient)
-{
-    public abstract IAsyncEnumerable<T> GenerateCoreAsync();
+        return parsedJson.Organizations.First();
+    }
 }

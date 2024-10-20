@@ -11,27 +11,27 @@ using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
 using Asp.Versioning;
+using Domain.Gaia.Features;
 using Domain.Gaia.Features.Generators;
+using Domain.HealthcareOrganizations;
+using Domain.HealthcareOrganizations.Models;
 using Microsoft.Extensions.AI;
+using Serilog;
 
 [ApiController]
 [Route("api/v{v:apiVersion}/gaia")]
 [ApiVersion("1.0")]
-public sealed class GaiaController(IChatClient chatClient) : ControllerBase
+public sealed class GaiaController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     /// Test Org Creation
     /// </summary>
     // [Authorize]
-    [HttpPost(Name = "TryOrgs")]
-    public async Task<IActionResult> TryOrgs()
+    [HttpPost(Name = "AssembleAWorld")]
+    public async Task<IActionResult> AssembleAWorld()
     {
-        var organizations = new OrganizationGenerator(chatClient).GenerateCoreAsync();
-        var orgsToReturn = new List<OrganizationResponse>();
-        await foreach (var org in organizations)
-        {
-            orgsToReturn.Add(org);
-        }
-        return Ok(orgsToReturn);
+        var command = new AssembleAWorld.Command();
+        var response = await mediator.Send(command);
+        return Ok(response);
     }
 }
