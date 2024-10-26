@@ -3,14 +3,14 @@ namespace KeycloakInPulumi;
 using KeycloakInPulumi.Extensions;
 using KeycloakInPulumi.Factories;
 using Pulumi;
-using Pulumi.Keycloak;
 using Pulumi.Keycloak.Inputs;
+using Keycloak = Pulumi.Keycloak;
 
 class RealmBuild : Stack
 {
     public RealmBuild()
     {
-        var realm = new Realm("PeakLIMS-realm", new RealmArgs
+        var realm = new Keycloak.Realm("PeakLIMS-realm", new Keycloak.RealmArgs
         {
             RealmName = "PeakLIMS",
             RegistrationAllowed = true,
@@ -25,7 +25,7 @@ class RealmBuild : Stack
             "dd283422-f6ef-4e28-b373-1d3b9d909f8e", 
             "PeakLims Postman Machine",
             "https://oauth.pstmn.io");
-        peakLimsPostmanMachineClient.ExtendDefaultScopes(peaklimsScope.Name);
+        peakLimsPostmanMachineClient.ExtendDefaultScopes("peak_lims");
         peakLimsPostmanMachineClient.AddAudienceMapper("peak_lims");
         peakLimsPostmanMachineClient.AddTenantMapper();
         
@@ -37,9 +37,10 @@ class RealmBuild : Stack
             redirectUris: null,
             webOrigins: null
             );
-        peakLimsPostmanCodeClient.ExtendDefaultScopes(peaklimsScope.Name);
+        peakLimsPostmanCodeClient.ExtendDefaultScopes("peak_lims");
         peakLimsPostmanCodeClient.AddAudienceMapper("peak_lims");
         peakLimsPostmanCodeClient.AddTenantMapper();
+        
         
         var peakLimsSwaggerClient = ClientFactory.CreateCodeFlowClient(realm.Id,
             "peak_lims.swagger", 
@@ -49,7 +50,7 @@ class RealmBuild : Stack
             redirectUris: null,
             webOrigins: null
             );
-        peakLimsSwaggerClient.ExtendDefaultScopes(peaklimsScope.Name);
+        peakLimsSwaggerClient.ExtendDefaultScopes("peak_lims");
         peakLimsSwaggerClient.AddAudienceMapper("peak_lims");
         peakLimsSwaggerClient.AddTenantMapper();
         
@@ -68,18 +69,11 @@ class RealmBuild : Stack
                 "https://localhost:4378",
             }
         );
-        peakLimsSpaClient.ExtendDefaultScopes(peaklimsScope.Name);
+        peakLimsSpaClient.ExtendDefaultScopes("peak_lims");
         peakLimsSpaClient.AddAudienceMapper("peak_lims");
         peakLimsSpaClient.AddTenantMapper();
-        // var client2ServiceAccountRole = new Keycloak.OpenId.ClientServiceAccountRole("client2_service_account_role", new()
-        // {
-        //     RealmId = realm.Id,
-        //     ServiceAccountUserId = client2.ServiceAccountUserId,
-        //     ClientId = client1.Id,
-        //     Role = client1Role.Name,
-        // });
         
-        var bob = new User("bob", new UserArgs
+        var bob = new Keycloak.User("bob", new Keycloak.UserArgs
         {
             RealmId = realm.Id,
             Username = "bob",
@@ -98,7 +92,7 @@ class RealmBuild : Stack
             }
         });
 
-        var alice = new User("alice", new UserArgs
+        var alice = new Keycloak.User("alice", new Keycloak.UserArgs
         {
             RealmId = realm.Id,
             Username = "alice",

@@ -20,25 +20,21 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - keycloak-data:/var/lib/postgresql/data
-  
+
   keycloak:
-    image: sleighzy/keycloak:latest
+    image: quay.io/keycloak/keycloak:latest
     environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: keycloakdb
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_PASSWORD: password
-      DB_SCHEMA: public
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      KEYCLOAK_HTTP_PORT: 8080
-      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, 
-      # and it shouldn't be used in production without knowledge. It is highly recommended that you read the 
-      # PostgreSQL JDBC driver documentation in order to use it.
-      #JDBC_PARAMS: "ssl=true"
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloakdb
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command:
+      - start-dev
     ports:
-      - 56221:8080
+      - '56221:8080'
     depends_on:
       - keycloakdb
 

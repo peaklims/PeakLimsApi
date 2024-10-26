@@ -21,8 +21,8 @@ public class KeycloakClient(IHttpClientFactory httpClientFactory, IOptionsSnapsh
 {
     private readonly PeakLimsOptions.AuthOptions _options = options.Value.Auth;
     private HttpClient GetKeycloakClient() => httpClientFactory.CreateClient(Consts.HttpClients.KeycloakAdmin);
-    private Uri UsersRoute() => new Uri(_options.Administration.BaseApiRoute).Append("/auth/admin/realms/PeakLIMS/users");
-    private Uri TokenRoute() => new Uri(_options.Administration.BaseApiRoute).Append("/auth/realms/PeakLIMS/protocol/openid-connect/token");
+    private Uri UsersRoute() => new Uri(_options.Administration.BaseApiRoute).Append("/admin/realms/PeakLIMS/users");
+    private Uri TokenRoute() => new(_options.TokenUrl);
     
     public async Task<string> GetTokenAsync()
     {
