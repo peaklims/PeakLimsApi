@@ -50,6 +50,7 @@ public static class PatientGenerator
             OrganizationId = organizationId
         };
         
+        // TODO audit is failing
         return Patient.Create(patientToCreate);
     }
 }
