@@ -708,5 +708,17 @@
         <member name="M:PeakLims.Migrations.OrgDOmain.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:PeakLims.Migrations.PatientCleanupAccession">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.PatientCleanupAccession.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.PatientCleanupAccession.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.PatientCleanupAccession.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

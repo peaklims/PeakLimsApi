@@ -40,7 +40,7 @@ public class Patient : BaseEntity
     // public IReadOnlyCollection<Sample> Samples => _sample.AsReadOnly();
     public List<Sample> Samples => _sample;
 
-    public IReadOnlyCollection<Accession> Accessions { get; }
+    public List<Accession> Accessions { get; }
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 

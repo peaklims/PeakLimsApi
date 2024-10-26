@@ -17,25 +17,18 @@ public static class SearchExistingPatients
 {
     public sealed record Query(PatientParametersDto QueryParameters) : IRequest<PagedList<PatientSearchResultDto>>;
 
-    public sealed class Handler : IRequestHandler<Query, PagedList<PatientSearchResultDto>>
+    public sealed class Handler(IPatientRepository patientRepository)
+        : IRequestHandler<Query, PagedList<PatientSearchResultDto>>
     {
-        private readonly IPatientRepository _patientRepository;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IPatientRepository patientRepository, IHeimGuardClient heimGuard)
-        {
-            _patientRepository = patientRepository;
-            _heimGuard = heimGuard;
-        }
-
         public async Task<PagedList<PatientSearchResultDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             
-            var queryKitConfig = new CustomQueryKitConfiguration();
-            // var queryKitConfig = new CustomQueryKitConfiguration(config =>
-            // {
-            //     config.Property<Patient>(x => x.Accessions).HasQueryName("status");
-            // });
+            // var queryKitConfig = new CustomQueryKitConfiguration();
+            var queryKitConfig = new CustomQueryKitConfiguration(config =>
+            {
+                // config.Property<Patient>(x => x.Accessions).HasQueryName("status");
+                // config.Property<Patient>(x => x.Accessions.Select(y => y.AccessionNumber)).HasQueryName("accessionNumber");
+            });
             var queryKitData = new QueryKitData()
             {
                 Filters = request.QueryParameters.Filters,
@@ -43,7 +36,7 @@ public static class SearchExistingPatients
                 Configuration = queryKitConfig
             };
 
-            var collection = _patientRepository.Query()
+            var collection = patientRepository.Query()
                 .Include(x => x.Accessions)
                 .AsNoTracking();
             var appliedCollection = collection.ApplyQueryKit(queryKitData);
