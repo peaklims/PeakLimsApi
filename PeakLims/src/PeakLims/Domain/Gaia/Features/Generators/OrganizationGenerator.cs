@@ -57,7 +57,7 @@ public class OrganizationGenerator(IChatClient chatClient) : IOrganizationGenera
             - Stonebridge Labs
             - Cardinal Diagnostics
             
-            You should also make valid email domains for each organization. For example, Greater Peach Hospital might have a `greaterpeachhospital.com` or `gph.com` domain.
+            You should also make valid email domains for each organization. For example, Greater Peach Hospital might have a `greaterpeachhospital.com` or `gph.com` domain. Note that the domain does NOT have an `@` symbol.
             
             Make sure you return the response in valid json in the exact format below:
             
@@ -67,6 +67,11 @@ public class OrganizationGenerator(IChatClient chatClient) : IOrganizationGenera
         var parsedJson = JsonSerializer.Deserialize<OrganizationResponse>(chatCompletion.Message.Text, 
             JsonSerializationOptions.LlmSerializerOptions);
 
-        return parsedJson.Organizations.First();
+        var org = parsedJson.Organizations.First();
+        if (org.Domain.Contains("@")) // just in case it doesn't listen
+        {
+            org.Domain = org.Domain.Split('@')[0];
+        }
+        return org;
     }
 }

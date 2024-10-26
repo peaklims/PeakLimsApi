@@ -11,22 +11,22 @@ using Services.External.Keycloak.Models;
 
 public interface IUserInfoGenerator
 {
-    Task<List<UserForCreation>> Generate(Guid organizationId, string domain);
+    Task<List<User>> Generate(Guid organizationId, string domain);
 }
 
 public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext dbContext) : IUserInfoGenerator
 {
-    public async Task<List<UserForCreation>> Generate(Guid organizationId, string domain)
+    public async Task<List<User>> Generate(Guid organizationId, string domain)
     {
         var random = new Random();
         var userCount = random.Next(3, 8);
         var people = PersonInfoGenerator.Generate(userCount);
-        var users = new ConcurrentBag<UserForCreation>();
+        var userForCreations = new ConcurrentBag<UserForCreation>();
 
         async ValueTask GenerateUsers(PersonInfo person, CancellationToken ct)
         {
             var user = await CreateUser(person, organizationId, domain);
-            users.Add(user);
+            userForCreations.Add(user);
         }
         var options = new ParallelOptions
         {
@@ -34,6 +34,15 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
         };
         await Parallel.ForEachAsync(people, options, GenerateUsers);
 
+        var usersInfoToCreate = userForCreations.ToList();
+        var users = new List<User>();
+        foreach (var userForCreation in usersInfoToCreate)
+        {
+            var user = User.Create(userForCreation);
+            users.Add(user);
+            await dbContext.Users.AddAsync(user);
+        }
+        // TODO add role
         return users.ToList();
     }
 
@@ -73,13 +82,10 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
                 { "organization-id", new List<string>() { organizationId.ToString() } }
             }
         };
+        await keycloakClient.CreateUserAsync(kcUser);
             
         Log.Information("User to create: {@User}", userToCreate);
         
-        await keycloakClient.CreateUserAsync(kcUser);
-        var user = User.Create(userToCreate);
-        await dbContext.Users.AddAsync(user);
-        // TODO add role
         
         return userToCreate;
     }

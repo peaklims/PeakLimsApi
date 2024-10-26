@@ -45,7 +45,7 @@ public class AccessionGenerator : IAccessionGenerator
     {
         var random = new Random();
         var contactCount = random.Next(2, 6);
-        var contacts = new List<HealthcareOrganizationContact>();
+        var contacts = new ConcurrentBag<HealthcareOrganizationContact>();
         for (var i = 0; i < contactCount; i++)
         {
             var contact = Faker.PickRandom(healthOrg.HealthcareOrganizationContacts);

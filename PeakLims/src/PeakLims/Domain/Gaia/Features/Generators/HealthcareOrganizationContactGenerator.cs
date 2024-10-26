@@ -35,7 +35,7 @@ public class HealthcareOrganizationContactGenerator()
     {
         var people = PersonInfoGenerator.Generate();
         
-        var contacts = new List<HealthcareOrganizationContact>();
+        var contacts = new ConcurrentBag<HealthcareOrganizationContact>();
         foreach (var parsedJsonContact in people)
         {
             var contactToCreate = new HealthcareOrganizationContactForCreation()
