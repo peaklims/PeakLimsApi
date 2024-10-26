@@ -16,15 +16,13 @@ public interface IKeycloakClient
     Task CreateUserAsync(UserRepresentation user);
 }
 
+// rest api https://www.keycloak.org/docs-api/latest/rest-api/index.html 
 public class KeycloakClient(IHttpClientFactory httpClientFactory, IOptionsSnapshot<PeakLimsOptions> options) : IKeycloakClient
 {
     private readonly PeakLimsOptions.AuthOptions _options = options.Value.Auth;
     private HttpClient GetKeycloakClient() => httpClientFactory.CreateClient(Consts.HttpClients.KeycloakAdmin);
     private Uri UsersRoute() => new Uri(_options.Administration.BaseApiRoute).Append("/auth/admin/realms/PeakLIMS/users");
     private Uri TokenRoute() => new Uri(_options.Administration.BaseApiRoute).Append("/auth/realms/PeakLIMS/protocol/openid-connect/token");
-    
-    // private string UsersRoute() => "users";
-    // private string TokenRoute() => "protocol/openid-connect/token";
     
     public async Task<string> GetTokenAsync()
     {
@@ -48,6 +46,7 @@ public class KeycloakClient(IHttpClientFactory httpClientFactory, IOptionsSnapsh
         return tokenResponse.AccessToken;
     }
 
+    // needs service role accounts: https://stackoverflow.com/questions/60359979/keycloak-admin-rest-api-unknown-error-for-update-user-api
     public async Task CreateUserAsync(UserRepresentation user)
     {
         // TODO do some caching to avoid getting a new token every time

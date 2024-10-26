@@ -71,6 +71,13 @@ class RealmBuild : Stack
         peakLimsSpaClient.ExtendDefaultScopes(peaklimsScope.Name);
         peakLimsSpaClient.AddAudienceMapper("peak_lims");
         peakLimsSpaClient.AddTenantMapper();
+        // var client2ServiceAccountRole = new Keycloak.OpenId.ClientServiceAccountRole("client2_service_account_role", new()
+        // {
+        //     RealmId = realm.Id,
+        //     ServiceAccountUserId = client2.ServiceAccountUserId,
+        //     ClientId = client1.Id,
+        //     Role = client1Role.Name,
+        // });
         
         var bob = new User("bob", new UserArgs
         {
