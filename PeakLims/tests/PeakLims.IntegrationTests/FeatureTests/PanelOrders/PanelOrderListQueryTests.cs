@@ -5,6 +5,8 @@ using PeakLims.SharedTestHelpers.Fakes.PanelOrder;
 using PeakLims.Domain.PanelOrders.Features;
 using Domain;
 using System.Threading.Tasks;
+using Domain.PanelOrders;
+using SharedTestHelpers.Fakes.Panel;
 
 public class PanelOrderListQueryTests : TestBase
 {
@@ -14,8 +16,14 @@ public class PanelOrderListQueryTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var panelOrderOne = new FakePanelOrderBuilder().Build();
-        var panelOrderTwo = new FakePanelOrderBuilder().Build();
+        var panelOrderOne = PanelOrder.Create(new FakePanelBuilder()
+            .WithRandomTest()
+            .Build()
+        );
+        var panelOrderTwo = PanelOrder.Create(new FakePanelBuilder()
+            .WithRandomTest()
+            .Build()
+        );
         var queryParameters = new PanelOrderParametersDto();
 
         await testingServiceScope.InsertAsync(panelOrderOne, panelOrderTwo);

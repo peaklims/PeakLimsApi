@@ -7,7 +7,6 @@ using Riok.Mapperly.Abstractions;
 [Mapper]
 public static partial class PanelOrderMapper
 {
-    public static partial PanelOrderForCreation ToPanelOrderForCreation(this PanelOrderForCreationDto panelOrderForCreationDto);
     public static partial PanelOrderForUpdate ToPanelOrderForUpdate(this PanelOrderForUpdateDto panelOrderForUpdateDto);
     public static partial PanelOrderDto ToPanelOrderDto(this PanelOrder panelOrder);
     public static partial IQueryable<PanelOrderDto> ToPanelOrderDtoQueryable(this IQueryable<PanelOrder> panelOrder);

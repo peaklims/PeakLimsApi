@@ -23,14 +23,12 @@ public sealed class TestOrderRepository(PeakLimsDbContext dbContext)
             .Include(x => x.PanelOrder)
             .ThenInclude(x => x.Panel)
             .Include(x => x.PanelOrder)
-            .ThenInclude(x => x.Accession)
             .ToList();
         var response = _dbContext.TestOrders
             .Include(x => x.Accession)
             .Include(x => x.PanelOrder)
             .ThenInclude(x => x.Panel)
             .Include(x => x.PanelOrder)
-            .ThenInclude(x => x.Accession)
             .Any(x => x.PanelOrder.Panel == panel);
         return response;
     }

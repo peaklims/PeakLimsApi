@@ -29,14 +29,14 @@ public class ManagePanelOrderOnAccessionTests
         accession.AddPanel(panel);
 
         // Assert - Add
-        accession.PanelOrders
+        accession.GetPanelOrders()
             .SelectMany(x => x.TestOrders)
             .ToList()
             .Count
             .Should()
             .Be(1);
         
-        var testOrder = accession.PanelOrders
+        var testOrder = accession.GetPanelOrders()
             .SelectMany(x => x.TestOrders).FirstOrDefault();
         testOrder.Test.TestCode.Should().Be(test.TestCode);
         testOrder.PanelOrder.Panel.PanelCode.Should().Be(panel.PanelCode);

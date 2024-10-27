@@ -35,8 +35,12 @@ public class Accession : BaseEntity
     private readonly List<TestOrder> _testOrders = new();
     public IReadOnlyCollection<TestOrder> TestOrders => _testOrders.AsReadOnly();
     
-    private readonly List<PanelOrder> _panelOrders = new();
-    public IReadOnlyCollection<PanelOrder> PanelOrders => _panelOrders.AsReadOnly();
+    // get panel orders from test orders
+    public IReadOnlyCollection<PanelOrder> GetPanelOrders() => TestOrders
+        .Where(x => x.PanelOrder != null)
+        .Select(x => x.PanelOrder)
+        .ToList()
+        .AsReadOnly();
     
     public IReadOnlyCollection<AccessionComment> Comments { get; } = new List<AccessionComment>();
 
@@ -70,8 +74,7 @@ public class Accession : BaseEntity
                 $"An organization is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
 
         var directTestOrders = TestOrders;
-        var panelTestOrders = PanelOrders.SelectMany(x => x.TestOrders).ToList();
-        ValidationException.MustNot(directTestOrders.Count <= 0 && panelTestOrders.Count <= 0,
+        ValidationException.MustNot(directTestOrders.Count <= 0,
                 $"At least 1 panel or test is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
         ValidationException.MustNot(AccessionContacts.Count <= 0,
                 $"At least 1 organization contact is required in order to set an accession to {AccessionStatus.ReadyForTesting().Value}");
@@ -80,11 +83,7 @@ public class Accession : BaseEntity
             $"This accession is already submitted and is ready for testing");
 
         Status = AccessionStatus.ReadyForTesting();
-        foreach (var testOrder in directTestOrders)
-        {
-            testOrder.MarkAsReadyForTesting();
-        }
-        foreach (var testOrder in panelTestOrders)
+        foreach (var testOrder in TestOrders)
         {
             testOrder.MarkAsReadyForTesting();
         }
@@ -251,7 +250,6 @@ public class Accession : BaseEntity
                 $"This panel has one or more tests that are not active. Only panels with all active tests can be added to an accession.");
         
         var panelOrder = PanelOrder.Create(panel);
-        _panelOrders.Add(panelOrder);
         foreach (var panelOrderTestOrder in panelOrder.TestOrders)
         {
             _testOrders.Add(panelOrderTestOrder);

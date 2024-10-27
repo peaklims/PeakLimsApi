@@ -71,7 +71,7 @@ public class ManageTestOrderOnAccessionTests
             .AddTest(test)
             .Activate();
         accession.AddPanel(panel);
-        var testOrder = accession.PanelOrders
+        var testOrder = accession.GetPanelOrders()
             .SelectMany(x => x.TestOrders).First();
         
         // Act

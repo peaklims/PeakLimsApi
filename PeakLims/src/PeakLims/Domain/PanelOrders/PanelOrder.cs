@@ -17,10 +17,10 @@ public class PanelOrder : BaseEntity
     public string CancellationReason { get; private set; }
 
     public string CancellationComments { get; private set; }
+    
+    public Guid OrganizationId { get; private set; }
 
     public Panel Panel { get; private set; }
-
-    public Accession Accession { get; }
 
     private readonly List<TestOrder> _testOrders = new();
     public IReadOnlyCollection<TestOrder> TestOrders => _testOrders.AsReadOnly();
@@ -28,17 +28,14 @@ public class PanelOrder : BaseEntity
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
 
-    public static PanelOrder Create(PanelOrderForCreation panelOrderForCreation)
-    {
-        var newPanelOrder = new PanelOrder();
-
-        newPanelOrder.CancellationReason = panelOrderForCreation.CancellationReason;
-        newPanelOrder.CancellationComments = panelOrderForCreation.CancellationComments;
-
-        newPanelOrder.QueueDomainEvent(new PanelOrderCreated(){ PanelOrder = newPanelOrder });
-        
-        return newPanelOrder;
-    }
+    // public static PanelOrder Create()
+    // {
+    //     var newPanelOrder = new PanelOrder();
+    //
+    //     newPanelOrder.QueueDomainEvent(new PanelOrderCreated(){ PanelOrder = newPanelOrder });
+    //     
+    //     return newPanelOrder;
+    // }
     
     public PanelOrder Cancel(TestOrderCancellationReason cancellationReason, string cancellationComments)
     {
@@ -83,6 +80,7 @@ public class PanelOrder : BaseEntity
                 $"This panel has no tests to assign.");
         
         var panelOrder = new PanelOrder();
+        panelOrder.OrganizationId = panel.OrganizationId;
         panelOrder.SetPanel(panel);
         foreach (var test in panel.Tests)
         {

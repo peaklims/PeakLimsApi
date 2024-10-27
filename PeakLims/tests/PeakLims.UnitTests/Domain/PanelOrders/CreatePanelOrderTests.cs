@@ -5,6 +5,7 @@ using PeakLims.Domain.PanelOrders;
 using PeakLims.Domain.PanelOrders.DomainEvents;
 using Bogus;
 using FluentAssertions.Extensions;
+using SharedTestHelpers.Fakes.Panel;
 using ValidationException = PeakLims.Exceptions.ValidationException;
 
 public class CreatePanelOrderTests
@@ -20,24 +21,26 @@ public class CreatePanelOrderTests
     public void can_create_valid_panelOrder()
     {
         // Arrange
-        var panelOrderToCreate = new FakePanelOrderForCreation().Generate();
+        var panel = new FakePanelBuilder()
+            .WithRandomTest().Build();
         
         // Act
-        var panelOrder = PanelOrder.Create(panelOrderToCreate);
+        var panelOrder = PanelOrder.Create(panel);
 
         // Assert
-        panelOrder.CancellationReason.Should().Be(panelOrderToCreate.CancellationReason);
-        panelOrder.CancellationComments.Should().Be(panelOrderToCreate.CancellationComments);
+        panelOrder.Should().BeOfType<PanelOrder>();
+        panelOrder.Id.Should().NotBeEmpty();
     }
 
     [Fact]
     public void queue_domain_event_on_create()
     {
         // Arrange
-        var panelOrderToCreate = new FakePanelOrderForCreation().Generate();
+        var panel = new FakePanelBuilder()
+            .WithRandomTest().Build();
         
         // Act
-        var panelOrder = PanelOrder.Create(panelOrderToCreate);
+        var panelOrder = PanelOrder.Create(panel);
 
         // Assert
         panelOrder.DomainEvents.Count.Should().Be(1);

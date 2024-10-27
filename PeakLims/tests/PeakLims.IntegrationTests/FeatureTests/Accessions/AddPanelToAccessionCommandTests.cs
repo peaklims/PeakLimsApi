@@ -39,18 +39,23 @@ public class AddPanelToAccessionCommandPanels : TestBase
         // Act
         var command = new AddPanelToAccession.Command(accession.Id, panel.Id);
         await testingServiceScope.SendAsync(command);
-        var panelOrders = await testingServiceScope.ExecuteDbContextAsync(db => db.PanelOrders
-            .Include(x => x.Accession)
-            .Include(x => x.Panel)
+        var dbAccession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Test)
-            .FirstOrDefaultAsync(a => a.Accession.Id == accession.Id));
-        var testOrders = panelOrders.TestOrders;
+            .Include(x => x.TestOrders)
+            .ThenInclude(x => x.PanelOrder)
+            .ThenInclude(x => x.Panel)
+            .FirstOrDefaultAsync(a => a.Id == accession.Id));
+        var testOrders = dbAccession.TestOrders;
+        var panelOrders = dbAccession.GetPanelOrders();
 
         // Assert
         testOrders.Count.Should().Be(1);
         testOrders.FirstOrDefault().Test.TestName.Should().Be(panel.Tests.FirstOrDefault().TestName);
         testOrders.FirstOrDefault().PanelOrder.Panel.PanelName.Should().Be(panel.PanelName);
+        
+        panelOrders.Count.Should().Be(1);
+        panelOrders.FirstOrDefault().Panel.PanelName.Should().Be(panel.PanelName);
     }
     
     [Fact]
@@ -74,10 +79,10 @@ public class AddPanelToAccessionCommandPanels : TestBase
 
         var dbAccession = await testingServiceScope.ExecuteDbContextAsync(db => db.Accessions
             .Include(x => x.TestOrders)
-                .ThenInclude(x => x.Test)
-            .Include(x => x.PanelOrders)
-                .ThenInclude(x => x.TestOrders)
-                .ThenInclude(x => x.Test)
+            .ThenInclude(x => x.Test)
+            .Include(x => x.TestOrders)
+            .ThenInclude(x => x.PanelOrder)
+            .ThenInclude(x => x.Panel)
             .FirstOrDefaultAsync(a => a.Id == accession.Id));
         
         var testOrders = dbAccession.TestOrders;

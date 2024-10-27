@@ -24,8 +24,6 @@ public sealed class AccessionConfiguration : IEntityTypeConfiguration<Accession>
             .WithMany(x => x.Accessions);
         builder.HasMany(x => x.TestOrders)
             .WithOne(x => x.Accession);
-        builder.HasMany(x => x.PanelOrders)
-            .WithOne(x => x.Accession);
         builder.HasOne(e => e.Organization)
             .WithMany()
             .HasForeignKey(e => e.OrganizationId);

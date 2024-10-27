@@ -5,22 +5,20 @@ using PeakLims.Domain.PanelOrders;
 using PeakLims.Domain.PanelOrders.DomainEvents;
 using Bogus;
 using FluentAssertions.Extensions;
+using SharedTestHelpers.Fakes.Panel;
 using ValidationException = PeakLims.Exceptions.ValidationException;
 
 public class UpdatePanelOrderTests
 {
-    private readonly Faker _faker;
+    private readonly Faker _faker = new();
 
-    public UpdatePanelOrderTests()
-    {
-        _faker = new Faker();
-    }
-    
     [Fact]
     public void can_update_panelOrder()
     {
         // Arrange
-        var panelOrder = new FakePanelOrderBuilder().Build();
+        var panel = new FakePanelBuilder()
+            .WithRandomTest().Build();
+        var panelOrder = PanelOrder.Create(panel);
         var updatedPanelOrder = new FakePanelOrderForUpdate().Generate();
         
         // Act
@@ -35,7 +33,9 @@ public class UpdatePanelOrderTests
     public void queue_domain_event_on_update()
     {
         // Arrange
-        var panelOrder = new FakePanelOrderBuilder().Build();
+        var panel = new FakePanelBuilder()
+            .WithRandomTest().Build();
+        var panelOrder = PanelOrder.Create(panel);
         var updatedPanelOrder = new FakePanelOrderForUpdate().Generate();
         panelOrder.DomainEvents.Clear();
         

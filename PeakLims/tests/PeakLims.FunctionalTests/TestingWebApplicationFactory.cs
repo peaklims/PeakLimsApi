@@ -9,9 +9,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Amazon.S3;
+using Databases;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
 using Microsoft.Extensions.Logging;
+using SharedTestHelpers.Fakes.PeakOrganization;
 using Testcontainers.LocalStack;
 using Xunit;
 using static Resources.PeakLimsOptions;
@@ -52,6 +56,18 @@ public class TestingWebApplicationFactory : WebApplicationFactory<Program>, IAsy
                 options.DefaultAuthenticateScheme = FakeJwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = FakeJwtBearerDefaults.AuthenticationScheme;
             }).AddFakeJwtBearer();
+            
+            // TODO 
+            services.AddHostedService<MigrationHostedService<PeakLimsDbContext>>();
+            
+            // using var scope = host.Services.CreateScope();
+            // var dbContext = scope.ServiceProvider.GetRequiredService<PeakLimsDbContext>();
+            //
+            // var testingOrganization = new FakePeakOrganizationBuilder().Build();
+            // testingOrganization.OverrideId(TestingConsts.DefaultTestingOrganizationId);
+            //
+            // dbContext.PeakOrganizations.Add(testingOrganization);
+            // dbContext.SaveChanges();
         });
     }
 

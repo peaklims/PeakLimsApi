@@ -36,6 +36,13 @@ public class FakePanelBuilder
         _creationData.Type = type;
         return this;
     }
+
+    public FakePanelBuilder WithRandomTest()
+    {
+        var test = new FakeTestBuilder().Build().Activate();
+        _tests.Add(test);
+        return this;
+    }
     
     public FakePanelBuilder WithTest(Test test)
     {

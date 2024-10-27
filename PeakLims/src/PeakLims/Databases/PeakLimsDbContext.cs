@@ -124,7 +124,7 @@ public sealed class PeakLimsDbContext(
         modelBuilder.Entity<TestOrder>()
             .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
         modelBuilder.Entity<PanelOrder>()
-            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
         modelBuilder.Entity<Test>()
             .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
         modelBuilder.Entity<Panel>()
@@ -262,15 +262,12 @@ public static class Extensions
                 .ThenInclude(x => x.Test)
             .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Sample)
-            .Include(x => x.PanelOrders)
-                .ThenInclude(x => x.TestOrders)
-                .ThenInclude(x => x.Test)
-            .Include(x => x.PanelOrders)
-                .ThenInclude(x => x.TestOrders)
+            .Include(x => x.TestOrders)
+                .ThenInclude(x => x.PanelOrder)
+                .ThenInclude(x => x.Panel)
+            .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Sample)
             .Include(x => x.AccessionContacts)
-            .Include(x => x.PanelOrders)
-                .ThenInclude(x => x.Panel)
             .AsSplitQuery();
     }
 
@@ -291,11 +288,11 @@ public static class Extensions
                 .ThenInclude(x => x.TestOrders)
                 .ThenInclude(x => x.Sample)
             .Include(x => x.Accessions)
-                .ThenInclude(x => x.PanelOrders)
                 .ThenInclude(x => x.TestOrders)
                 .ThenInclude(x => x.Test)
             .Include(x => x.Accessions)
-                .ThenInclude(x => x.PanelOrders)
+                .ThenInclude(x => x.TestOrders)
+                .ThenInclude(x => x.PanelOrder)
                 .ThenInclude(x => x.Panel)
             .AsSplitQuery();
     }
