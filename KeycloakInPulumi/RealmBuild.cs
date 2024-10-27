@@ -4,6 +4,7 @@ using KeycloakInPulumi.Extensions;
 using KeycloakInPulumi.Factories;
 using Pulumi;
 using Pulumi.Keycloak.Inputs;
+using Pulumi.Keycloak.OpenId;
 using Keycloak = Pulumi.Keycloak;
 
 class RealmBuild : Stack
@@ -28,6 +29,15 @@ class RealmBuild : Stack
         peakLimsPostmanMachineClient.ExtendDefaultScopes("peak_lims");
         peakLimsPostmanMachineClient.AddAudienceMapper("peak_lims");
         peakLimsPostmanMachineClient.AddTenantMapper();
+        // var realmManagementClient = Client.Get("realm-management", realm.Id);
+        // var manageUserRole = ClientServiceAccountRole.Get("manage-users");
+        // var client2ServiceAccountRole = new Keycloak.OpenId.ClientServiceAccountRole("peaklims_postman_service_manage_users", new()
+        // {
+        //     RealmId = realm.Id,
+        //     ServiceAccountUserId = peakLimsPostmanMachineClient.ServiceAccountUserId,
+        //     ClientId = ,
+        //     Role = client1Role.Name,
+        // });
         
         var peakLimsPostmanCodeClient = ClientFactory.CreateCodeFlowClient(realm.Id,
             "peak_lims.postman.code", 
