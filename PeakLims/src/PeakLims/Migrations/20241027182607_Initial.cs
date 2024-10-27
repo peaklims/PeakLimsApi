@@ -49,6 +49,7 @@ namespace PeakLims.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "text", nullable: true),
+                    domain = table.Column<string>(type: "text", nullable: true),
                     created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     created_by = table.Column<string>(type: "text", nullable: true),
                     last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -294,6 +295,31 @@ namespace PeakLims.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "panel_orders",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    cancellation_reason = table.Column<string>(type: "text", nullable: true),
+                    cancellation_comments = table.Column<string>(type: "text", nullable: true),
+                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    panel_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "text", nullable: true),
+                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_modified_by = table.Column<string>(type: "text", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_panel_orders", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_panel_orders_panels_panel_id",
+                        column: x => x.panel_id,
+                        principalTable: "panels",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "accessions",
                 columns: table => new
                 {
@@ -485,36 +511,6 @@ namespace PeakLims.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "panel_orders",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    cancellation_reason = table.Column<string>(type: "text", nullable: true),
-                    cancellation_comments = table.Column<string>(type: "text", nullable: true),
-                    panel_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    accession_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    created_by = table.Column<string>(type: "text", nullable: true),
-                    last_modified_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "text", nullable: true),
-                    is_deleted = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_panel_orders", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_panel_orders_accessions_accession_id",
-                        column: x => x.accession_id,
-                        principalTable: "accessions",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "fk_panel_orders_panels_panel_id",
-                        column: x => x.panel_id,
-                        principalTable: "panels",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "test_orders",
                 columns: table => new
                 {
@@ -625,11 +621,6 @@ namespace PeakLims.Migrations
                 column: "organization_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_panel_orders_accession_id",
-                table: "panel_orders",
-                column: "accession_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_panel_orders_panel_id",
                 table: "panel_orders",
                 column: "panel_id");
@@ -731,6 +722,9 @@ namespace PeakLims.Migrations
                 name: "healthcare_organization_contacts");
 
             migrationBuilder.DropTable(
+                name: "accessions");
+
+            migrationBuilder.DropTable(
                 name: "panel_orders");
 
             migrationBuilder.DropTable(
@@ -743,16 +737,13 @@ namespace PeakLims.Migrations
                 name: "users");
 
             migrationBuilder.DropTable(
-                name: "accessions");
+                name: "healthcare_organizations");
 
             migrationBuilder.DropTable(
                 name: "panels");
 
             migrationBuilder.DropTable(
                 name: "containers");
-
-            migrationBuilder.DropTable(
-                name: "healthcare_organizations");
 
             migrationBuilder.DropTable(
                 name: "patients");

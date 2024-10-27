@@ -696,53 +696,5 @@
         <member name="M:PeakLims.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:PeakLims.Migrations.OrgDOmain">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.OrgDOmain.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.OrgDOmain.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.OrgDOmain.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.PatientCleanupAccession">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PatientCleanupAccession.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PatientCleanupAccession.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PatientCleanupAccession.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.PanelOrderCleanup">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrderCleanup.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrderCleanup.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrderCleanup.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:PeakLims.Migrations.PanelOrderTenanting">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrderTenanting.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrderTenanting.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:PeakLims.Migrations.PanelOrderTenanting.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
     </members>
 </doc>

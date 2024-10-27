@@ -12,8 +12,8 @@ using PeakLims.Databases;
 namespace PeakLims.Migrations
 {
     [DbContext(typeof(PeakLimsDbContext))]
-    [Migration("20241027180526_PanelOrderTenanting")]
-    partial class PanelOrderTenanting
+    [Migration("20241027182607_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
