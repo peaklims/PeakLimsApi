@@ -124,7 +124,7 @@ public sealed class PeakLimsDbContext(
         modelBuilder.Entity<TestOrder>()
             .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
         modelBuilder.Entity<PanelOrder>()
-            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && e.Panel.OrganizationId == currentUserService.OrganizationId);
         modelBuilder.Entity<Test>()
             .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
         modelBuilder.Entity<Panel>()

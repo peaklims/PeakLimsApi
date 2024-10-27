@@ -539,10 +539,6 @@ namespace PeakLims.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
 
-                    b.Property<Guid>("OrganizationId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("organization_id");
-
                     b.Property<Guid?>("PanelId")
                         .HasColumnType("uuid")
                         .HasColumnName("panel_id");

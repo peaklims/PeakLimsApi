@@ -12,7 +12,7 @@ using PeakLims.Databases;
 namespace PeakLims.Migrations
 {
     [DbContext(typeof(PeakLimsDbContext))]
-    [Migration("20241027182607_Initial")]
+    [Migration("20241027183312_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -541,10 +541,6 @@ namespace PeakLims.Migrations
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_on");
-
-                    b.Property<Guid>("OrganizationId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("organization_id");
 
                     b.Property<Guid?>("PanelId")
                         .HasColumnType("uuid")

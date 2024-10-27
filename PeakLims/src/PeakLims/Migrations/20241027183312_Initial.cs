@@ -301,7 +301,6 @@ namespace PeakLims.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     cancellation_reason = table.Column<string>(type: "text", nullable: true),
                     cancellation_comments = table.Column<string>(type: "text", nullable: true),
-                    organization_id = table.Column<Guid>(type: "uuid", nullable: false),
                     panel_id = table.Column<Guid>(type: "uuid", nullable: true),
                     created_on = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     created_by = table.Column<string>(type: "text", nullable: true),

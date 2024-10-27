@@ -17,8 +17,6 @@ public class PanelOrder : BaseEntity
     public string CancellationReason { get; private set; }
 
     public string CancellationComments { get; private set; }
-    
-    public Guid OrganizationId { get; private set; }
 
     public Panel Panel { get; private set; }
 
@@ -80,7 +78,6 @@ public class PanelOrder : BaseEntity
                 $"This panel has no tests to assign.");
         
         var panelOrder = new PanelOrder();
-        panelOrder.OrganizationId = panel.OrganizationId;
         panelOrder.SetPanel(panel);
         foreach (var test in panel.Tests)
         {
