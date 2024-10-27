@@ -12,7 +12,7 @@ public sealed class AuditLogAction : ValueObject
         private set
         {
             if (!AuditLogActionEnum.TryFromName(value, true, out var parsed))
-                throw new ValidationException($"Invalid Audit log action. PLease use one of the following: {string.Join(", ", ListNames())}");
+                throw new ValidationException($"Invalid Audit log action. Please use one of the following: {string.Join(", ", ListNames())}");
 
             _auditLogAction = parsed;
         }

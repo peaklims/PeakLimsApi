@@ -15,7 +15,7 @@ public class TestOrderCancellationReason : ValueObject
                 _reason = null;
             
             if (!TestOrderCancellationReasonEnum.TryFromName(value, true, out var parsed))
-                throw new ValidationException($"Invalid Cancellation Reason. PLease use one of the following: {string.Join(", ", ListNames())}");
+                throw new ValidationException($"Invalid Cancellation Reason. Please use one of the following: {string.Join(", ", ListNames())}");
 
             _reason = parsed;
         }

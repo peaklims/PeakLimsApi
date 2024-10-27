@@ -94,9 +94,6 @@ public class Sample : BaseEntity
         if (!container.CanStore(Type))
             throw new ValidationException(nameof(Sample),
                 $"A {container.Type} container is used to store {container.UsedFor.Value} samples, not {Type.Value}.");
-        if (!container.Status.IsActive())
-            throw new ValidationException(nameof(Sample),
-                $"Only active containers can be added to a sample.");
         
         Container = container;
         

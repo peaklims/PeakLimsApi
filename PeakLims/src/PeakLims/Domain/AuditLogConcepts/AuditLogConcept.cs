@@ -13,7 +13,7 @@ public sealed class AuditLogConcept : ValueObject
         private set
         {
             if (!AuditLogConceptEnum.TryFromName(value, true, out var parsed))
-                throw new ValidationException($"Invalid Audit log concept. PLease use one of the following: {string.Join(", ", ListNames())}");
+                throw new ValidationException($"Invalid Audit log concept. Please use one of the following: {string.Join(", ", ListNames())}");
 
             _auditLogConcept = parsed;
         }

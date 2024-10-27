@@ -26,7 +26,6 @@ public class ContainerQueryTests : TestBase
 
         // Assert
         container.UsedFor.Should().Be(fakeContainerOne.UsedFor);
-        container.Status.Should().Be(fakeContainerOne.Status);
         container.Type.Should().Be(fakeContainerOne.Type);
     }
 

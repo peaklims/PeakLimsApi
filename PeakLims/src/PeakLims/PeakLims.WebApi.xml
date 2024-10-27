@@ -144,9 +144,9 @@
             Gets a paginated list of all Containers.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.ContainersController.GetAllContainers">
+        <member name="M:PeakLims.Controllers.v1.ContainersController.GetAllContainers(System.String)">
             <summary>
-            Gets a list of all Containers.
+            Gets a list of all Containers or all containers for a specific sample type.
             </summary>
         </member>
         <member name="M:PeakLims.Controllers.v1.ContainersController.GetContainer(System.Guid)">
@@ -694,6 +694,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.RemoveContainerStatus">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.RemoveContainerStatus.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.RemoveContainerStatus.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.RemoveContainerStatus.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

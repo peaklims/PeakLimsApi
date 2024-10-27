@@ -3,12 +3,6 @@ namespace PeakLims.Domain.Containers;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Containers.Models;
 using PeakLims.Domain.Containers.DomainEvents;
-using FluentValidation;
-using System.Text.Json.Serialization;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
-using ContainerStatuses;
 using PeakOrganizations;
 using SampleTypes;
 
@@ -16,7 +10,6 @@ public class Container : BaseEntity
 {
     public SampleType UsedFor { get; private set; }
 
-    public ContainerStatus Status { get; private set; }
     
     public PeakOrganization Organization { get; }
     public Guid OrganizationId { get; private set;  }
@@ -34,7 +27,6 @@ public class Container : BaseEntity
         var newContainer = new Container();
 
         newContainer.UsedFor = SampleType.Of(containerForCreation.UsedFor);
-        newContainer.Status = ContainerStatus.Active();
         newContainer.Type = containerForCreation.Type;
         newContainer.OrganizationId = containerForCreation.OrganizationId;
 
@@ -48,26 +40,6 @@ public class Container : BaseEntity
         UsedFor = SampleType.Of(containerForUpdate.UsedFor);
         Type = containerForUpdate.Type;
 
-        QueueDomainEvent(new ContainerUpdated(){ Id = Id });
-        return this;
-    }
-
-    public Container Activate()
-    {
-        if (Status == ContainerStatus.Active())
-            return this;
-        
-        Status = ContainerStatus.Active();
-        QueueDomainEvent(new ContainerUpdated(){ Id = Id });
-        return this;
-    }
-
-    public Container Deactivate()
-    {
-        if (Status == ContainerStatus.Inactive())
-            return this;
-        
-        Status = ContainerStatus.Inactive();
         QueueDomainEvent(new ContainerUpdated(){ Id = Id });
         return this;
     }

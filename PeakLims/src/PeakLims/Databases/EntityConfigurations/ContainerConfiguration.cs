@@ -1,6 +1,5 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
-using Domain.ContainerStatuses;
 using Domain.SampleTypes;
 using PeakLims.Domain.Containers;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +13,6 @@ public sealed class ContainerConfiguration : IEntityTypeConfiguration<Container>
     public void Configure(EntityTypeBuilder<Container> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
-        
-        builder.Property(x => x.Status)
-            .HasConversion(x => x.Value, x => new ContainerStatus(x));
         builder.Property(x => x.UsedFor)
             .HasConversion(x => x.Value, x => new SampleType(x));
         

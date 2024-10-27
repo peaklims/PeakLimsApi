@@ -32,7 +32,6 @@ public class UpdateContainerCommandTests : TestBase
 
         // Assert
         updatedContainer.UsedFor.Value.Should().Be(updatedContainerDto.UsedFor);
-        updatedContainer.Status.Should().Be(fakeContainerOne.Status);
         updatedContainer.Type.Should().Be(updatedContainerDto.Type);
     }
 

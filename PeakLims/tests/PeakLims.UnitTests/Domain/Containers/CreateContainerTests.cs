@@ -5,8 +5,6 @@ using PeakLims.Domain.Containers;
 using PeakLims.Domain.Containers.DomainEvents;
 using Bogus;
 using FluentAssertions;
-using FluentAssertions.Extensions;
-using PeakLims.Domain.ContainerStatuses;
 using Xunit;
 
 public class CreateContainerTests
@@ -29,7 +27,6 @@ public class CreateContainerTests
 
         // Assert
         fakeContainer.UsedFor.Value.Should().Be(containerToCreate.UsedFor);
-        fakeContainer.Status.Should().Be(ContainerStatus.Active());
         fakeContainer.Type.Should().Be(containerToCreate.Type);
     }
 

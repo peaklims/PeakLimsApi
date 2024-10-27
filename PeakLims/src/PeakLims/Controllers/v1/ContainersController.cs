@@ -56,13 +56,13 @@ public sealed class ContainersController: ControllerBase
     
 
     /// <summary>
-    /// Gets a list of all Containers.
+    /// Gets a list of all Containers or all containers for a specific sample type.
     /// </summary>
     [Authorize]
     [HttpGet("all", Name = "GetAllContainers")]
-    public async Task<IActionResult> GetAllContainers()
+    public async Task<IActionResult> GetAllContainers([FromQuery] string? sampleType)
     {
-        var query = new GetAllContainers.Query();
+        var query = new GetAllContainers.Query(sampleType);
         var queryResponse = await _mediator.Send(query);
         return Ok(queryResponse);
     }

@@ -17,29 +17,24 @@ public static class GetOrderablePanelsAndTests
 {
     public sealed record Query() : IRequest<OrderablePanelsAndTestsDto>;
 
-    public sealed class Handler : IRequestHandler<Query, OrderablePanelsAndTestsDto>
+    public sealed class Handler(
+        IPanelRepository panelRepository,
+        ITestRepository testRepository,
+        IHeimGuardClient heimGuard)
+        : IRequestHandler<Query, OrderablePanelsAndTestsDto>
     {
-        private readonly IPanelRepository _panelRepository;
-        private readonly ITestRepository _testRepository;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IPanelRepository panelRepository, ITestRepository testRepository, IHeimGuardClient heimGuard)
-        {
-            _panelRepository = panelRepository;
-            _testRepository = testRepository;
-            _heimGuard = heimGuard;
-        }
+        private readonly IHeimGuardClient _heimGuard = heimGuard;
 
         public async Task<OrderablePanelsAndTestsDto> Handle(Query request, CancellationToken cancellationToken)
         {
             
-            var tests = await _testRepository.Query()
+            var tests = await testRepository.Query()
                 .AsNoTracking()
                 .Where(x => x.Status == TestStatus.Active().Value)
                 .ToOrderableTestQueryable()
                 .ToListAsync(cancellationToken);
             
-            var panels = await _panelRepository.Query()
+            var panels = await panelRepository.Query()
                 .AsNoTracking()
                 .Where(x => x.Status == PanelStatus.Active().Value)
                 .ToOrderablePanelQueryable()
