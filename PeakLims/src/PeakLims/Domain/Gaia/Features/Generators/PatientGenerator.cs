@@ -1,19 +1,22 @@
 namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Collections.Concurrent;
+using Containers;
 using Ethnicities;
 using Models;
 using Patients;
 using Npis;
 using Patients.Models;
 using Races;
+using Samples;
+using Samples.Models;
 using Serilog;
 using Sexes;
 using Soenneker.Utils.AutoBogus;
 
 public static class PatientGenerator
 {
-    public static async Task<List<Patient>> Generate(Guid organizationId)
+    public static async Task<List<Patient>> Generate(Guid organizationId, List<Container> containerList)
     {
         Log.Information("Starting Patient creation");
         var random = new Random();
@@ -22,7 +25,7 @@ public static class PatientGenerator
         var patients = new ConcurrentBag<Patient>();
         ValueTask GeneratePatients(PersonInfo person, CancellationToken ct)
         {
-            var patient = CreatePatient(person, organizationId);
+            var patient = CreatePatient(person, organizationId, containerList);
             patients.Add(patient);
             return ValueTask.CompletedTask;
         }
@@ -36,7 +39,7 @@ public static class PatientGenerator
         return patients.ToList();
     }
 
-    private static Patient CreatePatient(PersonInfo personInfo, Guid organizationId)
+    private static Patient CreatePatient(PersonInfo personInfo, Guid organizationId, List<Container> containerList)
     {
         var faker = new AutoFaker().Faker;
         var patientToCreate = new PatientForCreation()
@@ -49,8 +52,24 @@ public static class PatientGenerator
             Ethnicity = faker.PickRandom(Ethnicity.ListNames()),
             OrganizationId = organizationId
         };
+        var patient = Patient.Create(patientToCreate);
+        
+        var sampleCount = faker.Random.Int(1, 2);
+        var containersToUse = faker.PickRandom(containerList, sampleCount);
+        foreach (var container in containersToUse)
+        {
+            var patientDob = DateOnly.Parse(patient.Lifespan.DateOfBirth.ToString());
+            var sample = Sample.Create(new SampleForCreation()
+            {
+                Type = container.UsedFor.Value,
+                CollectionDate = faker.Date.BetweenDateOnly(patientDob, DateOnly.FromDateTime(DateTime.UtcNow)),
+                ExternalId = faker.Random.AlphaNumeric(faker.Random.Int(10, 20)).ToUpper(),
+            });
+            sample.SetContainer(container);
+            patient.AddSample(sample);
+        }
         
         // TODO audit is failing
-        return Patient.Create(patientToCreate);
+        return patient;
     }
 }

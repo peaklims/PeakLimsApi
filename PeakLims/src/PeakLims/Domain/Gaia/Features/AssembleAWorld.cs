@@ -26,6 +26,7 @@ public static class AssembleAWorld
         IUserInfoGenerator userInfoGenerator,
         IHealthcareOrganizationGenerator healthcareOrganizationGenerator,
         IAccessionGenerator accessionGenerator,
+        IPanelTestGenerator panelTestGenerator,
         PeakLimsDbContext dbContext
     ) : IRequestHandler<Command, object>
     {
@@ -59,45 +60,13 @@ public static class AssembleAWorld
             
             // -----------------------------------------------------------
             
-            var patients = await PatientGenerator.Generate(organization.Id);
+            await panelTestGenerator.Generate(organization.Id);
+            
+            var patients = await PatientGenerator.Generate(organization.Id, containerList);
             // TODO save phase
             
             var accessions = await accessionGenerator.Generate(patients, healthcareOrganizations);
             await dbContext.Accessions.AddRangeAsync(accessions, cancellationToken);
-            
-            var probandOgmTest = Test.Create(new TestForCreation()
-            {
-                TestCode = "TOGM001",
-                TestName = "Optical Genome Mapping (Proband)",
-                OrganizationId = organization.Id,
-                Methodology = "Optical Genome Mapping"
-            }).Activate();
-            var additionalFamilyMememberOgmTest = Test.Create(new TestForCreation()
-            {
-                TestCode = "TOGM002",
-                TestName = "Optical Genome Mapping (Additional Family Member)",
-                OrganizationId = organization.Id,
-                Methodology = "Optical Genome Mapping"
-            }).Activate();
-            var panelOgmProband = Panel.Create(new PanelForCreation()
-            {
-                PanelCode = "OGM001",
-                PanelName = "Optical Genome Mapping Proband",
-                Type = "OGM",
-                OrganizationId = organization.Id
-            });
-            panelOgmProband.AddTest(probandOgmTest).Activate();
-            var panelOgmDuo = Panel.Create(new PanelForCreation()
-            {
-                PanelCode = "OGM001",
-                PanelName = "Optical Genome Mapping Duo",
-                Type = "OGM",
-                OrganizationId = organization.Id
-            });
-            panelOgmDuo.AddTest(probandOgmTest)
-                .AddTest(additionalFamilyMememberOgmTest)
-                .Activate();
-            await dbContext.Panels.AddRangeAsync(panelOgmProband, panelOgmDuo);
             
             // TODO save phase
             await dbContext.SaveChangesAsync(cancellationToken);
