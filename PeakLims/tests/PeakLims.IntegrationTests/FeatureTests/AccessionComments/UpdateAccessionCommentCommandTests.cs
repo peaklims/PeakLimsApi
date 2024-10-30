@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Bogus;
 using Domain.AccessionCommentStatuses;
 using Exceptions;
+using Services;
+using SharedTestHelpers.Utilities;
 
 public class UpdateAccessionCommentCommandTests : TestBase
 {
@@ -20,7 +22,10 @@ public class UpdateAccessionCommentCommandTests : TestBase
     {
         // Arrange
         var testingServiceScope = new TestingServiceScope();
-        var originalAccessionComment = new FakeAccessionCommentBuilder().Build();
+        var currentUserService = testingServiceScope.GetService<ICurrentUserService>();
+        var originalAccessionComment = new FakeAccessionCommentBuilder()
+            .WithUserIdentifier(currentUserService.UserIdentifier)
+            .Build();
         await testingServiceScope.InsertAsync(originalAccessionComment);
         
         var faker = new Faker();

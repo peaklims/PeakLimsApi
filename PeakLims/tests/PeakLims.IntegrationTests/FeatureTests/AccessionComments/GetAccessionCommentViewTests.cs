@@ -4,6 +4,7 @@ using Bogus;
 using Domain.AccessionComments.Features;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Services;
 using SharedTestHelpers.Fakes.Accession;
 using SharedTestHelpers.Fakes.AccessionComment;
 
@@ -20,12 +21,14 @@ public class GetAccessionCommentViewTests : TestBase
         var accession = new FakeAccessionBuilder().Build();
 
         // input
+        var currentUserService = testingServiceScope.GetService<ICurrentUserService>();
         var accessionCommentItem = new FakeAccessionCommentBuilder()
             .WithAccession(accession)
+            .WithUserIdentifier(currentUserService.UserIdentifier)
             .Build();
         await testingServiceScope.InsertAsync(accessionCommentItem);
         var newComment =  new Faker().Lorem.Sentence();
-        var command = new UpdateAccessionComment.Command(accessionCommentItem.Id, newComment, accessionCommentItem.CreatedBy);
+        var command = new UpdateAccessionComment.Command(accessionCommentItem.Id, newComment, accessionCommentItem.CommentedByIdentifier);
         await testingServiceScope.SendAsync(command);
 
         // Act
@@ -52,25 +55,28 @@ public class GetAccessionCommentViewTests : TestBase
         var accession = new FakeAccessionBuilder().Build();
 
         // standalone input
+        var currentUserService = testingServiceScope.GetService<ICurrentUserService>();
         var standaloneCommentItem = new FakeAccessionCommentBuilder()
+            .WithUserIdentifier(currentUserService.UserIdentifier)
             .WithAccession(accession)
             .Build();
         
         // input with history
         var rootCommentItem = new FakeAccessionCommentBuilder()
+            .WithUserIdentifier(currentUserService.UserIdentifier)
             .WithAccession(accession)
             .Build();
         await testingServiceScope.InsertAsync(rootCommentItem, standaloneCommentItem);
         
         var firstUpdatedCommentText = new Faker().Lorem.Sentence();
-        var command = new UpdateAccessionComment.Command(rootCommentItem.Id, firstUpdatedCommentText, rootCommentItem.CreatedBy);
+        var command = new UpdateAccessionComment.Command(rootCommentItem.Id, firstUpdatedCommentText, rootCommentItem.CommentedByIdentifier);
         await testingServiceScope.SendAsync(command);
         
         var updatedCommentItem = await testingServiceScope.ExecuteDbContextAsync(db => db.AccessionComments
             .Include(x => x.Accession)
             .FirstOrDefaultAsync(x => x.Comment == firstUpdatedCommentText));
         var finalCommentText = new Faker().Lorem.Sentence();
-        command = new UpdateAccessionComment.Command(updatedCommentItem.Id, finalCommentText, updatedCommentItem.CreatedBy);
+        command = new UpdateAccessionComment.Command(updatedCommentItem.Id, finalCommentText, updatedCommentItem.CommentedByIdentifier);
         await testingServiceScope.SendAsync(command);
 
         // Act

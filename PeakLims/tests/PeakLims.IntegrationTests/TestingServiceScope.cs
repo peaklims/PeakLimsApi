@@ -6,6 +6,7 @@ using Amazon.S3;
 using Databases;
 using Domain.PeakOrganizations;
 using Domain.PeakOrganizations.Models;
+using Domain.Users;
 using Exceptions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ using SharedTestHelpers.Utilities;
 public class TestingServiceScope 
 {
     private readonly IServiceScope _scope;
+    private ClaimsPrincipal _userClaimsPrincipal;
 
     public TestingServiceScope()
     {
@@ -47,6 +49,7 @@ public class TestingServiceScope
         {
             User = user
         };
+        _userClaimsPrincipal = user;
     }
 
     public void SetRandomUserInNewOrg()
@@ -55,6 +58,12 @@ public class TestingServiceScope
             .WithOrganizationId(Guid.NewGuid())
             .Build();
         SetUser(userClaim);
+        _userClaimsPrincipal = userClaim;
+    }
+    
+    public ClaimsPrincipal GetUser()
+    {
+        return _userClaimsPrincipal;
     }
 
     public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)

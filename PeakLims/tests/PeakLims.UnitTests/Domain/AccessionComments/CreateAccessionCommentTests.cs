@@ -13,13 +13,8 @@ using ValidationException = Exceptions.ValidationException;
 
 public class CreateAccessionCommentTests
 {
-    private readonly Faker _faker;
+    private readonly Faker _faker = new();
 
-    public CreateAccessionCommentTests()
-    {
-        _faker = new Faker();
-    }
-    
     [Fact]
     public void can_create_valid_accessionComment()
     {
@@ -28,7 +23,8 @@ public class CreateAccessionCommentTests
         var comment = _faker.Lorem.Sentence();
         
         // Act
-        var accessionComment = AccessionComment.Create(accession, comment);
+        var accessionComment = AccessionComment.Create(accession, comment, 
+            _faker.Random.Guid().ToString());
 
         // Assert
         accessionComment.Comment.Should().Be(comment);
@@ -45,11 +41,27 @@ public class CreateAccessionCommentTests
         var accession = new FakeAccessionBuilder().Build();
         
         // Act
-        var act = () => AccessionComment.Create(accession, null);
+        var act = () => AccessionComment.Create(accession, null, 
+            _faker.Random.Guid().ToString());
 
         // Assert
         act.Should().Throw<ValidationException>()
             .WithMessage("Please provide a valid comment.");
+    }
+    
+    [Fact]
+    public void must_have_a_user_identifier()
+    {
+        // Arrange
+        var accession = new FakeAccessionBuilder().Build();
+        var comment = _faker.Lorem.Sentence();
+        
+        // Act
+        var act = () => AccessionComment.Create(accession, comment, null);
+
+        // Assert
+        act.Should().Throw<ValidationException>()
+            .WithMessage("Please provide a valid user identifier.");
     }
 
     [Fact]
@@ -60,7 +72,7 @@ public class CreateAccessionCommentTests
         var comment = _faker.Lorem.Sentence();
         
         // Act
-        var fakeAccessionComment = AccessionComment.Create(accession, comment);
+        var fakeAccessionComment = AccessionComment.Create(accession, comment, _faker.Random.Guid().ToString());
 
         // Assert
         fakeAccessionComment.DomainEvents.Count.Should().Be(1);

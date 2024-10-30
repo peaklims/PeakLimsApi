@@ -24,21 +24,20 @@ public static class GetAccessionCommentView
     {
         public async Task<AccessionCommentViewDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            var accession = await accessionRepository.Query()
+            var accession = await dbContext.Accessions
                 .Include(x => x.Comments)
-                .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken);
-            
-            if (accession == null)
-                throw new KeyNotFoundException($"Accession with id {request.AccessionId} not found");
+                .ThenInclude(x => x.ParentComment)
+                .AsNoTracking()
+                .GetById(request.AccessionId, cancellationToken);
 
             var commentView = new AccessionCommentViewDto();
 
             var allAccessionComments = accession.Comments.ToList();
             var activeAccessionComments = allAccessionComments
                 .Where(x => x.Status == AccessionCommentStatus.Active())
-                .OrderBy(x => x.CreatedOn)
+                .OrderBy(x => x.CommentedAt)
                 .ToList();
-            var distinctAccessionCommentUserIdList = allAccessionComments.Select(x => x.CreatedBy)
+            var distinctAccessionCommentUserIdList = allAccessionComments.Select(x => x.CommentedByIdentifier)
                 .Distinct()
                 .ToList();
 
@@ -67,17 +66,17 @@ public static class GetAccessionCommentView
         IList<AccessionComment> allAccessionComments,
         List<User> distinctUserList, string currentUserId)
     {
-        var owner = distinctUserList.FirstOrDefault(x => x.Identifier == accessionComment.CreatedBy);
+        var owner = distinctUserList.FirstOrDefault(x => x.Identifier == accessionComment.CommentedByIdentifier);
         var isUnknownUser = owner == null;
         var accessionCommentDto = new AccessionCommentViewDto.AccessionCommentItemDto
         {
             Id = accessionComment.Id,
             Comment = accessionComment.Comment,
-            CreatedDate = accessionComment.CreatedOn,
+            CreatedDate = accessionComment.CommentedAt.DateTime,
             CreatedByFirstName = isUnknownUser ? "Unknown" : owner?.FirstName,
             CreatedByLastName = owner?.LastName,
-            CreatedById = accessionComment?.CreatedBy,
-            OwnedByCurrentUser = accessionComment.CreatedBy == currentUserId,
+            CreatedById = accessionComment?.CommentedByIdentifier,
+            OwnedByCurrentUser = accessionComment.CommentedByIdentifier == currentUserId,
             History = new List<AccessionCommentViewDto.AccessionCommentHistoryRecordDto>()
         };
 
@@ -92,23 +91,23 @@ public static class GetAccessionCommentView
         while (historyStack.Count > 0)
         {
             var archivedAccessionComment = historyStack.Pop();
-            var archivedOwner = distinctUserList.FirstOrDefault(x => x.Identifier == archivedAccessionComment.CreatedBy);
+            var archivedOwner = distinctUserList.FirstOrDefault(x => x.Identifier == archivedAccessionComment.CommentedByIdentifier);
             var isUnknownArchivedUser = archivedOwner == null;
             accessionCommentHistory.Add(new AccessionCommentViewDto.AccessionCommentHistoryRecordDto
             {
                 Id = archivedAccessionComment.Id,
                 Comment = archivedAccessionComment.Comment,
-                CreatedDate = archivedAccessionComment.CreatedOn,
+                CreatedDate = archivedAccessionComment.CommentedAt.DateTime,
                 CreatedByFirstName = isUnknownArchivedUser ? "Unknown" : archivedOwner?.FirstName,
                 CreatedByLastName = archivedOwner?.LastName,
-                CreatedById = archivedAccessionComment?.CreatedBy,
-                OwnedByCurrentUser = accessionComment.CreatedBy == currentUserId,
+                CreatedById = archivedAccessionComment?.CommentedByIdentifier,
+                OwnedByCurrentUser = accessionComment.CommentedByIdentifier == currentUserId,
             });
 
             var childArchivedAccessionComments = allAccessionComments
                 .Where(tsi => tsi?.Status == AccessionCommentStatus.Archived() && 
                               tsi?.ParentComment?.Id == archivedAccessionComment.Id)
-                .OrderBy(x => x?.CreatedOn);
+                .OrderBy(x => x?.CommentedAt);
             foreach (var childArchivedAccessionComment in childArchivedAccessionComments)
             {
                 historyStack.Push(childArchivedAccessionComment);

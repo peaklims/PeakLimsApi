@@ -13,40 +13,22 @@ using MediatR;
 
 public static class AddAccessionComment
 {
-    public sealed class Command : IRequest<AccessionCommentDto>
+    public sealed record Command(Guid AccessionId, string Comment) : IRequest<AccessionCommentDto>;
+
+    public sealed class Handler(
+        IAccessionCommentRepository accessionCommentRepository,
+        IUnitOfWork unitOfWork,
+        ICurrentUserService currentUserService,
+        IAccessionRepository accessionRepository)
+        : IRequestHandler<Command, AccessionCommentDto>
     {
-        public readonly string Comment;
-        public readonly Guid AccessionId;
-
-        public Command( Guid accessionId, string comment)
-        {
-            Comment = comment;
-            AccessionId = accessionId;
-        }
-    }
-
-    public sealed class Handler : IRequestHandler<Command, AccessionCommentDto>
-    {
-        private readonly IAccessionCommentRepository _accessionCommentRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHeimGuardClient _heimGuard;
-        private readonly IAccessionRepository _accessionRepository;
-
-        public Handler(IAccessionCommentRepository accessionCommentRepository, IUnitOfWork unitOfWork, IHeimGuardClient heimGuard, IAccessionRepository accessionRepository)
-        {
-            _accessionCommentRepository = accessionCommentRepository;
-            _unitOfWork = unitOfWork;
-            _heimGuard = heimGuard;
-            _accessionRepository = accessionRepository;
-        }
-
         public async Task<AccessionCommentDto> Handle(Command request, CancellationToken cancellationToken)
         {
-            var accession = await _accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
-            var accessionComment = AccessionComment.Create(accession, request.Comment);
-            await _accessionCommentRepository.Add(accessionComment, cancellationToken);
+            var accession = await accessionRepository.GetById(request.AccessionId, cancellationToken: cancellationToken);
+            var accessionComment = AccessionComment.Create(accession, request.Comment, currentUserService?.UserIdentifier);
+            await accessionCommentRepository.Add(accessionComment, cancellationToken);
 
-            await _unitOfWork.CommitChanges(cancellationToken);
+            await unitOfWork.CommitChanges(cancellationToken);
 
             return accessionComment.ToAccessionCommentDto();
         }

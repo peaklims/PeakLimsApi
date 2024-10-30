@@ -5,11 +5,16 @@ using System.ComponentModel.DataAnnotations;
 using AccessionCommentStatuses;
 using Exceptions;
 using PeakLims.Domain.Accessions;
+using Users;
 using ValidationException = Exceptions.ValidationException;
 
 public class AccessionComment : BaseEntity
 {
     public string Comment { get; private set; }
+    
+    public string CommentedByIdentifier { get; private set; }
+    
+    public DateTimeOffset CommentedAt { get; private set; }
 
     public AccessionCommentStatus Status { get; private set; }
 
@@ -20,15 +25,19 @@ public class AccessionComment : BaseEntity
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
     
-    public static AccessionComment Create(Accession accession, string commentText)
+    public static AccessionComment Create(Accession accession, string commentText, string commentedByIdentifier, 
+        DateTimeOffset? commentedAt = null)
     {
         GuardCommentNotEmptyOrNull(commentText);
+        ValidationException.ThrowWhenNullOrEmpty(commentedByIdentifier, "Please provide a valid user identifier.");
         
         var newAccessionComment = new AccessionComment
         {
             Comment = commentText,
             Accession = accession,
             ParentComment = null,
+            CommentedByIdentifier = commentedByIdentifier,
+            CommentedAt = commentedAt ?? DateTimeOffset.UtcNow,
             Status = AccessionCommentStatus.Active()
         };
 
@@ -40,6 +49,7 @@ public class AccessionComment : BaseEntity
     public void Update(string commentText, string userIdentifier, out AccessionComment newComment, out AccessionComment archivedComment)
     {
         GuardCommentNotEmptyOrNull(commentText);
+        ValidationException.ThrowWhenNullOrEmpty(userIdentifier, "Please provide a valid user identifier.");
         var canBeUpdated = CanBeUpdatedByUser(userIdentifier);
         if (!canBeUpdated)
             throw new ForbiddenAccessException("Accession comment cannot be updated by this user.");
@@ -49,7 +59,9 @@ public class AccessionComment : BaseEntity
             Comment = commentText,
             Accession = Accession,
             ParentComment = null,
-            Status = AccessionCommentStatus.Active()
+            Status = AccessionCommentStatus.Active(),
+            CommentedByIdentifier = userIdentifier,
+            CommentedAt = DateTimeOffset.UtcNow
         };
 
         Status = AccessionCommentStatus.Archived();
@@ -61,7 +73,7 @@ public class AccessionComment : BaseEntity
     }
     
     public bool CanBeUpdatedByUser(string userIdentifier) 
-        => CreatedBy == userIdentifier;
+        => CommentedByIdentifier == userIdentifier;
 
     private static void GuardCommentNotEmptyOrNull(string commentText)
     {

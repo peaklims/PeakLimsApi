@@ -28,7 +28,7 @@ public class UpdateAccessionCommentTests
         var comment = _faker.Lorem.Sentence();
         
         // Act
-        originalAccessionComment.Update(comment, originalAccessionComment.CreatedBy, out var newComment, out var archivedComment);
+        originalAccessionComment.Update(comment, originalAccessionComment.CommentedByIdentifier, out var newComment, out var archivedComment);
 
         // Assert
         newComment.Accession.Id.Should().Be(originalAccessionComment.Accession.Id);
@@ -50,7 +50,7 @@ public class UpdateAccessionCommentTests
         var originalAccessionComment = new FakeAccessionCommentBuilder().Build();
         
         // Act
-        var act = () => originalAccessionComment.Update( null, originalAccessionComment.CreatedBy, out _ , out _);
+        var act = () => originalAccessionComment.Update( null, originalAccessionComment.CommentedByIdentifier, out _ , out _);
 
         // Assert
         act.Should().Throw<ValidationException>()
@@ -66,7 +66,7 @@ public class UpdateAccessionCommentTests
         fakeAccessionComment.DomainEvents.Clear();
         
         // Act
-        fakeAccessionComment.Update(comment, fakeAccessionComment.CreatedBy, out var _, out var _);
+        fakeAccessionComment.Update(comment, fakeAccessionComment.CommentedByIdentifier, out var _, out var _);
 
         // Assert
         fakeAccessionComment.DomainEvents.Count.Should().Be(1);
