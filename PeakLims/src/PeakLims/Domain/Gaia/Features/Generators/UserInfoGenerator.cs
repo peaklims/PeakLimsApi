@@ -51,7 +51,6 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
         var email = $"{personInfo.FirstName.ToLower()}.{personInfo.LastName.ToLower()}@{domain}";
         var userToCreate = new UserForCreation()
         {
-            Identifier = Guid.NewGuid().ToString(),
             FirstName = personInfo.FirstName,
             LastName = personInfo.LastName,
             Email = email,
@@ -83,9 +82,10 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
             }
         };
         await keycloakClient.CreateUserAsync(kcUser);
-            
-        Log.Information("User to create: {@User}", userToCreate);
+        var kcUserResponse = await keycloakClient.GetUserByEmail(email);
         
+        userToCreate.Identifier = kcUserResponse.Id;
+        Log.Information("User to create: {@User}", userToCreate);
         
         return userToCreate;
     }

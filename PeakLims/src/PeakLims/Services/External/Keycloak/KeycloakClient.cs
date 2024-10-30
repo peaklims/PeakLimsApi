@@ -14,6 +14,7 @@ public interface IKeycloakClient
 {
     Task<string> GetTokenAsync();
     Task CreateUserAsync(UserRepresentation user);
+    Task<UserRepresentation> GetUserByEmail(string email);
 }
 
 // rest api https://www.keycloak.org/docs-api/latest/rest-api/index.html 
@@ -65,4 +66,28 @@ public class KeycloakClient(IHttpClientFactory httpClientFactory, IOptionsSnapsh
         
         response.EnsureSuccessStatusCode();
     }
+    
+    public async Task<UserRepresentation> GetUserByEmail(string email)
+    {
+        var token = await GetTokenAsync();
+        var client = GetKeycloakClient();
+        
+        var baseUri = UsersRoute();
+        var uriBuilder = new UriBuilder(baseUri);
+        var query = $"email={Uri.EscapeDataString(email)}";
+        uriBuilder.Query = query;
+        var requestUri = uriBuilder.Uri;
+        
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
+        var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var users = JsonSerializer.Deserialize<List<UserRepresentation>>(content, JsonSerializationOptions.LlmSerializerOptions);
+
+        return users?.FirstOrDefault();
+    }
+
 }

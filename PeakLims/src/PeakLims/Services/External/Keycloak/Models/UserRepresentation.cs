@@ -4,7 +4,6 @@ public sealed class UserRepresentation
 {
     // public string Self { get; set; }
     public string Id { get; set; }
-    public int CreatedTimestamp { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
@@ -27,7 +26,6 @@ public sealed class UserRepresentation
     // public string[] Groups { get; set; }
     // public string Origin { get; set; }
     // public string[] DisableableCredentialTypes { get; set; }
-    public Dictionary<string, ICollection<string>> Access { get; set; }
 
     public sealed class CredentialRepresentation
     {
