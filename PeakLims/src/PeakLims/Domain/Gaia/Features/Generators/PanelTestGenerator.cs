@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using Databases;
+using Models;
 using Panels;
 using Panels.Models;
 using Tests;
@@ -8,21 +9,32 @@ using Tests.Models;
 
 public interface IPanelTestGenerator
 {
-    Task Generate(Guid organizationId);
+    Task<PanelTestResponse> Generate(Guid organizationId);
 }
 
 public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerator
 {
-    public async Task Generate(Guid organizationId)
+    public async Task<PanelTestResponse> Generate(Guid organizationId)
     {
-        await AddOpticalGenomeMapping(organizationId);
-        await AddWholeGenomeSequencing(organizationId);
-        await AddTranscriptomeSequencing(organizationId);
-        await AddCombinedSequencing(organizationId);
-        await AddCombinedOgmWgsSequencing(organizationId);
-        await AddCombinedOgmExternalDataAnalysis(organizationId);
-        await AddBasicExomeSequencing(organizationId);
-        await AddExpandedExomeSequencing(organizationId);
+        var fullTestList = new PanelTestResponse();
+        var panelResponseOpticalGenomeMapping = await AddOpticalGenomeMapping(organizationId);
+        var panelResponseWholeGenomeSequencing = await AddWholeGenomeSequencing(organizationId);
+        var panelResponseTranscriptomeSequencing = await AddTranscriptomeSequencing(organizationId);
+        var panelResponseCombinedSequencing = await AddCombinedSequencing(organizationId);
+        var panelResponseCombinedOgmWgsSequencing = await AddCombinedOgmWgsSequencing(organizationId);
+        var panelResponseCombinedOgmExternalDataAnalysis = await AddCombinedOgmExternalDataAnalysis(organizationId);
+        var panelResponseBasicExomeSequencing = await AddBasicExomeSequencing(organizationId);
+        var panelResponseExpandedExomeSequencing = await AddExpandedExomeSequencing(organizationId);
+        fullTestList.Panels.AddRange([
+            ..panelResponseOpticalGenomeMapping.Panels,
+            ..panelResponseWholeGenomeSequencing.Panels,
+            ..panelResponseTranscriptomeSequencing.Panels,
+            ..panelResponseCombinedSequencing.Panels,
+            ..panelResponseCombinedOgmWgsSequencing.Panels,
+            ..panelResponseCombinedOgmExternalDataAnalysis.Panels,
+            ..panelResponseBasicExomeSequencing.Panels,
+            ..panelResponseExpandedExomeSequencing.Panels
+        ]);
         
         var kfvTest = Test.Create(new TestForCreation()
         {
@@ -59,12 +71,13 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId,
             Methodology = "Exome Sequencing"
         }).Activate();
-        
-        await dbContext.Tests.AddRangeAsync(kfvTest, pgxAddOnTest, 
-            hlaAddOnTest, pkdAddOnTest, wgaAddOnTest);
+
+        await dbContext.Tests.AddRangeAsync(kfvTest, pgxAddOnTest, hlaAddOnTest, pkdAddOnTest, wgaAddOnTest);
+        fullTestList.StandaloneTests.AddRange([kfvTest, pgxAddOnTest, hlaAddOnTest, pkdAddOnTest, wgaAddOnTest]);
+        return fullTestList;
     }
 
-    private async Task AddWholeGenomeSequencing(Guid organizationId)
+    private async Task<PanelTestResponse> AddWholeGenomeSequencing(Guid organizationId)
     {
         var probandWgsTest = Test.Create(new TestForCreation()
         {
@@ -144,9 +157,14 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                      .Activate();
         
         await dbContext.Panels.AddRangeAsync(panelWgsProband, panelWgsDuo, panelWgsTrio, panelWgsQuartet);
+
+        return new PanelTestResponse()
+        {
+            Panels = [panelWgsProband, panelWgsDuo, panelWgsTrio, panelWgsQuartet],
+        };
     }
     
-    private async Task AddOpticalGenomeMapping(Guid organizationId)
+    private async Task<PanelTestResponse> AddOpticalGenomeMapping(Guid organizationId)
     {
         var probandOgmTest = Test.Create(new TestForCreation()
         {
@@ -221,9 +239,14 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             .Activate();
         
         await dbContext.Panels.AddRangeAsync(panelOgmProband, panelOgmDuo, panelOgmTrio, panelOgmQuartet);
+
+        return new PanelTestResponse()
+        {
+            Panels = [panelOgmProband, panelOgmDuo, panelOgmTrio, panelOgmQuartet],
+        };
     }
     
-    private async Task AddTranscriptomeSequencing(Guid organizationId)
+    private async Task<PanelTestResponse> AddTranscriptomeSequencing(Guid organizationId)
     {
         var probandTranTest = Test.Create(new TestForCreation()
         {
@@ -303,9 +326,14 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                      .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelTranProband, panelTranDuo, panelTranTrio, panelTranQuartet);
+
+        return new PanelTestResponse()
+        {
+            Panels = [panelTranProband, panelTranDuo, panelTranTrio, panelTranQuartet],
+        };
     }
 
-    private async Task AddCombinedSequencing(Guid organizationId)
+    private async Task<PanelTestResponse> AddCombinedSequencing(Guid organizationId)
     {
         var probandCombTest = Test.Create(new TestForCreation()
         {
@@ -385,9 +413,14 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                        .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelCombProband, panelCombDuo, panelCombTrio, panelCombQuartet);
+
+        return new PanelTestResponse()
+        {
+            Panels = [panelCombProband, panelCombDuo, panelCombTrio, panelCombQuartet],
+        };
     }
 
-    private async Task AddCombinedOgmWgsSequencing(Guid organizationId)
+    private async Task<PanelTestResponse> AddCombinedOgmWgsSequencing(Guid organizationId)
     {
         var probandComb1Test = Test.Create(new TestForCreation()
         {
@@ -467,9 +500,14 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                        .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelComb1Proband, panelComb1Duo, panelComb1Trio, panelComb1Quartet);
+
+        return new PanelTestResponse()
+        {
+            Panels = [panelComb1Proband, panelComb1Duo, panelComb1Trio, panelComb1Quartet],
+        };
     }
     
-    private async Task AddCombinedOgmExternalDataAnalysis(Guid organizationId)
+    private async Task<PanelTestResponse> AddCombinedOgmExternalDataAnalysis(Guid organizationId)
     {
         var probandComb9Test = Test.Create(new TestForCreation()
         {
@@ -549,9 +587,14 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                        .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelComb9Proband, panelComb9Duo, panelComb9Trio, panelComb9Quartet);
+
+        return new PanelTestResponse()
+        {
+            Panels = [panelComb9Proband, panelComb9Duo, panelComb9Trio, panelComb9Quartet],
+        };
     }
 
-    private async Task AddBasicExomeSequencing(Guid organizationId)
+    private async Task<PanelTestResponse> AddBasicExomeSequencing(Guid organizationId)
     {
         var probandTexTest = Test.Create(new TestForCreation()
         {
@@ -667,9 +710,13 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                     .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelExProband, panelExDuo, panelExTrio, panelExQuartet);
+        return new PanelTestResponse()
+        {
+            Panels = [panelExProband, panelExDuo, panelExTrio, panelExQuartet],
+        };
     }
 
-    private async Task AddExpandedExomeSequencing(Guid organizationId)
+    private async Task<PanelTestResponse> AddExpandedExomeSequencing(Guid organizationId)
     {
         var probandTeexTest = Test.Create(new TestForCreation()
         {
@@ -785,5 +832,10 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                      .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelEexProband, panelEexDuo, panelEexTrio, panelEexQuartet);
+
+        return new PanelTestResponse()
+        {
+            Panels = [panelEexProband, panelEexDuo, panelEexTrio, panelEexQuartet],
+        };
     }
 }

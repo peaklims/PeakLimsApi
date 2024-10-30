@@ -21,7 +21,7 @@ public static class AssembleAWorld
 {
     public sealed record Command() : IRequest<object>;
     
-    public sealed class Handler(IChatClient chatClient, 
+    public sealed class Handler(
         IOrganizationGenerator organizationGenerator,
         IUserInfoGenerator userInfoGenerator,
         IHealthcareOrganizationGenerator healthcareOrganizationGenerator,
@@ -60,12 +60,13 @@ public static class AssembleAWorld
             
             // -----------------------------------------------------------
             
-            await panelTestGenerator.Generate(organization.Id);
+            var panelsAndTests = await panelTestGenerator.Generate(organization.Id);
             
             var patients = await PatientGenerator.Generate(organization.Id, containerList);
             // TODO save phase
-            
-            var accessions = await accessionGenerator.Generate(patients, healthcareOrganizations);
+
+            var accessions =
+                await accessionGenerator.Generate(patients, healthcareOrganizations, panelsAndTests, users);
             await dbContext.Accessions.AddRangeAsync(accessions, cancellationToken);
             
             // TODO save phase
