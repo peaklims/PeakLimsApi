@@ -1,10 +1,12 @@
 namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text.Json;
 using AccessionComments;
 using Accessions;
 using Bogus;
+using Databases;
 using HealthcareOrganizationContacts;
 using HealthcareOrganizations;
 using Microsoft.Extensions.AI;
@@ -23,7 +25,7 @@ public interface IAccessionGenerator
         PanelTestResponse panelsAndTests, List<User> users);
 }
 
-public class AccessionGenerator(IChatClient chatClient) : IAccessionGenerator
+public class AccessionGenerator(IChatClient chatClient, PeakLimsDbContext dbContext) : IAccessionGenerator
 {
     private static readonly Faker Faker = new AutoFaker().Faker;
     
@@ -37,12 +39,12 @@ public class AccessionGenerator(IChatClient chatClient) : IAccessionGenerator
         var userBag = new ConcurrentBag<User>(users);
         var panelBag = new ConcurrentBag<Panel>(panelsAndTests.Panels);
         var testBag = new ConcurrentBag<Test>(panelsAndTests.StandaloneTests);
-        ValueTask GenerateAccessions(Patient patient, CancellationToken ct)
+
+        async ValueTask GenerateAccessions(Patient patient, CancellationToken ct)
         {
             var healthOrg = Faker.PickRandom(orgBag.ToList());
-            var accession = CreateAccession(patient, healthOrg, panelBag, testBag, userBag);
+            var accession = await CreateAccession(patient, healthOrg, panelBag, userBag);
             accessions.Add(accession);
-            return ValueTask.CompletedTask;
         }
         var options = new ParallelOptions
         {
@@ -54,8 +56,8 @@ public class AccessionGenerator(IChatClient chatClient) : IAccessionGenerator
         return accessions.ToList();
     }
 
-    private static Accession CreateAccession(Patient patient, HealthcareOrganization healthOrg,
-        ConcurrentBag<Panel> panels, ConcurrentBag<Test> tests, ConcurrentBag<User> users)
+    private async Task<Accession> CreateAccession(Patient patient, HealthcareOrganization healthOrg,
+        ConcurrentBag<Panel> panels, ConcurrentBag<User> users)
     {
         var random = new Random();
         var contactCount = random.Next(2, 6);
@@ -95,52 +97,121 @@ public class AccessionGenerator(IChatClient chatClient) : IAccessionGenerator
                 }
             }
         }
+
+        var startedAt = Stopwatch.GetTimestamp();
+        var conversation = await GenerateConversation(accession, users);
+        var delta = Stopwatch.GetElapsedTime(startedAt);
+        Log.Information("Conversation generated in {Delta} for accession {AccessionNumber}", delta, accession.AccessionNumber);
+        
+        foreach (var comment in conversation.Conversation)
+        {
+            if (comment.OriginalCommentText != null)
+            {
+                var accessionComment = AccessionComment.Create(accession, comment.OriginalCommentText, comment.UserIdentifier);
+                accessionComment.Update(comment.CommentText, comment.UserIdentifier, out var newComment, out var archivedComment);
+                dbContext.AccessionComments.Add(archivedComment);
+                dbContext.AccessionComments.Add(newComment);
+                continue;
+            }
+            
+            var soloAccessionComment = AccessionComment.Create(accession, comment.CommentText, comment.UserIdentifier);
+            dbContext.AccessionComments.Add(soloAccessionComment);
+        }
         
         return accession;
     }
     
-    
-//     private async Task<List<AccessionComment>> GenerateConversation(Accession accession)
-//     {
-//         var chatOptions = new ChatOptions
-//         {
-//             ResponseFormat = ChatResponseFormat.Json,
-//         };
-//         var jsonFormat = 
-//             // lang=json
-//             """
-//             {
-//                 "organizations": [
-//                     { "name": "string", "domain": "string" }
-//                 ]
-//             }
-//             """;
-//         var prompt =
-//             $$"""
-//               Can you provide a list of 5 fake laboratory names? Here are a few examples (do not use any of these examples in your list): 
-//
-//               - Redwood Genomics
-//               - Greater Peach Labs
-//               - GenoQuantum Diagnostics
-//               - Genesight Medical
-//               - Stonebridge Labs
-//               - Cardinal Diagnostics
-//
-//               You should also make valid email domains for each organization. For example, Greater Peach Hospital might have a `greaterpeachhospital.com` or `gph.com` domain. Note that the domain does NOT have an `@` symbol.
-//
-//               Make sure you return the response in valid json in the exact format below:
-//
-//               {{jsonFormat}}
-//               """;
-//         var chatCompletion = await chatClient.CompleteAsync(prompt, chatOptions);
-//         var parsedJson = JsonSerializer.Deserialize<OrganizationResponse>(chatCompletion.Message.Text, 
-//             JsonSerializationOptions.LlmSerializerOptions);
-//
-//         var org = parsedJson.Organizations.First();
-//         if (org.Domain.Contains("@")) // just in case it doesn't listen
-//         {
-//             org.Domain = org.Domain.Split('@')[0];
-//         }
-//         return org;
-//     }
+     private async Task<CommentConversationResponse> GenerateConversation(Accession accession, ConcurrentBag<User> users)
+     {
+         var chatOptions = new ChatOptions
+         {
+             ResponseFormat = ChatResponseFormat.Json,
+         };
+         var jsonFormat = 
+             // lang=json
+             """
+             {
+                 "conversation": [
+                     { "commentText": "string", "originalCommentText": "string or null", "userIdentifier": "string", "orderInConversation": "int" }
+                 ]
+             }
+             """;
+         
+         var userIdentifiersForPrompt = string.Join(", ", users.Select(x => $"`{x.Identifier}`"));
+         var orgContactsForPrompt = string.Join(", ", accession.HealthcareOrganization
+             .HealthcareOrganizationContacts.Select(x => $"{x.FirstName} {x.LastName}"));
+         var testInfoForPrompt = string.Join(", ", accession.TestOrders.Select(x => $"A test called '{x.Test.TestName}' with a '{x.Test.Methodology}' methodology and a '{x.Test.TurnAroundTime}' turnaround time"));
+         var sampleInfoForPrompt = string.Join(", ", accession.Patient.Samples.Select(x => $"{x.Type.Value} with a sample number of {x.SampleNumber} in a {x.Container}"));
+         
+         var prompt =
+             $$"""
+               Your objective is to help me generate demo data for an accession in a LIMS. Specifically, I need to 
+               create a conversation between a 2 or more users about a given accession.
+               
+               This conversation should be realistic in the context of a conversation that may actually happen in a 
+               laboratory setting. For example, it could be about the handling of the sample, the prep work for the test,
+               contacting someone at the ordering org for more information, any issues that may have arisen, etc.
+               
+               The conversation could be just a single comment from a user, but it could also be a back-and-forth between
+               multiple users. 
+               
+               The user identifiers that can be involved in this conversation are: {{userIdentifiersForPrompt}} 
+               No other uder identifiers should be used in the conversations.
+               
+               The ordering organization name is: {{accession.HealthcareOrganization.Name}}
+               The contacts at the ordering organization are: {{orgContactsForPrompt}}
+               The samples on the accession are: {{sampleInfoForPrompt}}
+               The tests that have been ordered are {{testInfoForPrompt}}
+
+               Depending on the context of the conversation, you can add an edit history for a comment to show that a 
+               user may have corrected a typo or expanded on a thought.
+
+               Make sure you return the response in valid json in the exact format below:
+
+               {{jsonFormat}}
+               
+               The `commentText` should be the text of the comment.
+               The `originalCommentText` should be the text of the comment before any edits. If there are no edits, this would be null.
+               The `userIdentifier` should be the identifier of the user who made the comment.
+               The `orderInConversation` should be the order in which the comment was made in the conversation.
+               
+               Here is an example of a conversation:
+               ```
+               {
+                   "conversation": [
+                       { 
+                           "commentText": "Please note that sample number 12345 arrived hemolyzed. We need to contact the ordering organization for a redraw.",
+                           "originalCommentText": "Please note that sample number 12345 arrived hemolyzed. We need to contact the ordering organization for a redaw.",
+                           "userIdentifier": "jdoe",
+                           "orderInConversation": 1
+                       },
+                       {
+                           "commentText": "Understood. I'll reach out to Dr. Emily Watson to arrange a new sample collection.",
+                           "originalCommentText": null,
+                           "userIdentifier": "asmith",
+                           "orderInConversation": 2
+                       },
+                       {
+                           "commentText": "Update: Dr. Watson has scheduled a redraw for tomorrow morning.",
+                           "originalCommentText": null,
+                           "userIdentifier": "asmith",
+                           "orderInConversation": 3
+                       },
+                       {
+                           "commentText": "Great, thanks for handling that.",
+                           "originalCommentText": null,
+                           "userIdentifier": "bjones",
+                           "orderInConversation": 4
+                       }
+                   ]
+               }
+               ```
+               """;
+         var chatCompletion = await chatClient.CompleteAsync(prompt, chatOptions);
+         var conversation = JsonSerializer.Deserialize<CommentConversationResponse>(chatCompletion.Message.Text, 
+             JsonSerializationOptions.LlmSerializerOptions);
+         
+        conversation.Conversation = [.. conversation.Conversation.OrderBy(x => x.OrderInConversation)];
+        return conversation;
+     }
 }
