@@ -156,12 +156,15 @@ public class AccessionGenerator(IChatClient chatClient, PeakLimsDbContext dbCont
                multiple users. 
                
                The user identifiers that can be involved in this conversation are: {{userIdentifiersForPrompt}} 
-               No other uder identifiers should be used in the conversations.
+               No other user identifiers should be used in the conversations.
                
                The ordering organization name is: {{accession.HealthcareOrganization.Name}}
                The contacts at the ordering organization are: {{orgContactsForPrompt}}
                The samples on the accession are: {{sampleInfoForPrompt}}
                The tests that have been ordered are {{testInfoForPrompt}}
+               
+               Please use this information to create a conversation that is realistic and relevant to the context of the 
+               conversation. Don't make up entities or intentifiers that are not part of this context.
 
                Depending on the context of the conversation, you can add an edit history for a comment to show that a 
                user may have corrected a typo or expanded on a thought.
@@ -175,7 +178,7 @@ public class AccessionGenerator(IChatClient chatClient, PeakLimsDbContext dbCont
                The `userIdentifier` should be the identifier of the user who made the comment.
                The `orderInConversation` should be the order in which the comment was made in the conversation.
                
-               Here is an example of a conversation:
+               Here is an example of a conversation with dummy data:
                ```
                {
                    "conversation": [
