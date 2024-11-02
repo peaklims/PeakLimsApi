@@ -182,10 +182,11 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         });
         panelOgmProband.AddTest(probandOgmTest).Activate();
         
-        var additionalFamilyMemberOgmTestOne = Test.Create(new TestForCreation()
+        
+        var additionalFamilyMemberOgmTest = Test.Create(new TestForCreation()
         {
             TestCode = "TOGM002",
-            TestName = "Optical Genome Mapping (Additional Family Member 1)",
+            TestName = "Optical Genome Mapping (Additional Family Member)",
             OrganizationId = organizationId,
             Methodology = "Optical Genome Mapping"
         }).Activate();
@@ -197,15 +198,9 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelOgmDuo.AddTest(probandOgmTest)
-            .AddTest(additionalFamilyMemberOgmTestOne)
+            .AddTest(additionalFamilyMemberOgmTest)
             .Activate();
-        var additionalFamilyMemberOgmTestTwo = Test.Create(new TestForCreation()
-        {
-            TestCode = "TOGM003",
-            TestName = "Optical Genome Mapping (Additional Family Member 2)",
-            OrganizationId = organizationId,
-            Methodology = "Optical Genome Mapping"
-        }).Activate();
+        
         var panelOgmTrio = Panel.Create(new PanelForCreation()
         {
             PanelCode = "OGM001",
@@ -214,17 +209,9 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelOgmTrio.AddTest(probandOgmTest)
-            .AddTest(additionalFamilyMemberOgmTestOne)
-            .AddTest(additionalFamilyMemberOgmTestTwo)
+            .AddTest(additionalFamilyMemberOgmTest, 2)
             .Activate();
         
-        var additionalFamilyMemberOgmTestThree = Test.Create(new TestForCreation()
-        {
-            TestCode = "TOGM004",
-            TestName = "Optical Genome Mapping (Additional Family Member 3)",
-            OrganizationId = organizationId,
-            Methodology = "Optical Genome Mapping"
-        }).Activate();
         var panelOgmQuartet = Panel.Create(new PanelForCreation()
         {
             PanelCode = "OGM001",
@@ -233,9 +220,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelOgmQuartet.AddTest(probandOgmTest)
-            .AddTest(additionalFamilyMemberOgmTestOne)
-            .AddTest(additionalFamilyMemberOgmTestTwo)
-            .AddTest(additionalFamilyMemberOgmTestThree)
+            .AddTest(additionalFamilyMemberOgmTest, 3)
             .Activate();
         
         await dbContext.Panels.AddRangeAsync(panelOgmProband, panelOgmDuo, panelOgmTrio, panelOgmQuartet);
@@ -265,10 +250,10 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         });
         panelTranProband.AddTest(probandTranTest).Activate();
 
-        var additionalFamilyMemberTranTestOne = Test.Create(new TestForCreation()
+        var additionalFamilyMemberTranTest = Test.Create(new TestForCreation()
         {
             TestCode = "TTRAN002",
-            TestName = "Transcriptome Sequencing (Additional Family Member 1)",
+            TestName = "Transcriptome Sequencing (Additional Family Member)",
             OrganizationId = organizationId,
             Methodology = "Transcriptome Sequencing"
         }).Activate();
@@ -281,16 +266,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelTranDuo.AddTest(probandTranTest)
-                   .AddTest(additionalFamilyMemberTranTestOne)
+                   .AddTest(additionalFamilyMemberTranTest)
                    .Activate();
-
-        var additionalFamilyMemberTranTestTwo = Test.Create(new TestForCreation()
-        {
-            TestCode = "TTRAN003",
-            TestName = "Transcriptome Sequencing (Additional Family Member 2)",
-            OrganizationId = organizationId,
-            Methodology = "Transcriptome Sequencing"
-        }).Activate();
 
         var panelTranTrio = Panel.Create(new PanelForCreation()
         {
@@ -300,17 +277,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelTranTrio.AddTest(probandTranTest)
-                   .AddTest(additionalFamilyMemberTranTestOne)
-                   .AddTest(additionalFamilyMemberTranTestTwo)
+                   .AddTest(additionalFamilyMemberTranTest, 2)
                    .Activate();
-
-        var additionalFamilyMemberTranTestThree = Test.Create(new TestForCreation()
-        {
-            TestCode = "TTRAN004",
-            TestName = "Transcriptome Sequencing (Additional Family Member 3)",
-            OrganizationId = organizationId,
-            Methodology = "Transcriptome Sequencing"
-        }).Activate();
 
         var panelTranQuartet = Panel.Create(new PanelForCreation()
         {
@@ -320,9 +288,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelTranQuartet.AddTest(probandTranTest)
-                     .AddTest(additionalFamilyMemberTranTestOne)
-                     .AddTest(additionalFamilyMemberTranTestTwo)
-                     .AddTest(additionalFamilyMemberTranTestThree)
+                     .AddTest(additionalFamilyMemberTranTest, 3)
                      .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelTranProband, panelTranDuo, panelTranTrio, panelTranQuartet);
@@ -352,10 +318,10 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         });
         panelCombProband.AddTest(probandCombTest).Activate();
 
-        var additionalFamilyMemberCombTestOne = Test.Create(new TestForCreation()
+        var additionalFamilyMemberCombTest = Test.Create(new TestForCreation()
         {
             TestCode = "TCOMB002",
-            TestName = "Combined Sequencing (Additional Family Member 1)",
+            TestName = "Combined Sequencing (Additional Family Member)",
             OrganizationId = organizationId,
             Methodology = "Combined OGM, WGS & Transcriptome"
         }).Activate();
@@ -368,16 +334,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelCombDuo.AddTest(probandCombTest)
-                   .AddTest(additionalFamilyMemberCombTestOne)
+                   .AddTest(additionalFamilyMemberCombTest)
                    .Activate();
-
-        var additionalFamilyMemberCombTestTwo = Test.Create(new TestForCreation()
-        {
-            TestCode = "TCOMB003",
-            TestName = "Combined Sequencing (Additional Family Member 2)",
-            OrganizationId = organizationId,
-            Methodology = "Combined OGM, WGS & Transcriptome"
-        }).Activate();
 
         var panelCombTrio = Panel.Create(new PanelForCreation()
         {
@@ -387,17 +345,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelCombTrio.AddTest(probandCombTest)
-                   .AddTest(additionalFamilyMemberCombTestOne)
-                   .AddTest(additionalFamilyMemberCombTestTwo)
+                   .AddTest(additionalFamilyMemberCombTest, 2)
                    .Activate();
-
-        var additionalFamilyMemberCombTestThree = Test.Create(new TestForCreation()
-        {
-            TestCode = "TCOMB004",
-            TestName = "Combined Sequencing (Additional Family Member 3)",
-            OrganizationId = organizationId,
-            Methodology = "Combined OGM, WGS & Transcriptome"
-        }).Activate();
 
         var panelCombQuartet = Panel.Create(new PanelForCreation()
         {
@@ -407,9 +356,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelCombQuartet.AddTest(probandCombTest)
-                       .AddTest(additionalFamilyMemberCombTestOne)
-                       .AddTest(additionalFamilyMemberCombTestTwo)
-                       .AddTest(additionalFamilyMemberCombTestThree)
+                       .AddTest(additionalFamilyMemberCombTest, 3)
                        .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelCombProband, panelCombDuo, panelCombTrio, panelCombQuartet);
@@ -439,10 +386,10 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         });
         panelComb1Proband.AddTest(probandComb1Test).Activate();
 
-        var additionalFamilyMemberComb1TestOne = Test.Create(new TestForCreation()
+        var additionalFamilyMemberComb1Test = Test.Create(new TestForCreation()
         {
             TestCode = "TCOMB102",
-            TestName = "Combined OGM & WGS Sequencing (Additional Family Member 1)",
+            TestName = "Combined OGM & WGS Sequencing (Additional Family Member)",
             OrganizationId = organizationId,
             Methodology = "Combined OGM & WGS Sequencing"
         }).Activate();
@@ -455,16 +402,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelComb1Duo.AddTest(probandComb1Test)
-                   .AddTest(additionalFamilyMemberComb1TestOne)
+                   .AddTest(additionalFamilyMemberComb1Test)
                    .Activate();
-
-        var additionalFamilyMemberComb1TestTwo = Test.Create(new TestForCreation()
-        {
-            TestCode = "TCOMB103",
-            TestName = "Combined OGM & WGS Sequencing (Additional Family Member 2)",
-            OrganizationId = organizationId,
-            Methodology = "Combined OGM & WGS Sequencing"
-        }).Activate();
 
         var panelComb1Trio = Panel.Create(new PanelForCreation()
         {
@@ -474,8 +413,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelComb1Trio.AddTest(probandComb1Test)
-                   .AddTest(additionalFamilyMemberComb1TestOne)
-                   .AddTest(additionalFamilyMemberComb1TestTwo)
+                   .AddTest(additionalFamilyMemberComb1Test, 2)
                    .Activate();
 
         var additionalFamilyMemberComb1TestThree = Test.Create(new TestForCreation()
@@ -494,9 +432,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelComb1Quartet.AddTest(probandComb1Test)
-                       .AddTest(additionalFamilyMemberComb1TestOne)
-                       .AddTest(additionalFamilyMemberComb1TestTwo)
-                       .AddTest(additionalFamilyMemberComb1TestThree)
+                       .AddTest(additionalFamilyMemberComb1Test, 3)
                        .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelComb1Proband, panelComb1Duo, panelComb1Trio, panelComb1Quartet);
@@ -526,10 +462,10 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         });
         panelComb9Proband.AddTest(probandComb9Test).Activate();
 
-        var additionalFamilyMemberComb9TestOne = Test.Create(new TestForCreation()
+        var additionalFamilyMemberComb9Test = Test.Create(new TestForCreation()
         {
             TestCode = "TCOMB902",
-            TestName = "Combined OGM & External Data Analysis (Additional Family Member 1)",
+            TestName = "Combined OGM & External Data Analysis (Additional Family Member)",
             OrganizationId = organizationId,
             Methodology = "Combined OGM & External Data Analysis"
         }).Activate();
@@ -542,16 +478,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelComb9Duo.AddTest(probandComb9Test)
-                   .AddTest(additionalFamilyMemberComb9TestOne)
+                   .AddTest(additionalFamilyMemberComb9Test)
                    .Activate();
-
-        var additionalFamilyMemberComb9TestTwo = Test.Create(new TestForCreation()
-        {
-            TestCode = "TCOMB903",
-            TestName = "Combined OGM & External Data Analysis (Additional Family Member 2)",
-            OrganizationId = organizationId,
-            Methodology = "Combined OGM & External Data Analysis"
-        }).Activate();
 
         var panelComb9Trio = Panel.Create(new PanelForCreation()
         {
@@ -561,17 +489,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelComb9Trio.AddTest(probandComb9Test)
-                   .AddTest(additionalFamilyMemberComb9TestOne)
-                   .AddTest(additionalFamilyMemberComb9TestTwo)
+                   .AddTest(additionalFamilyMemberComb9Test, 2)
                    .Activate();
-
-        var additionalFamilyMemberComb9TestThree = Test.Create(new TestForCreation()
-        {
-            TestCode = "TCOMB904",
-            TestName = "Combined OGM & External Data Analysis (Additional Family Member 3)",
-            OrganizationId = organizationId,
-            Methodology = "Combined OGM & External Data Analysis"
-        }).Activate();
 
         var panelComb9Quartet = Panel.Create(new PanelForCreation()
         {
@@ -581,9 +500,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelComb9Quartet.AddTest(probandComb9Test)
-                       .AddTest(additionalFamilyMemberComb9TestOne)
-                       .AddTest(additionalFamilyMemberComb9TestTwo)
-                       .AddTest(additionalFamilyMemberComb9TestThree)
+                       .AddTest(additionalFamilyMemberComb9Test, 3)
                        .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelComb9Proband, panelComb9Duo, panelComb9Trio, panelComb9Quartet);
@@ -622,10 +539,10 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         });
         panelExProband.AddTest(probandTexTest).Activate();
 
-        var additionalFamilyMemberTexTestOne = Test.Create(new TestForCreation()
+        var additionalFamilyMemberTexTest = Test.Create(new TestForCreation()
         {
             TestCode = "TEX002",
-            TestName = "Basic Exome Sequencing (Additional Family Member 1)",
+            TestName = "Basic Exome Sequencing (Additional Family Member)",
             OrganizationId = organizationId,
             Methodology = "Exome Sequencing"
         }).Activate();
@@ -647,16 +564,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelExDuo.AddTest(probandTexTest)
-                 .AddTest(additionalFamilyMemberTexTestOne)
+                 .AddTest(additionalFamilyMemberTexTest)
                  .Activate();
-
-        var additionalFamilyMemberTexTestTwo = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEX003",
-            TestName = "Basic Exome Sequencing (Additional Family Member 2)",
-            OrganizationId = organizationId,
-            Methodology = "Exome Sequencing"
-        }).Activate();
 
         var trioTexGTest = Test.Create(new TestForCreation()
         {
@@ -675,17 +584,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelExTrio.AddTest(probandTexTest)
-                  .AddTest(additionalFamilyMemberTexTestOne)
-                  .AddTest(additionalFamilyMemberTexTestTwo)
+                  .AddTest(additionalFamilyMemberTexTest, 2)
                   .Activate();
-
-        var additionalFamilyMemberTexTestThree = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEX004",
-            TestName = "Basic Exome Sequencing (Additional Family Member 3)",
-            OrganizationId = organizationId,
-            Methodology = "Exome Sequencing"
-        }).Activate();
 
         var quartetTexGTest = Test.Create(new TestForCreation()
         {
@@ -704,9 +604,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelExQuartet.AddTest(probandTexTest)
-                    .AddTest(additionalFamilyMemberTexTestOne)
-                    .AddTest(additionalFamilyMemberTexTestTwo)
-                    .AddTest(additionalFamilyMemberTexTestThree)
+                    .AddTest(additionalFamilyMemberTexTest, 3)
                     .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelExProband, panelExDuo, panelExTrio, panelExQuartet);
@@ -744,10 +642,10 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         });
         panelEexProband.AddTest(probandTeexTest).Activate();
 
-        var additionalFamilyMemberTeexTestOne = Test.Create(new TestForCreation()
+        var additionalFamilyMemberTeexTest = Test.Create(new TestForCreation()
         {
             TestCode = "TEEX002",
-            TestName = "Expanded Exome Sequencing (Additional Family Member 1)",
+            TestName = "Expanded Exome Sequencing (Additional Family Member)",
             OrganizationId = organizationId,
             Methodology = "Exome Sequencing"
         }).Activate();
@@ -769,16 +667,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelEexDuo.AddTest(probandTeexTest)
-                  .AddTest(additionalFamilyMemberTeexTestOne)
+                  .AddTest(additionalFamilyMemberTeexTest)
                   .Activate();
-
-        var additionalFamilyMemberTeexTestTwo = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEEX003",
-            TestName = "Expanded Exome Sequencing (Additional Family Member 2)",
-            OrganizationId = organizationId,
-            Methodology = "Exome Sequencing"
-        }).Activate();
 
         var trioTeexGTest = Test.Create(new TestForCreation()
         {
@@ -797,17 +687,8 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelEexTrio.AddTest(probandTeexTest)
-                   .AddTest(additionalFamilyMemberTeexTestOne)
-                   .AddTest(additionalFamilyMemberTeexTestTwo)
+                   .AddTest(additionalFamilyMemberTeexTest, 2)
                    .Activate();
-
-        var additionalFamilyMemberTeexTestThree = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEEX004",
-            TestName = "Expanded Exome Sequencing (Additional Family Member 3)",
-            OrganizationId = organizationId,
-            Methodology = "Exome Sequencing"
-        }).Activate();
 
         var quartetTeexGTest = Test.Create(new TestForCreation()
         {
@@ -826,9 +707,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId
         });
         panelEexQuartet.AddTest(probandTeexTest)
-                     .AddTest(additionalFamilyMemberTeexTestOne)
-                     .AddTest(additionalFamilyMemberTeexTestTwo)
-                     .AddTest(additionalFamilyMemberTeexTestThree)
+                     .AddTest(additionalFamilyMemberTeexTest, 3)
                      .Activate();
 
         await dbContext.Panels.AddRangeAsync(panelEexProband, panelEexDuo, panelEexTrio, panelEexQuartet);

@@ -13,7 +13,6 @@ public sealed class OrderablePanelsAndTestsDto
         public string Type { get; set; }
         public int Version { get; set; }
         public string Status { get; set; }
-        public List<OrderableTest> Tests { get; set; }
     }
     
     public sealed class OrderableTest

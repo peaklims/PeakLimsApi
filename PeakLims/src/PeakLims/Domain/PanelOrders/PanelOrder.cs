@@ -72,17 +72,19 @@ public class PanelOrder : BaseEntity
 
     public static PanelOrder Create(Panel panel)
     {
-        var hasNoTests = panel.Tests.Count == 0;
+        var hasNoTests = panel.TestAssignments.Count == 0;
         if(hasNoTests)
-            throw new ValidationException(nameof(Accession),
-                $"This panel has no tests to assign.");
+            throw new ValidationException(nameof(Accession), $"This panel has no tests to assign.");
         
         var panelOrder = new PanelOrder();
         panelOrder.SetPanel(panel);
-        foreach (var test in panel.Tests)
+        foreach (var testAssignment in panel.TestAssignments)
         {
-            var testOrder = TestOrder.Create(test, panelOrder);
-            panelOrder.AddTestOrder(testOrder);
+            for (var i = 0; i < testAssignment.TestCount; i++)
+            {
+                var testOrder = TestOrder.Create(testAssignment.Test, panelOrder);
+                panelOrder.AddTestOrder(testOrder);
+            }
         }
         
         panelOrder.QueueDomainEvent(new PanelOrderCreated(){ PanelOrder = panelOrder });

@@ -33,11 +33,12 @@ public class RemoveTestFromPanelCommandTests : TestBase
         var command = new RemoveTestFromPanel.Command(panel.Id, test.Id);
         await testingServiceScope.SendAsync(command);
         var panelFromDb = await testingServiceScope.ExecuteDbContextAsync(db => db.Panels
-            .Include(x => x.Tests)
+            .Include(x => x.TestAssignments)
+            .ThenInclude(x => x.Test)
             .FirstOrDefaultAsync(p => p.Id == panel.Id));
 
         // Assert 
-        panelFromDb.Tests.Count.Should().Be(0);
+        panelFromDb.TestAssignments.Count.Should().Be(0);
     }
     
     [Fact]

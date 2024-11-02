@@ -105,7 +105,7 @@ public sealed class PanelsController: ControllerBase
     [HttpPut("{panelId:guid}/addTest/{testId:guid}", Name = "AddTestToPanel")]
     public async Task<IActionResult> AddTestToPanel(Guid panelId, Guid testId)
     {
-        var command = new AddTestToPanel.Command(panelId, testId);
+        var command = new AddTestToPanel.Command(panelId, testId, 1);
         await _mediator.Send(command);
         return NoContent();
     }

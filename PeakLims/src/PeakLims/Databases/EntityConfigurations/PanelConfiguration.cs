@@ -13,8 +13,6 @@ public sealed class PanelConfiguration : IEntityTypeConfiguration<Panel>
     public void Configure(EntityTypeBuilder<Panel> builder)
     {
         // Relationship Marker -- Deleting or modifying this comment could cause incomplete relationship scaffolding
-        builder.HasMany(x => x.Tests)
-            .WithMany(x => x.Panels);
         builder.HasOne(e => e.Organization)
             .WithMany()
             .HasForeignKey(e => e.OrganizationId);

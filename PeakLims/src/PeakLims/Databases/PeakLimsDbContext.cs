@@ -81,6 +81,7 @@ public sealed class PeakLimsDbContext(
         */
 
         #region Entity Database Config Region - Only delete if you don't want to automatically add configurations
+        modelBuilder.ApplyConfiguration(new PanelTestAssignmentConfiguration());
         modelBuilder.ApplyConfiguration(new PeakOrganizationConfiguration());
         modelBuilder.ApplyConfiguration(new HipaaAuditLogConfiguration());
         modelBuilder.ApplyConfiguration(new PanelOrderConfiguration());
@@ -129,6 +130,8 @@ public sealed class PeakLimsDbContext(
             .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
         modelBuilder.Entity<Panel>()
             .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<PanelTestAssignment>()
+            .HasQueryFilter(e => !e.IsDeleted && e.Panel.OrganizationId == currentUserService.OrganizationId);
     }
 
     public override int SaveChanges()

@@ -244,7 +244,8 @@ public class Accession : BaseEntity
             throw new ValidationException(nameof(Accession),
                 $"This panel is not active. Only active panels can be added to an accession.");
         
-        var hasNonActiveTests = panel.Tests.Any(x => !x.Status.IsActive());
+        var tests = panel.TestAssignments.Select(x => x.Test).ToList();
+        var hasNonActiveTests = tests.Any(x => !x.Status.IsActive());
         if(hasNonActiveTests)
             throw new ValidationException(nameof(Accession),
                 $"This panel has one or more tests that are not active. Only panels with all active tests can be added to an accession.");

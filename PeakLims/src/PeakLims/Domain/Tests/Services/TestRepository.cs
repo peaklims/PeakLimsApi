@@ -17,10 +17,12 @@ public sealed class TestRepository(PeakLimsDbContext dbContext) : GenericReposit
     {
         return withTracking 
             ? await _dbContext.Tests
-                .Include(x => x.Panels)
+                .Include(x => x.PanelTestAssignments)
+                .ThenInclude(x => x.Panel)
                 .FirstOrDefaultAsync(e => e.Id == id, cancellationToken) 
             : await _dbContext.Tests
-                .Include(x => x.Panels)
+                .Include(x => x.PanelTestAssignments)
+                .ThenInclude(x => x.Panel)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }

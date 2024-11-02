@@ -19,12 +19,9 @@ public static class GetOrderablePanelsAndTests
 
     public sealed class Handler(
         IPanelRepository panelRepository,
-        ITestRepository testRepository,
-        IHeimGuardClient heimGuard)
+        ITestRepository testRepository)
         : IRequestHandler<Query, OrderablePanelsAndTestsDto>
     {
-        private readonly IHeimGuardClient _heimGuard = heimGuard;
-
         public async Task<OrderablePanelsAndTestsDto> Handle(Query request, CancellationToken cancellationToken)
         {
             

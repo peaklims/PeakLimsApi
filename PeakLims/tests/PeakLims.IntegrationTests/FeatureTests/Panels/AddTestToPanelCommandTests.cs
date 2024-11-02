@@ -31,15 +31,40 @@ public class AddTestToPanelCommandTests : TestBase
         await testingServiceScope.InsertAsync(panel);
 
         // Act
-        var command = new AddTestToPanel.Command(panel.Id, test.Id);
+        var command = new AddTestToPanel.Command(panel.Id, test.Id, 1);
         await testingServiceScope.SendAsync(command);
         var panelFromDb = await testingServiceScope.ExecuteDbContextAsync(db => db.Panels
-            .Include(x => x.Tests)
+            .Include(x => x.TestAssignments)
+            .ThenInclude(x => x.Test)
             .FirstOrDefaultAsync(p => p.Id == panel.Id));
 
         // Assert
-        panelFromDb.Tests.Count.Should().Be(1);
-        panelFromDb.Tests.First().TestName.Should().Be(test.TestName);
+        panelFromDb.TestAssignments.Count.Should().Be(1);
+        panelFromDb.TestAssignments.First().Test.TestName.Should().Be(test.TestName);
+    }
+
+    [Fact]
+    public async Task can_add_test_to_panel_with_multiple_entries()
+    {
+        // Arrange
+        var testingServiceScope = new TestingServiceScope();
+        var test = new FakeTestBuilder().Build().Activate();
+        await testingServiceScope.InsertAsync(test);
+        var panel = new FakePanelBuilder().Build();
+        await testingServiceScope.InsertAsync(panel);
+
+        // Act
+        var command = new AddTestToPanel.Command(panel.Id, test.Id, 2);
+        await testingServiceScope.SendAsync(command);
+        var panelFromDb = await testingServiceScope.ExecuteDbContextAsync(db => db.Panels
+        .Include(x => x.TestAssignments)
+        .ThenInclude(x => x.Test)
+        .FirstOrDefaultAsync(p => p.Id == panel.Id));
+
+        // Assert
+        panelFromDb.TestAssignments.Count.Should().Be(1);
+        panelFromDb.TestAssignments.First().Test.TestName.Should().Be(test.TestName);
+        panelFromDb.TestAssignments.First().TestCount.Should().Be(2);
     }
     
     [Fact]
@@ -57,7 +82,7 @@ public class AddTestToPanelCommandTests : TestBase
         await testingServiceScope.InsertAsync(accession);
 
         // Act
-        var command = new AddTestToPanel.Command(panel.Id, secondTest.Id);
+        var command = new AddTestToPanel.Command(panel.Id, secondTest.Id, 1);
         var act = () => testingServiceScope.SendAsync(command);
 
         // Assert

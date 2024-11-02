@@ -30,7 +30,7 @@ public class Test : BaseEntity
 
     public TestStatus Status { get; private set; }
 
-    public IReadOnlyCollection<Panel> Panels { get; }
+    public IReadOnlyCollection<PanelTestAssignment> PanelTestAssignments { get; }
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 

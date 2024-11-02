@@ -12,31 +12,21 @@ using Tests.Services;
 
 public static class AddTestToPanel
 {
-    public sealed record Command(Guid PanelId, Guid TestId) : IRequest;
+    public sealed record Command(Guid PanelId, Guid TestId, int TestEntries) : IRequest;
 
-    public sealed class Handler : IRequestHandler<Command>
+    public sealed class Handler(
+        IPanelRepository panelRepository,
+        ITestRepository testRepository,
+        ITestOrderRepository testOrderRepository,
+        IUnitOfWork unitOfWork)
+        : IRequestHandler<Command>
     {
-        private readonly IPanelRepository _panelRepository;
-        private readonly ITestRepository _testRepository;
-        private readonly ITestOrderRepository _testOrderRepository;
-        private readonly IHeimGuardClient _heimGuard;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public Handler(IPanelRepository panelRepository, ITestRepository testRepository, IHeimGuardClient heimGuard, ITestOrderRepository testOrderRepository, IUnitOfWork unitOfWork)
-        {
-            _testRepository = testRepository;
-            _panelRepository = panelRepository;
-            _heimGuard = heimGuard;
-            _testOrderRepository = testOrderRepository;
-            _unitOfWork = unitOfWork;
-        }
-
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var panel = await _panelRepository.GetById(request.PanelId, cancellationToken: cancellationToken);
-            var test = await _testRepository.GetById(request.TestId, cancellationToken: cancellationToken);
-            panel.AddTest(test, _testOrderRepository);
-            await _unitOfWork.CommitChanges(cancellationToken);
+            var panel = await panelRepository.GetById(request.PanelId, cancellationToken: cancellationToken);
+            var test = await testRepository.GetById(request.TestId, cancellationToken: cancellationToken);
+            panel.AddTest(test, testOrderRepository, request.TestEntries);
+            await unitOfWork.CommitChanges(cancellationToken);
         }
     }
 }

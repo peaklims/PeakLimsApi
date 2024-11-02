@@ -36,8 +36,6 @@ public class GetOrderablePanelsAndTestsTests : TestBase
             .Count.Should().Be(2);
         
         orderables.Panels.First().Id.Should().Be(panel.Id);
-        orderables.Panels.First().Tests.Count.Should().Be(1);
-        orderables.Panels.First().Tests.First().Id.Should().Be(testForPanel.Id);
         orderables.Tests.FirstOrDefault(x => x.Id == standaloneTest.Id).Should().NotBeNull();
         orderables.Tests.FirstOrDefault(x => x.Id == testForPanel.Id).Should().NotBeNull();
     }

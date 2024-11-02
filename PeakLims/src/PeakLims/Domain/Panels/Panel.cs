@@ -30,8 +30,10 @@ public class Panel : BaseEntity
 
     public PanelStatus Status { get; private set; }
 
-    private readonly List<Test> _tests = new();
-    public IReadOnlyCollection<Test> Tests => _tests.AsReadOnly();
+    private readonly List<PanelTestAssignment> _testAssignments = new();
+    public IReadOnlyCollection<PanelTestAssignment> TestAssignments => _testAssignments.AsReadOnly();
+    
+    // public PanelTestAssignment
 
     public IReadOnlyCollection<PanelOrder> PanelOrders { get; } = new List<PanelOrder>();
 
@@ -65,9 +67,17 @@ public class Panel : BaseEntity
         return this;
     }
 
-    public Panel AddTest(Test test)
+    public Panel AddTest(Test test, int testAssignmentCount = 1)
     {
-        _tests.Add(test);
+        var existingTest = _testAssignments.FirstOrDefault(t => t.Test.Id == test.Id);
+        if (existingTest != null)
+        {
+            existingTest.UpdateTestCount(existingTest.TestCount + 1);
+            return this;
+        }
+        
+        var panelTestAssignment = PanelTestAssignment.Create(test, testAssignmentCount);
+        _testAssignments.Add(panelTestAssignment);
         return this;
     }
 
@@ -76,8 +86,10 @@ public class Panel : BaseEntity
         if (Status == PanelStatus.Active())
             return this;
         
-        ValidationException.Must(_tests.Count > 0, $"A panel must have at least one test assigned to it before it can be activated.");
-        ValidationException.Must(_tests.All(t => t.Status.IsActive()), $"All tests assigned to a panel must be active before the panel can be activated.");
+        var tests = _testAssignments.Select(t => t.Test).ToList();
+        
+        ValidationException.Must(tests.Count > 0, $"A panel must have at least one test assigned to it before it can be activated.");
+        ValidationException.Must(tests.All(t => t.Status.IsActive()), $"All tests assigned to a panel must be active before the panel can be activated.");
         
         Status = PanelStatus.Active();
         QueueDomainEvent(new PanelUpdated(){ Id = Id });
@@ -94,17 +106,34 @@ public class Panel : BaseEntity
         return this;
     }
 
-    public void AddTest(Test test, ITestOrderRepository testOrderRepository)
+    public Panel AddTest(Test test, ITestOrderRepository testOrderRepository, int testAssignmentCount = 1)
     {
         GuardWhenPanelIsAssignedToAnAccession(testOrderRepository);
-        AddTest(test);
+        AddTest(test, testAssignmentCount);
         QueueDomainEvent(new PanelUpdated(){ Id = Id });
+        
+        return this;
     }
 
-    public void RemoveTest(Test test, ITestOrderRepository testOrderRepository)
+    public Panel RemoveTest(Test test, ITestOrderRepository testOrderRepository)
     {
         GuardWhenPanelIsAssignedToAnAccession(testOrderRepository);
-        _tests.RemoveAll(t => t.Id == test.Id);
+        _testAssignments.RemoveAll(t => t.Test.Id == test.Id);
+        QueueDomainEvent(new PanelUpdated(){ Id = Id });
+
+        return this;
+    }
+    
+    public void UpdateTestCount(Test test, int testAssignmentCount)
+        => UpdateTestCount(test.Id, testAssignmentCount);
+    
+    public void UpdateTestCount(Guid testId, int testAssignmentCount)
+    {
+        var testAssignment = _testAssignments.FirstOrDefault(t => t.Test.Id == testId);
+        if (testAssignment == null)
+            return;
+        
+        testAssignment.UpdateTestCount(testAssignmentCount);
         QueueDomainEvent(new PanelUpdated(){ Id = Id });
     }
 

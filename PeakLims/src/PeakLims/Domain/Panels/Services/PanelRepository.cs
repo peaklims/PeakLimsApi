@@ -23,10 +23,12 @@ public sealed class PanelRepository(PeakLimsDbContext dbContext) : GenericReposi
     {
         return withTracking 
             ? await _dbContext.Panels
-                .Include(x => x.Tests)
+                .Include(x => x.TestAssignments)
+                .ThenInclude(x => x.Test)
                 .FirstOrDefaultAsync(e => e.Id == id, cancellationToken) 
             : await _dbContext.Panels
-                .Include(x => x.Tests)
+                .Include(x => x.TestAssignments)
+                .ThenInclude(x => x.Test)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }

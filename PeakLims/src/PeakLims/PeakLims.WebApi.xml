@@ -599,6 +599,11 @@
             The database configuration for PanelOrders. 
             </summary>
         </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.PanelTestAssignmentConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.PanelTestAssignment})">
+            <summary>
+            The database configuration for Panels. 
+            </summary>
+        </member>
         <member name="M:PeakLims.Databases.EntityConfigurations.PatientConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Patients.Patient})">
             <summary>
             The database configuration for Patients. 
@@ -718,6 +723,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.GranularCommentControl.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.AddPanelTestAssignment">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddPanelTestAssignment.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddPanelTestAssignment.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddPanelTestAssignment.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

@@ -51,7 +51,7 @@ public class AddPanelToAccessionCommandPanels : TestBase
 
         // Assert
         testOrders.Count.Should().Be(1);
-        testOrders.FirstOrDefault().Test.TestName.Should().Be(panel.Tests.FirstOrDefault().TestName);
+        testOrders.FirstOrDefault().Test.TestName.Should().Be(panel.TestAssignments.FirstOrDefault().Test.TestName);
         testOrders.FirstOrDefault().PanelOrder.Panel.PanelName.Should().Be(panel.PanelName);
         
         panelOrders.Count.Should().Be(1);
