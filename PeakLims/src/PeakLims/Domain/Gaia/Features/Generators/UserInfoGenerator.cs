@@ -1,6 +1,7 @@
 namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Collections.Concurrent;
+using Bogus.DataSets;
 using Databases;
 using Models;
 using Users;
@@ -21,6 +22,13 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
         var random = new Random();
         var userCount = random.Next(3, 8);
         var people = PersonInfoGenerator.Generate(userCount);
+        var knownPerson = new PersonInfo()
+        {
+            FirstName = "Pao",
+            LastName = "Doe",
+            Sex = Name.Gender.Male
+        };
+        people.Add(knownPerson);
         var userForCreations = new ConcurrentBag<UserForCreation>();
 
         async ValueTask GenerateUsers(PersonInfo person, CancellationToken ct)
