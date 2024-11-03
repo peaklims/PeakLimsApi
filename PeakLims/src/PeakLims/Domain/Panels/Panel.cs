@@ -118,6 +118,17 @@ public class Panel : BaseEntity
     public Panel RemoveTest(Test test, ITestOrderRepository testOrderRepository)
     {
         GuardWhenPanelIsAssignedToAnAccession(testOrderRepository);
+        var existingTest = _testAssignments.FirstOrDefault(t => t.Test.Id == test.Id);
+        if (existingTest == null)
+            return this;
+        
+        if(existingTest.TestCount > 1)
+        {
+            existingTest.UpdateTestCount(existingTest.TestCount - 1);
+            QueueDomainEvent(new PanelUpdated(){ Id = Id });
+            return this;
+        }
+        
         _testAssignments.RemoveAll(t => t.Test.Id == test.Id);
         QueueDomainEvent(new PanelUpdated(){ Id = Id });
 
