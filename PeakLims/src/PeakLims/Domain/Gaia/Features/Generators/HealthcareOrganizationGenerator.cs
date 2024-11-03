@@ -64,7 +64,10 @@ public class HealthcareOrganizationGenerator(IChatClient chatClient) : IHealthca
             - Sunrise Health Alliance
             - Blue Ridge Medical Center
             
-            You should also make valid email domains for each organization. For example, Greater Peach Hospital might have the domain `greaterpeachhospital.com` or `gph.com`.
+            Make sure there are no repeat names.
+            
+            You should also make valid email domains for each organization. For example, Greater Peach Hospital might have the 
+            domain `greaterpeachhospital.com` or `gph.com`.
             
             Make sure you return the response in valid json in the exact format below:
             

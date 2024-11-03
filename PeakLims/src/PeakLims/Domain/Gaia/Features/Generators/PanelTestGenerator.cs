@@ -169,7 +169,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         var probandOgmTest = Test.Create(new TestForCreation()
         {
             TestCode = "TOGM001",
-            TestName = "Optical Genome Mapping (Proband)",
+            TestName = "Optical Genome Mapping Test (Proband)",
             OrganizationId = organizationId,
             Methodology = "Optical Genome Mapping"
         }).Activate();
@@ -192,7 +192,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         }).Activate();
         var panelOgmDuo = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "OGM001",
+            PanelCode = "OGM002",
             PanelName = "Optical Genome Mapping Duo",
             Type = "OGM",
             OrganizationId = organizationId
@@ -203,7 +203,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         
         var panelOgmTrio = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "OGM001",
+            PanelCode = "OGM003",
             PanelName = "Optical Genome Mapping Trio",
             Type = "OGM",
             OrganizationId = organizationId
@@ -214,7 +214,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         
         var panelOgmQuartet = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "OGM001",
+            PanelCode = "OGM004",
             PanelName = "Optical Genome Mapping Quartet",
             Type = "OGM",
             OrganizationId = organizationId
@@ -236,7 +236,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         var probandTranTest = Test.Create(new TestForCreation()
         {
             TestCode = "TTRAN001",
-            TestName = "Transcriptome Sequencing (Proband)",
+            TestName = "Transcriptome Sequencing Test (Proband)",
             OrganizationId = organizationId,
             Methodology = "Transcriptome Sequencing"
         }).Activate();
@@ -260,7 +260,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelTranDuo = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "TRAN001",
+            PanelCode = "TRAN002",
             PanelName = "Transcriptome Sequencing Duo",
             Type = "TRAN",
             OrganizationId = organizationId
@@ -271,7 +271,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelTranTrio = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "TRAN001",
+            PanelCode = "TRAN003",
             PanelName = "Transcriptome Sequencing Trio",
             Type = "TRAN",
             OrganizationId = organizationId
@@ -282,7 +282,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelTranQuartet = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "TRAN001",
+            PanelCode = "TRAN004",
             PanelName = "Transcriptome Sequencing Quartet",
             Type = "TRAN",
             OrganizationId = organizationId
@@ -304,7 +304,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         var probandCombTest = Test.Create(new TestForCreation()
         {
             TestCode = "TCOMB001",
-            TestName = "Combined Sequencing (Proband)",
+            TestName = "Combined Sequencing Test (Proband)",
             OrganizationId = organizationId,
             Methodology = "Combined OGM, WGS & Transcriptome"
         }).Activate();
@@ -328,7 +328,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelCombDuo = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "COMB001",
+            PanelCode = "COMB002",
             PanelName = "Combined Sequencing Duo",
             Type = "COMB",
             OrganizationId = organizationId
@@ -339,7 +339,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelCombTrio = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "COMB001",
+            PanelCode = "COMB003",
             PanelName = "Combined Sequencing Trio",
             Type = "COMB",
             OrganizationId = organizationId
@@ -350,7 +350,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelCombQuartet = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "COMB001",
+            PanelCode = "COMB004",
             PanelName = "Combined Sequencing Quartet",
             Type = "COMB",
             OrganizationId = organizationId
@@ -372,7 +372,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         var probandComb1Test = Test.Create(new TestForCreation()
         {
             TestCode = "TCOMB101",
-            TestName = "Combined OGM & WGS Sequencing (Proband)",
+            TestName = "Combined OGM & WGS Sequencing Test (Proband)",
             OrganizationId = organizationId,
             Methodology = "Combined OGM & WGS Sequencing"
         }).Activate();
@@ -396,7 +396,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelComb1Duo = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "COMB101",
+            PanelCode = "COMB102",
             PanelName = "Combined OGM & WGS Sequencing Duo",
             Type = "COMB1",
             OrganizationId = organizationId
@@ -407,7 +407,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelComb1Trio = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "COMB101",
+            PanelCode = "COMB103",
             PanelName = "Combined OGM & WGS Sequencing Trio",
             Type = "COMB1",
             OrganizationId = organizationId
@@ -416,19 +416,11 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                    .AddTest(additionalFamilyMemberComb1Test, 2)
                    .Activate();
 
-        var additionalFamilyMemberComb1TestThree = Test.Create(new TestForCreation()
-        {
-            TestCode = "TCOMB104",
-            TestName = "Combined OGM & WGS Sequencing (Additional Family Member 3)",
-            OrganizationId = organizationId,
-            Methodology = "Combined OGM & WGS Sequencing"
-        }).Activate();
-
         var panelComb1Quartet = Panel.Create(new PanelForCreation()
         {
             PanelCode = "COMB101",
             PanelName = "Combined OGM & WGS Sequencing Quartet",
-            Type = "COMB1",
+            Type = "COMB4",
             OrganizationId = organizationId
         });
         panelComb1Quartet.AddTest(probandComb1Test)
@@ -448,7 +440,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         var probandComb9Test = Test.Create(new TestForCreation()
         {
             TestCode = "TCOMB901",
-            TestName = "Combined OGM & External Data Analysis (Proband)",
+            TestName = "Combined OGM & External Data Analysis Test (Proband)",
             OrganizationId = organizationId,
             Methodology = "Combined OGM & External Data Analysis"
         }).Activate();
@@ -472,7 +464,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelComb9Duo = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "COMB901",
+            PanelCode = "COMB902",
             PanelName = "Combined OGM & External Data Analysis Duo",
             Type = "COMB9",
             OrganizationId = organizationId
@@ -483,7 +475,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelComb9Trio = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "COMB901",
+            PanelCode = "COMB903",
             PanelName = "Combined OGM & External Data Analysis Trio",
             Type = "COMB9",
             OrganizationId = organizationId
@@ -494,7 +486,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
         var panelComb9Quartet = Panel.Create(new PanelForCreation()
         {
-            PanelCode = "COMB901",
+            PanelCode = "COMB904",
             PanelName = "Combined OGM & External Data Analysis Quartet",
             Type = "COMB9",
             OrganizationId = organizationId
@@ -516,7 +508,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         var probandTexTest = Test.Create(new TestForCreation()
         {
             TestCode = "TEX001",
-            TestName = "Basic Exome Sequencing (Proband)",
+            TestName = "Basic Exome Sequencing Test (Proband)",
             OrganizationId = organizationId,
             Methodology = "Exome Sequencing"
         }).Activate();
@@ -547,15 +539,6 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             Methodology = "Exome Sequencing"
         }).Activate();
 
-        var duoTexGTest = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEXG002",
-            TestName = "Basic Exome Genome Upgrade (Duo)",
-            OrganizationId = organizationId,
-            Methodology = "Whole Genome Sequencing"
-        }).Activate();
-        dbContext.Tests.Add(duoTexGTest);
-
         var panelExDuo = Panel.Create(new PanelForCreation()
         {
             PanelCode = "EX002",
@@ -567,15 +550,6 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                  .AddTest(additionalFamilyMemberTexTest)
                  .Activate();
 
-        var trioTexGTest = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEXG003",
-            TestName = "Basic Exome Genome Upgrade (Trio)",
-            OrganizationId = organizationId,
-            Methodology = "Whole Genome Sequencing"
-        }).Activate();
-        dbContext.Tests.Add(trioTexGTest);
-
         var panelExTrio = Panel.Create(new PanelForCreation()
         {
             PanelCode = "EX003",
@@ -586,15 +560,6 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         panelExTrio.AddTest(probandTexTest)
                   .AddTest(additionalFamilyMemberTexTest, 2)
                   .Activate();
-
-        var quartetTexGTest = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEXG004",
-            TestName = "Basic Exome Genome Upgrade (Quartet)",
-            OrganizationId = organizationId,
-            Methodology = "Whole Genome Sequencing"
-        }).Activate();
-        dbContext.Tests.Add(quartetTexGTest);
 
         var panelExQuartet = Panel.Create(new PanelForCreation()
         {
@@ -619,7 +584,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         var probandTeexTest = Test.Create(new TestForCreation()
         {
             TestCode = "TEEX001",
-            TestName = "Expanded Exome Sequencing (Proband)",
+            TestName = "Expanded Exome Sequencing Test (Proband)",
             OrganizationId = organizationId,
             Methodology = "Exome Sequencing"
         }).Activate();
@@ -650,15 +615,6 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             Methodology = "Exome Sequencing"
         }).Activate();
 
-        var duoTeexGTest = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEEXG002",
-            TestName = "Expanded Exome Genome Upgrade (Duo)",
-            OrganizationId = organizationId,
-            Methodology = "Whole Genome Sequencing"
-        }).Activate();
-        dbContext.Tests.Add(duoTeexGTest);
-
         var panelEexDuo = Panel.Create(new PanelForCreation()
         {
             PanelCode = "EEX002",
@@ -669,15 +625,6 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         panelEexDuo.AddTest(probandTeexTest)
                   .AddTest(additionalFamilyMemberTeexTest)
                   .Activate();
-
-        var trioTeexGTest = Test.Create(new TestForCreation()
-        {
-            TestCode = "TEEXG003",
-            TestName = "Expanded Exome Genome Upgrade (Trio)",
-            OrganizationId = organizationId,
-            Methodology = "Whole Genome Sequencing"
-        }).Activate();
-        dbContext.Tests.Add(trioTeexGTest);
 
         var panelEexTrio = Panel.Create(new PanelForCreation()
         {
