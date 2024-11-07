@@ -25,7 +25,7 @@ public sealed class NPI : ValueObject
     
     public static NPI Random()
     {
-        return Utils.RunWithRetries(() =>
+        return PeakLimsUtils.RunWithRetries(() =>
         {
             var random = new Random();
             // Generate a random 9-digit base NPI number

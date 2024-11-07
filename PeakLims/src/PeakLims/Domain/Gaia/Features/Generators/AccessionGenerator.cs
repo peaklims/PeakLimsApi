@@ -18,6 +18,7 @@ using Serilog;
 using Soenneker.Utils.AutoBogus;
 using Tests;
 using Users;
+using Utilities;
 
 public interface IAccessionGenerator
 {
@@ -43,7 +44,8 @@ public class AccessionGenerator(IChatClient chatClient, PeakLimsDbContext dbCont
         async ValueTask GenerateAccessions(Patient patient, CancellationToken ct)
         {
             var healthOrg = Faker.PickRandom(orgBag.ToList());
-            var accession = await CreateAccession(patient, healthOrg, panelBag, userBag);
+            var accession = await PeakLimsUtils.RunWithRetriesAsync(() => CreateAccession(patient, healthOrg, 
+                panelBag, userBag));
             accessions.Add(accession);
         }
         var options = new ParallelOptions

@@ -26,7 +26,7 @@ public static class PatientGenerator
         var patients = new ConcurrentBag<Patient>();
         ValueTask GeneratePatients(PersonInfo person, CancellationToken ct)
         {
-            var patient = CreatePatient(person, organizationId, containerList);
+            var patient = PeakLimsUtils.RunWithRetries(() => CreatePatient(person, organizationId, containerList));
             patients.Add(patient);
             return ValueTask.CompletedTask;
         }

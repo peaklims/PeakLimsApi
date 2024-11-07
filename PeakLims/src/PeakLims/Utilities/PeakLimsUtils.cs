@@ -2,7 +2,7 @@ namespace PeakLims.Utilities;
 
 using System.Threading.Channels;
 
-public static class Utils
+public static class PeakLimsUtils
 {
     public static IAsyncEnumerable<V> MapParallel<U, V>(IEnumerable<U> source, Func<U, Task<V>> map)
     {
@@ -57,6 +57,25 @@ public static class Utils
             catch (Exception e) when (attemptIndex < maxAttempts)
             {
                 Console.WriteLine($"Exception on attempt {attemptIndex}: {e.Message}. Retrying...");
+            }
+        }
+    }
+
+    public static async Task<TResult> RunWithRetriesAsync<TResult>(Func<Task<TResult>> operation, int backoffIncrement = 5)
+    {
+        var delay = TimeSpan.FromSeconds(5);
+        var maxAttempts = 5;
+        for (var attemptIndex = 1; ; attemptIndex++)
+        {
+            try
+            {
+                return await operation();
+            }
+            catch (Exception e) when (attemptIndex < maxAttempts)
+            {
+                Console.WriteLine($"Exception on attempt {attemptIndex}: {e.Message}. Will retry after {delay}");
+                await Task.Delay(delay);
+                delay += TimeSpan.FromSeconds(backoffIncrement);
             }
         }
     }
