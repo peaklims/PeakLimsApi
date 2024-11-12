@@ -13,6 +13,7 @@ using Samples.Models;
 using Serilog;
 using Sexes;
 using Soenneker.Utils.AutoBogus;
+using Utilities;
 
 public static class PatientGenerator
 {
