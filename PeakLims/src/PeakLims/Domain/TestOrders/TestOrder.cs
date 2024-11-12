@@ -67,6 +67,7 @@ public class TestOrder : BaseEntity
         Status = TestOrderStatus.Cancelled();
         CancellationReason = reason;
         CancellationComments = comments;
+        DueDate = null;
         QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
         return this;
     }
