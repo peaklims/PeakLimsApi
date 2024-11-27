@@ -30,7 +30,6 @@ public class AccessionStatus : ValueObject
     public static AccessionStatus Draft() => new AccessionStatus(AccessionStatusEnum.Draft.Name);
     public static AccessionStatus ReadyForTesting() => new AccessionStatus(AccessionStatusEnum.ReadyForTesting.Name);
     public static AccessionStatus Testing() => new AccessionStatus(AccessionStatusEnum.Testing.Name);
-    public static AccessionStatus TestingComplete() => new AccessionStatus(AccessionStatusEnum.TestingComplete.Name);
     public static AccessionStatus ReportPending() => new AccessionStatus(AccessionStatusEnum.ReportPending.Name);
     public static AccessionStatus ReportComplete() => new AccessionStatus(AccessionStatusEnum.ReportComplete.Name);
     public static AccessionStatus Completed() => new AccessionStatus(AccessionStatusEnum.Completed.Name);
@@ -47,7 +46,6 @@ public class AccessionStatus : ValueObject
         public static readonly AccessionStatusEnum Draft = new DraftType();
         public static readonly AccessionStatusEnum ReadyForTesting = new ReadyForTestingType();
         public static readonly AccessionStatusEnum Testing = new TestingType();
-        public static readonly AccessionStatusEnum TestingComplete = new TestingCompleteType();
         public static readonly AccessionStatusEnum ReportPending = new ReportPendingType();
         public static readonly AccessionStatusEnum ReportComplete = new ReportCompleteType();
         public static readonly AccessionStatusEnum Completed = new CompletedType();
@@ -82,15 +80,6 @@ public class AccessionStatus : ValueObject
         private class TestingType : AccessionStatusEnum
         {
             public TestingType() : base("Testing", 2)
-            {
-            }
-
-            public override bool IsFinalState() => false;
-        }
-
-        private class TestingCompleteType : AccessionStatusEnum
-        {
-            public TestingCompleteType() : base("Testing Complete", 3)
             {
             }
 
