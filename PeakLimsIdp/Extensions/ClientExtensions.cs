@@ -1,4 +1,4 @@
-namespace KeycloakInPulumi.Extensions;
+namespace PeakLimsIdp.Extensions;
 
 using Pulumi;
 using Pulumi.Keycloak.OpenId;

@@ -1,7 +1,7 @@
-namespace KeycloakInPulumi;
+namespace PeakLimsIdp;
 
-using KeycloakInPulumi.Extensions;
-using KeycloakInPulumi.Factories;
+using PeakLimsIdp.Extensions;
+using PeakLimsIdp.Factories;
 using Pulumi;
 using Pulumi.Keycloak.Inputs;
 using Pulumi.Keycloak.OpenId;

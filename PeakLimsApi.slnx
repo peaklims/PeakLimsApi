@@ -9,7 +9,7 @@
     <Project Path="PeakLims\tests\PeakLims.SharedTestHelpers\PeakLims.SharedTestHelpers.csproj" Type="Classic C#" />
     <Project Path="PeakLims\tests\PeakLims.UnitTests\PeakLims.UnitTests.csproj" Type="Classic C#" />
   </Folder>
-  <Project Path="KeycloakInPulumi\KeycloakInPulumi.csproj" Type="Classic C#" />
+  <Project Path="PeakLimsIdp\PeakLimsIdp.csproj" Type="Classic C#" />
   <Project Path="PeakLimsSpa.Bff\PeakLimsSpa.Bff.csproj" Type="Classic C#" />
   <Project Path="SharedKernel\SharedKernel.csproj" Type="Classic C#" />
 </Solution>

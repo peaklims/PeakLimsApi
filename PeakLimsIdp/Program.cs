@@ -1,4 +1,4 @@
-namespace KeycloakInPulumi;
+namespace PeakLimsIdp;
 
 using System.Threading.Tasks;
 using Pulumi;
