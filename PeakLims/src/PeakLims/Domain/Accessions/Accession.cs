@@ -181,6 +181,18 @@ public class Accession : BaseEntity
     public Accession RemovePatient()
     {
         GuardIfInProcessingState("The patient");
+        var hasOrgAssigned = HealthcareOrganization != null;
+        ValidationException.MustNot(hasOrgAssigned,
+            $"This accession has an organization assigned. The patient can not be removed.");
+        
+        var hasContactsAssigned = AccessionContacts.Count > 0;
+        ValidationException.MustNot(hasContactsAssigned,
+            $"This accession has organization contacts assigned. The patient can not be removed.");
+        
+        var hasTestsAssigned = TestOrders.Count > 0;
+        ValidationException.MustNot(hasTestsAssigned,
+            $"This accession has tests assigned. The patient can not be removed.");
+
         Patient = null;
         return this;
     }
@@ -193,6 +205,15 @@ public class Accession : BaseEntity
             $"Only active organizations can be set on an accession.");
         
         HealthcareOrganization = org;
+        return this;
+    }
+
+    public Accession ClearHealthcareOrganization()
+    {
+        GuardIfInProcessingState("The organization");
+
+        _accessionContacts.Clear();
+        HealthcareOrganization = null;
         return this;
     }
 

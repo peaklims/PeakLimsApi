@@ -119,6 +119,11 @@
             Sets the organzation on an accession.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.AccessionsController.ClearAccessionHealthcareOrganization(System.Guid)">
+            <summary>
+            Clears the organzation on an accession.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.AccessionsController.DeleteAccession(System.Guid)">
             <summary>
             Deletes an existing Accession record.

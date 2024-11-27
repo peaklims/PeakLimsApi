@@ -189,6 +189,18 @@ public sealed class AccessionsController: ControllerBase
     }
 
     /// <summary>
+    /// Clears the organzation on an accession.
+    /// </summary>
+    [Authorize]
+    [HttpPut("{accessionId:guid}/clearOrganization", Name = "ClearAccessionHealthcareOrganization")]
+    public async Task<IActionResult> ClearAccessionHealthcareOrganization(Guid accessionId)
+    {
+        var command = new ClearAccessionHealthcareOrganization.Command(accessionId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    /// <summary>
     /// Deletes an existing Accession record.
     /// </summary>
     [Authorize]
