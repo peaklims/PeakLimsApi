@@ -1,11 +1,8 @@
 namespace PeakLims.Domain.HipaaAuditLogs.Features;
 
+using Databases;
 using PeakLims.Domain.HipaaAuditLogs.Dtos;
-using PeakLims.Domain.HipaaAuditLogs.Services;
-using PeakLims.Exceptions;
 using PeakLims.Resources;
-using PeakLims.Domain;
-using HeimGuard;
 using Mappings;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
@@ -16,22 +13,17 @@ public static class GetHipaaAuditLogList
 {
     public sealed record Query(HipaaAuditLogParametersDto QueryParameters) : IRequest<PagedList<HipaaAuditLogDto>>;
 
-    public sealed class Handler : IRequestHandler<Query, PagedList<HipaaAuditLogDto>>
+    public sealed class Handler(PeakLimsDbContext dbContext)
+        : IRequestHandler<Query, PagedList<HipaaAuditLogDto>>
     {
-        private readonly IHipaaAuditLogRepository _hipaaAuditLogRepository;
-        private readonly IHeimGuardClient _heimGuard;
-
-        public Handler(IHipaaAuditLogRepository hipaaAuditLogRepository, IHeimGuardClient heimGuard)
-        {
-            _hipaaAuditLogRepository = hipaaAuditLogRepository;
-            _heimGuard = heimGuard;
-        }
 
         public async Task<PagedList<HipaaAuditLogDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var collection = _hipaaAuditLogRepository.Query().AsNoTracking();
+            var collection = dbContext.HipaaAuditLogs.AsNoTracking();
 
-            var queryKitConfig = new CustomQueryKitConfiguration();
+            var queryKitConfig = new CustomQueryKitConfiguration(config =>
+            {
+            });
             var queryKitData = new QueryKitData()
             {
                 Filters = request.QueryParameters.Filters,

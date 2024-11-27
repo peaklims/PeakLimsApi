@@ -251,5 +251,18 @@ public sealed class AccessionsController: ControllerBase
         return NoContent();
     }
 
+
+    /// <summary>
+    /// Abandons an accession
+    /// </summary>
+    [Authorize]
+    [HttpPut("{accessionId:guid}/abandon", Name = "AbandonAccession")]
+    public async Task<IActionResult> AbandonAccession(Guid accessionId)
+    {
+        var command = new AbandonAccession.Command(accessionId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+    
     // endpoint marker - do not delete this comment
 }

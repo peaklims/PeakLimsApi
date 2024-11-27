@@ -91,6 +91,17 @@ public class Accession : BaseEntity
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
         return this;
     }
+    
+    public Accession Abandon()
+    {
+        ValidationException.Must(Status == AccessionStatus.Draft(),
+            $"This accession is already submitted and is ready for testing. Please cancel the accession instead.");
+
+        Status = AccessionStatus.Abandoned();
+
+        QueueDomainEvent(new AccessionUpdated(){ Id = Id });
+        return this;
+    }
 
     public TestOrder AddTest(Test test)
     {
