@@ -3,7 +3,9 @@
 namespace PeakLimsSpa.Bff.Middleware;
 
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using Hellang.Middleware.ProblemDetails;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using ProblemDetailsOptions = Hellang.Middleware.ProblemDetails.ProblemDetailsOptions;
 
@@ -18,6 +20,8 @@ public static class ProblemDetailsConfigurationExtension
         options.MapToStatusCode<NotImplementedException>(StatusCodes.Status501NotImplemented);
         options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
 
+        options.MapAuthenticationFailureException();
+        
         // You can configure the middleware to re-throw certain types of exceptions, all exceptions or based on a predicate.
         // This is useful if you have upstream middleware that  needs to do additional handling of exceptions.
         // options.Rethrow<NotSupportedException>();
@@ -31,4 +35,30 @@ public static class ProblemDetailsConfigurationExtension
         // If an exception other than NotImplementedException and HttpRequestException is thrown, this will handle it.
         options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
     }
+    
+    // For correlation failures after sitting on login page for a very long time
+    private static void MapAuthenticationFailureException(this ProblemDetailsOptions options) =>
+        options.Map<AuthenticationFailureException>((ctx, ex) =>
+        {
+            // Check if the exception message contains "Correlation failed"
+            if (ex.Message.Contains("Correlation failed"))
+            {
+                ctx.Response.Redirect("/bff/login");
+                ctx.Response.StatusCode = (int)HttpStatusCode.Found;
+                return null; 
+            }
+            else
+            {
+                // For other AuthenticationFailureExceptions, create a ProblemDetails response
+                var factory = ctx.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+
+                var problemDetails = factory.CreateProblemDetails(
+                    ctx,
+                    statusCode: StatusCodes.Status401Unauthorized,
+                    title: "Authentication Failure",
+                    detail: ex.Message);
+
+                return problemDetails;
+            }
+        });
 }
