@@ -2,6 +2,7 @@ using Duende.Bff;
 using Duende.Bff.Yarp;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using PeakLimsSpa.Bff;
 using PeakLimsSpa.Bff.Middleware;
 using Serilog;
@@ -52,6 +53,22 @@ builder.Services.AddAuthentication(options =>
         {
             NameClaimType = "name",
             RoleClaimType = "role"
+        };
+        
+        options.Events = new OpenIdConnectEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                if (context.Exception.Message.Contains("Correlation failed"))
+                {
+                    context.Response.Redirect("/bff/login");
+                    context.HandleResponse();
+                    return Task.CompletedTask;
+                }
+            
+                // For other authentication failures, you can decide how to handle them
+                return Task.CompletedTask;
+            }
         };
     });
 
