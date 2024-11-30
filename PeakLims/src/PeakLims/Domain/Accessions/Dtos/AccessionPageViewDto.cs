@@ -6,6 +6,7 @@ using TestOrderStatuses;
 public sealed record AccessionPageViewDto
 {
     public Guid Id { get; set; }
+    public string Notes { get; set; }
     public string AccessionNumber { get; set; }
     public string Status { get; set; }
     public PatientDto Patient { get; set; } = null!;

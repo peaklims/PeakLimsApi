@@ -44,6 +44,7 @@ public static partial class AccessionMapper
         return new AccessionPageViewDto()
         {
             Id = accession.Id,
+            Notes = accession.Notes,
             AccessionNumber = accession.AccessionNumber,
             Status = accession.Status != null ? accession.Status.Value : default,
             OrganizationId = accession?.HealthcareOrganization?.Id,

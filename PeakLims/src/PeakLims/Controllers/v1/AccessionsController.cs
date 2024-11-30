@@ -257,9 +257,9 @@ public sealed class AccessionsController: ControllerBase
     /// </summary>
     [Authorize]
     [HttpPut("{accessionId:guid}/abandon", Name = "AbandonAccession")]
-    public async Task<IActionResult> AbandonAccession(Guid accessionId)
+    public async Task<IActionResult> AbandonAccession(Guid accessionId, [FromQuery] string reason)
     {
-        var command = new AbandonAccession.Command(accessionId);
+        var command = new AbandonAccession.Command(accessionId, reason);
         await _mediator.Send(command);
         return NoContent();
     }

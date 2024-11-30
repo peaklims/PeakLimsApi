@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 public static class AbandonAccession
 {
-    public sealed record Command(Guid AccessionId) : IRequest;
+    public sealed record Command(Guid AccessionId, string Reason) : IRequest;
 
     public sealed class Handler(
         PeakLimsDbContext dbContext,
@@ -20,7 +20,7 @@ public static class AbandonAccession
                 .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken))
                 .MustBeFoundOrThrow();
             
-            accessionToUpdate.Abandon();
+            accessionToUpdate.Abandon(request.Reason);
             await unitOfWork.CommitChanges(cancellationToken);
         }
     }

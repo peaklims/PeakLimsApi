@@ -17,7 +17,6 @@ public static class GetAccessionPageView
 
     public sealed class Handler(
         PeakLimsDbContext dbContext,
-        IHeimGuardClient heimGuard,
         IFileStorage fileStorage)
         : IRequestHandler<Query, AccessionPageViewDto>
     {
@@ -26,8 +25,7 @@ public static class GetAccessionPageView
             var accession = (await dbContext.GetAccessionAggregate()
                 .Include(x => x.AccessionAttachments)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken))
-                .MustBeFoundOrThrow();
+                .FirstOrDefaultAsync(x => x.Id == request.AccessionId, cancellationToken: cancellationToken));
             return accession.ToEditableAccessionDto(fileStorage);
         }
     }

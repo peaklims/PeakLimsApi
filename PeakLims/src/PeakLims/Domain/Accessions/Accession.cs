@@ -23,7 +23,8 @@ public class Accession : BaseEntity
 
     public AccessionStatus Status { get; private set; }
 
-    // public Guid? PatientId { get; }
+    public string Notes { get; private set; }
+    
     public Patient Patient { get; private set; }
     
     public PeakOrganization Organization { get; }
@@ -92,12 +93,15 @@ public class Accession : BaseEntity
         return this;
     }
     
-    public Accession Abandon()
+    public Accession Abandon(string reason)
     {
         ValidationException.Must(Status == AccessionStatus.Draft(),
             $"This accession is already submitted and is ready for testing. Please cancel the accession instead.");
+        var hasValidReason = !string.IsNullOrWhiteSpace(reason) && reason.Length > 5;
+        ValidationException.Must(hasValidReason, "Please provide a reason for abandoning this accession of at least 5 characters.");
 
         Status = AccessionStatus.Abandoned();
+        Notes = reason;
 
         QueueDomainEvent(new AccessionUpdated(){ Id = Id });
         return this;
