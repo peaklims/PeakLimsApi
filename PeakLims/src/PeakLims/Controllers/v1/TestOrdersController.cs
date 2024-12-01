@@ -141,5 +141,41 @@ public sealed class TestOrdersController: ControllerBase
     public async Task<IActionResult> GetCancellationReasons()
         => Ok(TestOrderCancellationReason.ListNames());
 
+    /// <summary>
+    /// Marks a test order as STAT
+    /// </summary>
+    [Authorize]
+    [HttpPut("{testOrderId:guid}/markstat", Name = "MarkTestOrderAsStat")]
+    public async Task<IActionResult> MarkTestOrderAsStat([FromRoute] Guid testOrderId)
+    {
+        var command = new MarkTestOrderAsStat.Command(testOrderId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Marks a test order as normal priority
+    /// </summary>
+    [Authorize]
+    [HttpPut("{testOrderId:guid}/marknormal", Name = "MarkTestOrderAsNormal")]
+    public async Task<IActionResult> MarkTestOrderAsNormal([FromRoute] Guid testOrderId)
+    {
+        var command = new MarkTestOrderAsNormal.Command(testOrderId);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Adjusts the due date of a test order
+    /// </summary>
+    [Authorize]
+    [HttpPut("{testOrderId:guid}/duedate", Name = "AdjustTestOrderDueDate")]
+    public async Task<IActionResult> AdjustTestOrderDueDate([FromRoute] Guid testOrderId, [FromBody] DateOnly dueDate)
+    {
+        var command = new AdjustTestOrderDueDate.Command(testOrderId, dueDate);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
     // endpoint marker - do not delete this comment
 }

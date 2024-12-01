@@ -1,6 +1,7 @@
 namespace PeakLims.Databases.EntityConfigurations;
 
 using Domain.TestOrderCancellationReasons;
+using Domain.TestOrderPriorities;
 using Domain.TestOrderStatuses;
 using PeakLims.Domain.TestOrders;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,8 @@ public sealed class TestOrderConfiguration : IEntityTypeConfiguration<TestOrder>
 
         builder.Property(x => x.Status)
             .HasConversion(x => x.Value, x => new TestOrderStatus(x));
+        builder.Property(x => x.Priority)
+            .HasConversion(x => x.Value, x => new TestOrderPriority(x));
         builder.Property(x => x.CancellationReason)
             .HasConversion(x => x.Value, x => new TestOrderCancellationReason(x));
         

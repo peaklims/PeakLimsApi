@@ -3,11 +3,6 @@ namespace PeakLims.Domain.Tests;
 using PeakLims.Domain.Panels;
 using PeakLims.Domain.Tests.Models;
 using PeakLims.Domain.Tests.DomainEvents;
-using FluentValidation;
-using System.Text.Json.Serialization;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
 using PeakOrganizations;
 using TestStatuses;
 
@@ -24,6 +19,8 @@ public class Test : BaseEntity
     public int Version { get; private set; }
 
     public int TurnAroundTime { get; private set; }
+    
+    public int StatTurnAroundTime { get; private set; }
     
     public PeakOrganization Organization { get; }
     public Guid OrganizationId { get; private set; }
@@ -44,7 +41,7 @@ public class Test : BaseEntity
         newTest.Methodology = testForCreation.Methodology;
         newTest.Platform = testForCreation.Platform;
         newTest.Version = 1;
-        newTest.TurnAroundTime = testForCreation.TurnAroundTime;
+        newTest.TurnAroundTime = testForCreation.TurnAroundTime ?? 14;
         newTest.Status = TestStatus.Draft();
         newTest.OrganizationId = testForCreation.OrganizationId;
 
@@ -59,7 +56,7 @@ public class Test : BaseEntity
         TestName = testForUpdate.TestName;
         Methodology = testForUpdate.Methodology;
         Platform = testForUpdate.Platform;
-        TurnAroundTime = testForUpdate.TurnAroundTime;
+        TurnAroundTime = testForUpdate.TurnAroundTime ?? 14;
         
         // TODO figure out how i want to bump versions on updates and based on state of the test
 

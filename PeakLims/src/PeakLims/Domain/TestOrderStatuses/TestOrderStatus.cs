@@ -39,6 +39,7 @@ public class TestOrderStatus : ValueObject
     public static TestOrderStatus Qns() => new TestOrderStatus(TestOrderStatusEnum.Qns.Name);
     public bool IsFinalState() => _status.IsFinalState();
     public bool IsProcessing() => Pending().Value != Value && !IsFinalState();
+    public bool IsPending() => Pending().Value == Value;
 
     protected TestOrderStatus() { } // EF Core
 

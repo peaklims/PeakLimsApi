@@ -36,7 +36,6 @@ public class SetStatusToReadyForTestingTests
 
         // Assert
         fakeTestOrder.Status.Should().Be(TestOrderStatus.ReadyForTesting());
-        fakeTestOrder.TatSnapshot.Should().Be(test.TurnAroundTime);
         
         var dueDate = (DateOnly)fakeTestOrder.DueDate!;
         dueDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(test.TurnAroundTime)));

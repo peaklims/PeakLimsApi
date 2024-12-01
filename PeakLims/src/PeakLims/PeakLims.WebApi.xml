@@ -489,6 +489,21 @@
             Get a list of all possible cancellation reasons
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.MarkTestOrderAsStat(System.Guid)">
+            <summary>
+            Marks a test order as STAT
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.MarkTestOrderAsNormal(System.Guid)">
+            <summary>
+            Marks a test order as normal priority
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.AdjustTestOrderDueDate(System.Guid,System.DateOnly)">
+            <summary>
+            Adjusts the due date of a test order
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.TestsController.GetTests(PeakLims.Domain.Tests.Dtos.TestParametersDto)">
             <summary>
             Gets a list of all Tests.
@@ -769,6 +784,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.ChangetoDateTimeOffsetAudit.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.TatWork">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.TatWork.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.TatWork.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.TatWork.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

@@ -39,7 +39,7 @@ public class FakeSampleBuilder
         return this;
     }
     
-    public FakeSampleBuilder WithReceivedDate(DateOnly? receivedDate)
+    public FakeSampleBuilder WithReceivedDate(DateOnly receivedDate)
     {
         _creationData.ReceivedDate = receivedDate;
         return this;

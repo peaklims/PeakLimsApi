@@ -9,7 +9,7 @@ public sealed class SampleDto
     public string Type { get; set; }
     public decimal? Quantity { get; set; }
     public DateOnly? CollectionDate { get; set; }
-    public DateOnly? ReceivedDate { get; set; }
+    public DateOnly ReceivedDate { get; set; }
     public string CollectionSite { get; set; }
     public Guid? ContainerId { get; set; }
     public string? ContainerType { get; set; }

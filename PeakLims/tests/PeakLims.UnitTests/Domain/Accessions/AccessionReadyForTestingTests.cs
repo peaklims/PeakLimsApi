@@ -73,7 +73,6 @@ public class AccessionReadyForTestingTests
         fakeAccession.TestOrders.Count().Should().Be(1);
         var testOrder = fakeAccession.TestOrders.FirstOrDefault();
         testOrder.Status.Should().Be(TestOrderStatus.ReadyForTesting());
-        testOrder.TatSnapshot.Should().Be(test.TurnAroundTime);
 
         var dueDate = (DateOnly)testOrder.DueDate!;
         dueDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(test.TurnAroundTime)));

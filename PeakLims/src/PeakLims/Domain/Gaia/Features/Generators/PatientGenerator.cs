@@ -66,6 +66,7 @@ public static class PatientGenerator
                 Type = container.UsedFor.Value,
                 CollectionDate = faker.Date.BetweenDateOnly(patientDob, DateOnly.FromDateTime(DateTime.UtcNow)),
                 ExternalId = faker.Random.AlphaNumeric(faker.Random.Int(10, 20)).ToUpper(),
+                ReceivedDate = faker.Date.BetweenDateOnly(patientDob, DateOnly.FromDateTime(DateTime.UtcNow)),
             });
             sample.SetContainer(container);
             patient.AddSample(sample);

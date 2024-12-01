@@ -69,7 +69,6 @@ public static partial class AccessionMapper
                     TestCode = x.Test.TestCode,
                     Status = x.Status != null ? x.Status.Value : default,
                     DueDate = x.DueDate,
-                    TAT = x.TatSnapshot,
                     CancellationReason = x.CancellationReason != null ? x.CancellationReason.Value : default,
                     CancellationComments = x.CancellationComments,
                     IsPartOfPanel = x.IsPartOfPanel(),

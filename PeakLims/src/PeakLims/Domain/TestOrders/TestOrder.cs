@@ -7,17 +7,19 @@ using Panels;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
 using TestOrderCancellationReasons;
+using TestOrderPriorities;
 using TestOrderStatuses;
 using Tests;
+using Utilities;
 using ValidationException = Exceptions.ValidationException;
 
 public class TestOrder : BaseEntity
 {
     public TestOrderStatus Status { get; private set; }
+    
+    public TestOrderPriority Priority { get; private set; }
 
     public DateOnly? DueDate { get; private set; }
-
-    public int? TatSnapshot { get; private set; }
 
     public TestOrderCancellationReason CancellationReason { get; private set; }
 
@@ -41,7 +43,9 @@ public class TestOrder : BaseEntity
         var newTestOrder = new TestOrder();
 
         newTestOrder.Status = TestOrderStatus.Pending();
+        newTestOrder.DueDate = null;
         newTestOrder.Test = test;
+        newTestOrder.Priority = TestOrderPriority.Normal();
 
         newTestOrder.QueueDomainEvent(new TestOrderCreated(){ TestOrder = newTestOrder });
         
@@ -71,6 +75,44 @@ public class TestOrder : BaseEntity
         QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
         return this;
     }
+    
+    public TestOrder MarkAsStat()
+    {
+        var hasSampleAssigned = Sample != null;
+        ValidationException.Must(hasSampleAssigned, 
+            $"A sample must be assigned to a test order before it can be marked STAT.");
+
+        Priority = TestOrderPriority.Stat();
+        
+        var receivedDate = Sample!.ReceivedDate;
+        DueDate = receivedDate.AddDays(Test.StatTurnAroundTime);
+        
+        QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
+        return this;
+    }
+    
+    public TestOrder MarkAsNormal()
+    {
+        var hasSampleAssigned = Sample != null;
+        ValidationException.Must(hasSampleAssigned, 
+            $"A sample must be assigned to a test order before it can be marked as normal.");
+
+        Priority = TestOrderPriority.Normal();
+        
+        var receivedDate = Sample!.ReceivedDate;
+        DueDate = receivedDate.AddDays(Test.StatTurnAroundTime);
+        
+        QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
+        return this;
+    }
+    
+    public TestOrder AdjustDueDate(DateOnly dueDate)
+    {
+        DueDate = dueDate;
+        
+        QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
+        return this;
+    }
 
     public TestOrder MarkAsReadyForTesting()
     {
@@ -80,9 +122,10 @@ public class TestOrder : BaseEntity
         ValidationException.MustNot(Sample == null, 
             $"A sample is required in order to set a test order to {TestOrderStatus.ReadyForTesting().Value}.");
 
+        ValidationException.Must(DueDate != null, 
+            $"A due date must be set before a test order can be set to {TestOrderStatus.ReadyForTesting().Value}.");
+        
         Status = TestOrderStatus.ReadyForTesting();
-        TatSnapshot = Test.TurnAroundTime;
-        DueDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(Test.TurnAroundTime));
         
         QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
         return this;

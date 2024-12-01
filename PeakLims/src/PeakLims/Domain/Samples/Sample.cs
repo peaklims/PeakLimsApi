@@ -27,7 +27,7 @@ public class Sample : BaseEntity
 
     public DateOnly? CollectionDate { get; private set; }
 
-    public DateOnly? ReceivedDate { get; private set; }
+    public DateOnly ReceivedDate { get; private set; }
 
     public string CollectionSite { get; private set; }
 

@@ -33,7 +33,6 @@ public class TestOrderQueryTests : TestBase
         // Assert
         dbTestOrder.Status.Should().Be(testOrder.Status);
         dbTestOrder.DueDate.Should().Be(testOrder.DueDate);
-        dbTestOrder.TatSnapshot.Should().Be(testOrder.TatSnapshot);
         dbTestOrder.CancellationReason.Should().Be(testOrder.CancellationReason);
         dbTestOrder.CancellationComments.Should().Be(testOrder.CancellationComments);
     }
