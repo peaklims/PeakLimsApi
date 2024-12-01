@@ -34,7 +34,7 @@ public sealed class PeakLimsDbContext(
     DbContextOptions<PeakLimsDbContext> options,
     ICurrentUserService currentUserService,
     IMediator mediator,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : DbContext(options)
 {
     #region DbSet Region - Do Not Delete
@@ -168,7 +168,7 @@ public sealed class PeakLimsDbContext(
         
     private void UpdateAuditFields()
     {
-        var now = dateTimeProvider.DateTimeUtcNow;
+        var now = dateTimeProvider.GetUtcNow();
         foreach (var entry in ChangeTracker.Entries<BaseEntity>())
         {
             switch (entry.State)

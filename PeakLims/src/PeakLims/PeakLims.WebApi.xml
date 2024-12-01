@@ -759,5 +759,17 @@
         <member name="M:PeakLims.Migrations.AddAccessionNotes.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:PeakLims.Migrations.ChangetoDateTimeOffsetAudit">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.ChangetoDateTimeOffsetAudit.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.ChangetoDateTimeOffsetAudit.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.ChangetoDateTimeOffsetAudit.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

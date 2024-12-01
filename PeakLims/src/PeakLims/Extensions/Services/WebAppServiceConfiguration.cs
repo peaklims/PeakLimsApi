@@ -29,7 +29,6 @@ public static class WebAppServiceConfiguration
             .AsMatchingInterface()
             .WithScopedLifetime());
         
-        builder.Services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         builder.Services.AddSingleton(Log.Logger);
         builder.Services.AddProblemDetails(ProblemDetailsConfigurationExtension.ConfigureProblemDetails)
             .AddProblemDetailsConventions();
