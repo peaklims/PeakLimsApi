@@ -27,6 +27,7 @@ public static class MarkTestOrderAsNormal
             
             testOrder.MarkAsNormal();
             testOrderRepository.Update(testOrder);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -66,6 +66,7 @@ public static partial class AccessionMapper
                         Version = x.PanelOrder?.Panel?.Version,
                         Status = x?.PanelOrder?.Status()?.Value,
                     },
+                    Priority = x?.Priority?.Value,
                     TestCode = x.Test.TestCode,
                     Status = x.Status != null ? x.Status.Value : default,
                     DueDate = x.DueDate,
@@ -79,7 +80,7 @@ public static partial class AccessionMapper
                     }
                 })
                 .OrderByDescending(x => x.TestName)
-                .ToList() ?? new List<AccessionPageViewDto.TestOrderDto>(),
+                .ToList() ?? [],
             Attachments = accession.AccessionAttachments
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new AccessionPageViewDto.AccessionAttachmentDto()

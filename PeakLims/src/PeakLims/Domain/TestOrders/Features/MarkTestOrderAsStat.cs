@@ -27,6 +27,7 @@ public static class MarkTestOrderAsStat
             
             testOrder.MarkAsStat();
             testOrderRepository.Update(testOrder);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

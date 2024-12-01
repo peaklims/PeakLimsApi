@@ -27,6 +27,7 @@ public static class AdjustTestOrderDueDate
             
             testOrder.AdjustDueDate(request.DueDate);
             testOrderRepository.Update(testOrder);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

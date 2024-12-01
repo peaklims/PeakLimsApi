@@ -28,6 +28,7 @@ public class TestOrderPriority : ValueObject
     }
 
     public bool IsStat() => Value == Stat().Value;
+    public bool IsNormal() => Value == Normal().Value;
     public static TestOrderPriority Of(string value) => new TestOrderPriority(value);
     public static implicit operator string(TestOrderPriority value) => value.Value;
     public static List<string> ListNames() => TestOrderPriorityEnum.List.Select(x => x.Name).ToList();

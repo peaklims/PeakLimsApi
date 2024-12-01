@@ -54,6 +54,7 @@ public sealed record AccessionPageViewDto
         public Panel Panel { get; set; }
         public string Status { get; set; }
         public DateOnly? DueDate { get; set; }
+        public string Priority { get; set; }
         public string CancellationReason { get; set; }
         public string CancellationComments { get; set; }
         public bool IsPartOfPanel { get; set; }

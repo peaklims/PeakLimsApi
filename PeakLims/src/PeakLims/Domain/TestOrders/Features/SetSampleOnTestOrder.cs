@@ -1,5 +1,6 @@
 namespace PeakLims.Domain.TestOrders.Features;
 
+using Databases;
 using Exceptions;
 using PeakLims.Domain.TestOrders.Dtos;
 using PeakLims.Domain.TestOrders.Services;
@@ -15,24 +16,27 @@ public static class SetSampleOnTestOrder
 {
     public sealed record Command(Guid TestOrderId, Guid? SampleId) : IRequest;
 
-    public sealed class Handler(ITestOrderRepository testOrderRepository, IHeimGuardClient heimGuard,
-            IUnitOfWork unitOfWork, ISampleRepository sampleRepository)
+    public sealed class Handler(ITestOrderRepository testOrderRepository,
+            PeakLimsDbContext dbContext,
+            ISampleRepository sampleRepository)
         : IRequestHandler<Command>
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var testOrder = await testOrderRepository.Query()
-                .Include(x => x.Sample)
-                .FirstOrDefaultAsync(x => x.Id == request.TestOrderId, cancellationToken: cancellationToken);
+            var accessions = dbContext.GetAccessionAggregate();
+            var accession =
+                accessions.FirstOrDefault(x => x.TestOrders.Any(y => y.Id == request.TestOrderId));
+            accession.MustBeFoundOrThrow();
             
-            if (testOrder == null)
-                throw new NotFoundException(nameof(TestOrder), request.TestOrderId);
+            var testOrder = accession!.TestOrders
+                .FirstOrDefault(x => x.Id == request.TestOrderId)
+                .MustBeFoundOrThrow();
             
             if (request.SampleId == null)
             {
                 testOrder.RemoveSample();
                 testOrderRepository.Update(testOrder);
-                await unitOfWork.CommitChanges(cancellationToken);
+                await dbContext.SaveChangesAsync(cancellationToken);
                 return;
             }
             
@@ -40,7 +44,7 @@ public static class SetSampleOnTestOrder
             testOrder.SetSample(sample);
             testOrderRepository.Update(testOrder);
 
-            await unitOfWork.CommitChanges(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

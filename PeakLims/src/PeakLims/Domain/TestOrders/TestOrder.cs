@@ -137,6 +137,15 @@ public class TestOrder : BaseEntity
         GuardSampleIfTestOrderIsProcessing();
 
         Sample = sample;
+
+        if (Priority.IsStat())
+        {
+            MarkAsStat();
+        }
+        if (Priority.IsNormal())
+        {
+            MarkAsNormal();
+        }
         QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
         return this;
     }
