@@ -499,7 +499,7 @@
             Marks a test order as normal priority
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.TestOrdersController.AdjustTestOrderDueDate(System.Guid,System.DateOnly)">
+        <member name="M:PeakLims.Controllers.v1.TestOrdersController.AdjustTestOrderDueDate(System.Guid,PeakLims.Domain.TestOrders.Dtos.AdjustDueDateDto)">
             <summary>
             Adjusts the due date of a test order
             </summary>

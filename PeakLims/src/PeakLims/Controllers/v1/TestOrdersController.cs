@@ -169,10 +169,10 @@ public sealed class TestOrdersController: ControllerBase
     /// Adjusts the due date of a test order
     /// </summary>
     [Authorize]
-    [HttpPut("{testOrderId:guid}/duedate", Name = "AdjustTestOrderDueDate")]
-    public async Task<IActionResult> AdjustTestOrderDueDate([FromRoute] Guid testOrderId, [FromBody] DateOnly dueDate)
+    [HttpPut("{testOrderId:guid}/adjustDueDate", Name = "AdjustTestOrderDueDate")]
+    public async Task<IActionResult> AdjustTestOrderDueDate([FromRoute] Guid testOrderId, AdjustDueDateDto request)
     {
-        var command = new AdjustTestOrderDueDate.Command(testOrderId, dueDate);
+        var command = new AdjustTestOrderDueDate.Command(testOrderId, request.DueDate);
         await _mediator.Send(command);
         return NoContent();
     }
