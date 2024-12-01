@@ -7,5 +7,6 @@ public sealed record TestForCreation
     public string Methodology { get; set; }
     public string Platform { get; set; }
     public int? TurnAroundTime { get; set; }
+    public int? StatTurnAroundTime { get; set; }
     public Guid OrganizationId { get; set; }
 }

@@ -7,4 +7,5 @@ public sealed class TestForCreationDto
     public string Methodology { get; set; }
     public string Platform { get; set; } 
     public int? TurnAroundTime { get; set; }
+    public int? StatTurnAroundTime { get; set; }
 }

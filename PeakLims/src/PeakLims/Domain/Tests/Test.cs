@@ -42,6 +42,7 @@ public class Test : BaseEntity
         newTest.Platform = testForCreation.Platform;
         newTest.Version = 1;
         newTest.TurnAroundTime = testForCreation.TurnAroundTime ?? 14;
+        newTest.StatTurnAroundTime = testForCreation.TurnAroundTime ?? 5;
         newTest.Status = TestStatus.Draft();
         newTest.OrganizationId = testForCreation.OrganizationId;
 
@@ -57,6 +58,7 @@ public class Test : BaseEntity
         Methodology = testForUpdate.Methodology;
         Platform = testForUpdate.Platform;
         TurnAroundTime = testForUpdate.TurnAroundTime ?? 14;
+        StatTurnAroundTime = testForUpdate.StatTurnAroundTime ?? 5;
         
         // TODO figure out how i want to bump versions on updates and based on state of the test
 

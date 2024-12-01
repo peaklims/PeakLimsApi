@@ -10,4 +10,5 @@ public sealed class TestDto
     public int Version { get; set; }
     public int? TurnAroundTime { get; set; }
     public string Status { get; set; }
+    public int? StatTurnAroundTime { get; set; }
 }
