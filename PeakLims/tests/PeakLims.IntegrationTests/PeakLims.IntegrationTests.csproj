@@ -21,7 +21,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Testcontainers" Version="3.10.0" />
+    <PackageReference Include="Testcontainers" Version="4.0.0" />
     <PackageReference Include="Testcontainers.LocalStack" Version="3.10.0" />
     <PackageReference Include="Testcontainers.RabbitMq" Version="3.10.0" />
     <PackageReference Include="Testcontainers.PostgreSql" Version="3.10.0" />
