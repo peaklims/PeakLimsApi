@@ -74,6 +74,9 @@ public sealed record AccessionPageViewDto
         public string PanelName { get; set; }
         public string Type { get; set; }
         public int? Version { get; set; }
+        
+        public string CancellationReason { get; set; }
+        public string CancellationComments { get; set; }
         public string Status { get; set; }
         public Guid? PanelOrderId { get; set; }
     }

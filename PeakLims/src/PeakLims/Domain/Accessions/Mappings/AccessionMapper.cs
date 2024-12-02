@@ -65,6 +65,8 @@ public static partial class AccessionMapper
                         Type = x.PanelOrder?.Panel?.Type,
                         Version = x.PanelOrder?.Panel?.Version,
                         Status = x?.PanelOrder?.Status()?.Value,
+                        CancellationReason = x?.PanelOrder?.CancellationReason,
+                        CancellationComments = x?.PanelOrder?.CancellationComments
                     },
                     Priority = x?.Priority?.Value,
                     TestCode = x.Test.TestCode,
