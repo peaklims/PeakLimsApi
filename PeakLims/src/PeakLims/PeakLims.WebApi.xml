@@ -279,6 +279,11 @@
             Deletes an existing PanelOrder record.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.PanelOrdersController.CancelPanelOrder(System.Guid,PeakLims.Domain.PanelOrders.Dtos.TestOrderCancellationDto)">
+            <summary>
+            Cancels a panel order.
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PanelsController.GetPanels(PeakLims.Domain.Panels.Dtos.PanelParametersDto)">
             <summary>
             Gets a list of all Panels.

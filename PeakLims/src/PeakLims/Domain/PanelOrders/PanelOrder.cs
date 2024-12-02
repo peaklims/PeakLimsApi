@@ -24,16 +24,6 @@ public class PanelOrder : BaseEntity
     public IReadOnlyCollection<TestOrder> TestOrders => _testOrders.AsReadOnly();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
-
-
-    // public static PanelOrder Create()
-    // {
-    //     var newPanelOrder = new PanelOrder();
-    //
-    //     newPanelOrder.QueueDomainEvent(new PanelOrderCreated(){ PanelOrder = newPanelOrder });
-    //     
-    //     return newPanelOrder;
-    // }
     
     public PanelOrder Cancel(TestOrderCancellationReason cancellationReason, string cancellationComments)
     {

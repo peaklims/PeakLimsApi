@@ -79,5 +79,17 @@ public sealed class PanelOrdersController: ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Cancels a panel order.
+    /// </summary>
+    [Authorize]
+    [HttpPut("{id:guid}/cancel", Name = "CancelPanelOrder")]
+    public async Task<IActionResult> CancelPanelOrder(Guid id, [FromBody] TestOrderCancellationDto cancellationDto)
+    {
+        var command = new CancelPanelOrder.Command(id, cancellationDto.Reason, cancellationDto.Comments);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
     // endpoint marker - do not delete this comment
 }
