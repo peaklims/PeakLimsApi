@@ -4,6 +4,7 @@ using PeakLims.Domain.Panels;
 using PeakLims.Domain.Tests.Models;
 using PeakLims.Domain.Tests.DomainEvents;
 using PeakOrganizations;
+using Resources;
 using TestStatuses;
 
 public class Test : BaseEntity
@@ -41,8 +42,8 @@ public class Test : BaseEntity
         newTest.Methodology = testForCreation.Methodology;
         newTest.Platform = testForCreation.Platform;
         newTest.Version = 1;
-        newTest.TurnAroundTime = testForCreation.TurnAroundTime ?? 14;
-        newTest.StatTurnAroundTime = testForCreation.TurnAroundTime ?? 5;
+        newTest.TurnAroundTime = testForCreation.TurnAroundTime ?? Consts.DefaultTurnAroundTimes.NormalTat;
+        newTest.StatTurnAroundTime = testForCreation.TurnAroundTime ?? Consts.DefaultTurnAroundTimes.StatTat;
         newTest.Status = TestStatus.Draft();
         newTest.OrganizationId = testForCreation.OrganizationId;
 
@@ -57,8 +58,8 @@ public class Test : BaseEntity
         TestName = testForUpdate.TestName;
         Methodology = testForUpdate.Methodology;
         Platform = testForUpdate.Platform;
-        TurnAroundTime = testForUpdate.TurnAroundTime ?? 14;
-        StatTurnAroundTime = testForUpdate.StatTurnAroundTime ?? 5;
+        TurnAroundTime = testForUpdate.TurnAroundTime ?? Consts.DefaultTurnAroundTimes.NormalTat;
+        StatTurnAroundTime = testForUpdate.StatTurnAroundTime ?? Consts.DefaultTurnAroundTimes.StatTat;
         
         // TODO figure out how i want to bump versions on updates and based on state of the test
 

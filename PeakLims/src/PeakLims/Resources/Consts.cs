@@ -17,6 +17,12 @@ public static class Consts
         public const string SampleNumberPrefix = "SAM";
     }
 
+    public static class DefaultTurnAroundTimes
+    {
+        public const int NormalTat = 14;
+        public const int StatTat = 5;
+    }
+
     public static class HttpClients
     {
         public const string KeycloakAdmin = "KeycloakAdmin";
