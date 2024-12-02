@@ -53,7 +53,7 @@
     <PackageReference Include="Scrutor" Version="5.0.1" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageReference Include="Soenneker.Utils.AutoBogus" Version="2.1.381" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
 
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
     <PackageReference Include="Serilog.Enrichers.AspNetCore" Version="1.0.0" />
