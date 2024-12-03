@@ -75,7 +75,7 @@ public class AccessionReadyForTestingTests
         testOrder.Status.Should().Be(TestOrderStatus.ReadyForTesting());
 
         var dueDate = (DateOnly)testOrder.DueDate!;
-        dueDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(test.TurnAroundTime)));
+        dueDate.Should().Be(sample.ReceivedDate.AddDays(test.TurnAroundTime));
     }
 
     [Fact]
