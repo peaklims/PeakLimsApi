@@ -96,7 +96,7 @@ public sealed class PanelOrdersController: ControllerBase
     /// Get a list of all possible cancellation reasons
     /// </summary>
     [Authorize]
-    [HttpGet("cancellationReasons", Name = "GetCancellationReasons")]
+    [HttpGet("cancellationReasons", Name = "GetPanelOrderCancellationReasons")]
     public async Task<IActionResult> GetCancellationReasons()
         => Ok(CancellationReason.ListNames());
 

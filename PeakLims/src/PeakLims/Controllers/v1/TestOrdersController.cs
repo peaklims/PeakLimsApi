@@ -137,7 +137,7 @@ public sealed class TestOrdersController: ControllerBase
     /// Get a list of all possible cancellation reasons
     /// </summary>
     [Authorize]
-    [HttpGet("cancellationReasons", Name = "GetCancellationReasons")]
+    [HttpGet("cancellationReasons", Name = "GetTestOrderCancellationReasons")]
     public async Task<IActionResult> GetCancellationReasons()
         => Ok(CancellationReason.ListNames());
 
