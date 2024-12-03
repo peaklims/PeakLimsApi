@@ -22,7 +22,7 @@ public static class CancelTestOrder
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
             var testOrder = await testOrderRepository.GetById(request.TestOrderId, cancellationToken: cancellationToken);
-            testOrder.Cancel(TestOrderCancellationReason.Of(request.Reason), request.Comments);
+            testOrder.Cancel(CancellationReason.Of(request.Reason), request.Comments);
             testOrderRepository.Update(testOrder);
 
             await unitOfWork.CommitChanges(cancellationToken);

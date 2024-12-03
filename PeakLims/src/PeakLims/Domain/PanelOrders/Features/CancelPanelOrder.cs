@@ -37,7 +37,7 @@ public static class CancelPanelOrder
                 .MustBeFoundOrThrow()
                 .PanelOrder;
             
-            panelOrder.Cancel(TestOrderCancellationReason.Of(request.Reason), request.Comments);
+            panelOrder.Cancel(CancellationReason.Of(request.Reason), request.Comments);
             dbContext.PanelOrders.Update(panelOrder);
 
             await  dbContext.SaveChangesAsync(cancellationToken);

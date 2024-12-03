@@ -1,6 +1,5 @@
 namespace PeakLims.IntegrationTests.FeatureTests.PanelOrders;
 
-using PeakLims.SharedTestHelpers.Fakes.PanelOrder;
 using PeakLims.Domain.PanelOrders.Features;
 using Microsoft.EntityFrameworkCore;
 using Domain;

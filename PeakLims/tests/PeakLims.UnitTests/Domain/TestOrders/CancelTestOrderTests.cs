@@ -23,12 +23,12 @@ public class CancelTestOrderTests
     {
         // Arrange
         var test = new FakeTestBuilder().Build().Activate();
-        var reason = _faker.PickRandom(TestOrderCancellationReason.ListNames());
+        var reason = _faker.PickRandom(CancellationReason.ListNames());
         var comments = _faker.Lorem.Sentence(); 
         
         // Act
         var fakeTestOrder = TestOrder.Create(test);
-        fakeTestOrder.Cancel(TestOrderCancellationReason.Of(reason), comments);
+        fakeTestOrder.Cancel(CancellationReason.Of(reason), comments);
 
         // Assert
         fakeTestOrder.Status.Should().Be(TestOrderStatus.Cancelled());
@@ -41,11 +41,11 @@ public class CancelTestOrderTests
     {
         // Arrange
         var test = new FakeTestBuilder().Build().Activate();
-        var reason = _faker.PickRandom(TestOrderCancellationReason.ListNames());
+        var reason = _faker.PickRandom(CancellationReason.ListNames());
         
         // Act
         var fakeTestOrder = TestOrder.Create(test);
-        var act = () => fakeTestOrder.Cancel(TestOrderCancellationReason.Of(reason), null);
+        var act = () => fakeTestOrder.Cancel(CancellationReason.Of(reason), null);
 
         // Assert
         act.Should().Throw<ValidationException>()

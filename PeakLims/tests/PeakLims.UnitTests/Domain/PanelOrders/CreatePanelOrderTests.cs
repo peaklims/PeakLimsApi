@@ -1,6 +1,5 @@
 namespace PeakLims.UnitTests.Domain.PanelOrders;
 
-using PeakLims.SharedTestHelpers.Fakes.PanelOrder;
 using PeakLims.Domain.PanelOrders;
 using PeakLims.Domain.PanelOrders.DomainEvents;
 using Bogus;

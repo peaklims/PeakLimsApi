@@ -14,7 +14,6 @@ using PeakLims.SharedTestHelpers.Fakes.Patient;
 using PeakLims.SharedTestHelpers.Fakes.HealthcareOrganization;
 using Services;
 using SharedTestHelpers.Fakes.Panel;
-using SharedTestHelpers.Fakes.PanelOrder;
 using SharedTestHelpers.Fakes.Test;
 
 public class RemovePanelOrderFromAccessionCommandTests : TestBase

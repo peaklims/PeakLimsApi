@@ -3,7 +3,6 @@ namespace PeakLims.Domain.PanelOrders;
 using PeakLims.Domain.TestOrders;
 using PeakLims.Domain.Accessions;
 using PeakLims.Domain.Panels;
-using PeakLims.Domain.PanelOrders.Models;
 using PeakLims.Domain.PanelOrders.DomainEvents;
 using PanelOrderStatuses;
 using TestOrderCancellationReasons;
@@ -14,7 +13,7 @@ public class PanelOrder : BaseEntity
 {
     public PanelOrderStatus Status() => DeriveStatus();
 
-    public string CancellationReason { get; private set; }
+    public CancellationReason CancellationReason { get; private set; }
 
     public string CancellationComments { get; private set; }
 
@@ -25,13 +24,13 @@ public class PanelOrder : BaseEntity
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
     
-    public PanelOrder Cancel(TestOrderCancellationReason cancellationReason, string cancellationComments)
+    public PanelOrder Cancel(CancellationReason cancellationReason, string cancellationComments)
     {
         foreach (var testOrder in TestOrders)
         {
             testOrder.Cancel(cancellationReason, cancellationComments);
         }
-        CancellationReason = cancellationReason.Value;
+        CancellationReason = CancellationReason.Of(cancellationReason.Value);
         CancellationComments = cancellationComments;
 
         QueueDomainEvent(new PanelOrderUpdated(){ Id = Id });
@@ -80,15 +79,6 @@ public class PanelOrder : BaseEntity
         panelOrder.QueueDomainEvent(new PanelOrderCreated(){ PanelOrder = panelOrder });
         
         return panelOrder;
-    }
-
-    public PanelOrder Update(PanelOrderForUpdate panelOrderForUpdate)
-    {
-        CancellationReason = panelOrderForUpdate.CancellationReason;
-        CancellationComments = panelOrderForUpdate.CancellationComments;
-
-        QueueDomainEvent(new PanelOrderUpdated(){ Id = Id });
-        return this;
     }
 
     public PanelOrder SetPanel(Panel panel)

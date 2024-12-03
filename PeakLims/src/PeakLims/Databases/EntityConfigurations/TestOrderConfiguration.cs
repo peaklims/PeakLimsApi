@@ -23,7 +23,7 @@ public sealed class TestOrderConfiguration : IEntityTypeConfiguration<TestOrder>
         builder.Property(x => x.Priority)
             .HasConversion(x => x.Value, x => new TestOrderPriority(x));
         builder.Property(x => x.CancellationReason)
-            .HasConversion(x => x.Value, x => new TestOrderCancellationReason(x));
+            .HasConversion(x => x.Value, x => new CancellationReason(x));
         
         // example for a more complex value object
         // builder.OwnsOne(x => x.PhysicalAddress, opts =>

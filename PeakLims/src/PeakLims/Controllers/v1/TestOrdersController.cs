@@ -139,7 +139,7 @@ public sealed class TestOrdersController: ControllerBase
     [Authorize]
     [HttpGet("cancellationReasons", Name = "GetCancellationReasons")]
     public async Task<IActionResult> GetCancellationReasons()
-        => Ok(TestOrderCancellationReason.ListNames());
+        => Ok(CancellationReason.ListNames());
 
     /// <summary>
     /// Marks a test order as STAT

@@ -21,7 +21,7 @@ public class TestOrder : BaseEntity
 
     public DateOnly? DueDate { get; private set; }
 
-    public TestOrderCancellationReason CancellationReason { get; private set; }
+    public CancellationReason CancellationReason { get; private set; }
 
     public string CancellationComments { get; private set; }
 
@@ -59,7 +59,7 @@ public class TestOrder : BaseEntity
         return testOrder;
     }
 
-    public TestOrder Cancel(TestOrderCancellationReason reason, string comments)
+    public TestOrder Cancel(CancellationReason reason, string comments)
     {
         ValidationException.ThrowWhenNullOrWhitespace(comments, 
             $"A comment must be provided detailing why the test order was cancelled.");

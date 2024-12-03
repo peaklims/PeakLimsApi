@@ -3,7 +3,7 @@ namespace PeakLims.Domain.TestOrderCancellationReasons;
 using Ardalis.SmartEnum;
 using Exceptions;
 
-public class TestOrderCancellationReason : ValueObject
+public class CancellationReason : ValueObject
 {
     private TestOrderCancellationReasonEnum _reason;
     public string Value
@@ -21,24 +21,24 @@ public class TestOrderCancellationReason : ValueObject
         }
     }
     
-    public TestOrderCancellationReason(string value)
+    public CancellationReason(string value)
     {
         Value = value;
     }
-    public TestOrderCancellationReason(TestOrderCancellationReasonEnum value)
+    public CancellationReason(TestOrderCancellationReasonEnum value)
     {
         Value = value.Name;
     }
     
-    public static TestOrderCancellationReason Of(string value) => new TestOrderCancellationReason(value);
-    public static implicit operator string(TestOrderCancellationReason value) => value == null ? null : value.Value;
+    public static CancellationReason Of(string value) => new CancellationReason(value);
+    public static implicit operator string(CancellationReason value) => value == null ? null : value.Value;
     public static List<string> ListNames() => TestOrderCancellationReasonEnum.List.Select(x => x.Name).ToList();
 
-    public static TestOrderCancellationReason Qns() => new TestOrderCancellationReason(TestOrderCancellationReasonEnum.Qns.Name);
-    public static TestOrderCancellationReason Abandoned() => new TestOrderCancellationReason(TestOrderCancellationReasonEnum.Abandoned.Name);
-    public static TestOrderCancellationReason Other() => new TestOrderCancellationReason(TestOrderCancellationReasonEnum.Other.Name);
+    public static CancellationReason Qns() => new CancellationReason(TestOrderCancellationReasonEnum.Qns.Name);
+    public static CancellationReason Abandoned() => new CancellationReason(TestOrderCancellationReasonEnum.Abandoned.Name);
+    public static CancellationReason Other() => new CancellationReason(TestOrderCancellationReasonEnum.Other.Name);
 
-    protected TestOrderCancellationReason() { } // EF Core
+    protected CancellationReason() { } // EF Core
 }
 
 public abstract class TestOrderCancellationReasonEnum(string name, int value)

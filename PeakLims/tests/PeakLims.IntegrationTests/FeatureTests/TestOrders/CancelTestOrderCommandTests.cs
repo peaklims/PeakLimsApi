@@ -31,7 +31,7 @@ public class CancelTestOrderCommandTests : TestBase
         await testingServiceScope.InsertAsync(accession);
         var testOrder = accession.TestOrders.First();
         
-        var reason = _faker.PickRandom(TestOrderCancellationReason.ListNames());
+        var reason = _faker.PickRandom(CancellationReason.ListNames());
         var comments = _faker.Lorem.Sentence(); 
 
         // Act

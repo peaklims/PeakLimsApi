@@ -284,6 +284,11 @@
             Cancels a panel order.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.PanelOrdersController.GetCancellationReasons">
+            <summary>
+            Get a list of all possible cancellation reasons
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PanelsController.GetPanels(PeakLims.Domain.Panels.Dtos.PanelParametersDto)">
             <summary>
             Gets a list of all Panels.

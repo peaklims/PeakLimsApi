@@ -31,7 +31,7 @@ public class CancelPanelOrderCommandTests : TestBase
         var panelOrder = accession.AddPanel(panel);
         await testingServiceScope.InsertAsync(accession);
         
-        var reason = TestOrderCancellationReason.Other();
+        var reason = CancellationReason.Other();
         var comments = "Test cancellation";
         
         // Act

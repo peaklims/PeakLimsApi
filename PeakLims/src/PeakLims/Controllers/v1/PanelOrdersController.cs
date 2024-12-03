@@ -12,6 +12,7 @@ using System.Threading;
 using Domain.Accessions.Features;
 using MediatR;
 using Asp.Versioning;
+using Domain.TestOrderCancellationReasons;
 
 [ApiController]
 [Route("api/v{v:apiVersion}/panelorders")]
@@ -90,6 +91,14 @@ public sealed class PanelOrdersController: ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
+    
+    /// <summary>
+    /// Get a list of all possible cancellation reasons
+    /// </summary>
+    [Authorize]
+    [HttpGet("cancellationReasons", Name = "GetCancellationReasons")]
+    public async Task<IActionResult> GetCancellationReasons()
+        => Ok(CancellationReason.ListNames());
 
     // endpoint marker - do not delete this comment
 }

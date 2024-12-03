@@ -1,7 +1,6 @@
 namespace PeakLims.IntegrationTests.FeatureTests.PanelOrders;
 
 using PeakLims.Domain.PanelOrders.Dtos;
-using PeakLims.SharedTestHelpers.Fakes.PanelOrder;
 using PeakLims.Domain.PanelOrders.Features;
 using Domain;
 using System.Threading.Tasks;
