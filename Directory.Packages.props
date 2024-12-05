@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Ardalis.SmartEnum" Version="8.0.0" />
-    <PackageVersion Include="Asp.Versioning.Mvc" Version="8.0.0" />
+    <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
     <PackageVersion Include="AutoBogus.Conventions" Version="2.13.1" />
     <PackageVersion Include="AutoBogusLifesupport" Version="2.14.0" />
