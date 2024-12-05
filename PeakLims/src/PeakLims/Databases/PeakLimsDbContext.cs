@@ -27,6 +27,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Exceptions;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Resources;
 
@@ -189,6 +190,14 @@ public sealed class PeakLimsDbContext(
                     break;
             }
         }
+    }
+    
+    // due to dumb breaking change in .net 9... https://github.com/dotnet/efcore/issues/34431
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+
     }
 }
 
