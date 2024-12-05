@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeakLims.SharedTestHelpers"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeakLims.UnitTests", "PeakLims\tests\PeakLims.UnitTests\PeakLims.UnitTests.csproj", "{0ACE8680-37D0-4304-A0E7-831C5DD8A0B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeycloakInPulumi", "KeycloakInPulumi\KeycloakInPulumi.csproj", "{9E4842A7-EC6F-438C-8620-61BC2093E7E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeakLimsIdp", "PeakLimsIdp\PeakLimsIdp.csproj", "{9E4842A7-EC6F-438C-8620-61BC2093E7E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeakLimsSpa.Bff", "PeakLimsSpa.Bff\PeakLimsSpa.Bff.csproj", "{B22C4E0E-CF8A-4955-82BA-5D64719DE042}"
 EndProject
