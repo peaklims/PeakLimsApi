@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi.Keycloak" Version="5.3.5" />
+    <PackageReference Include="Pulumi.Keycloak" />
   </ItemGroup>
 
 </Project>
