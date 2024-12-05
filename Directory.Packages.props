@@ -18,7 +18,7 @@
     <PackageVersion Include="Duende.BFF.Yarp" Version="2.2.0" />
     <PackageVersion Include="EFCore.NamingConventions" Version="8.0.3" />
     <PackageVersion Include="FluentAssertions" Version="6.12.1" />
-    <PackageVersion Include="FluentValidation" Version="11.10.0" />
+    <PackageVersion Include="FluentValidation" Version="11.11.0" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="Hangfire" Version="1.8.14" />
     <PackageVersion Include="Hangfire.MemoryStorage" Version="1.8.1.1" />
