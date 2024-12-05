@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: ['8.0.x']
+        dotnet-version: ['9.0.x']
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -20,5 +20,5 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        working-directory: PeakLims/tests/PeakLims.IntegrationTests
+        working-directory: PeakLims.IntegrationTests
         run: dotnet test --no-restore --verbosity minimal
