@@ -57,18 +57,17 @@ builder.Services.AddAuthentication(options =>
         
         options.Events = new OpenIdConnectEvents
         {
-            OnAuthenticationFailed = context =>
+            OnRemoteFailure = (context) =>
             {
-                if (context.Exception.Message.Contains("Correlation failed"))
+                // https://github.com/dotnet/aspnetcore/issues/45620
+                if (context.Failure?.Message == "Correlation failed.")
                 {
                     context.Response.Redirect("/bff/login");
                     context.HandleResponse();
-                    return Task.CompletedTask;
                 }
-            
-                // For other authentication failures, you can decide how to handle them
+
                 return Task.CompletedTask;
-            }
+            },
         };
     });
 
