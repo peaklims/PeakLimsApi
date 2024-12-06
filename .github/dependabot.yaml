@@ -43,6 +43,12 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      ms-ai:
+        patterns:
+          - "Microsoft.Extensions.AI*"
+        update-types:
+          - "minor"
+          - "patch"
     commit-message:
       prefix: "Package Dependencies"
     # Temporarily disable PR limit, till initial dependency update goes through
