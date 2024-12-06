@@ -16,8 +16,6 @@ public class HealthcareOrganization : BaseEntity
 {
     public string Name { get; private set; }
 
-    public string Email { get; private set; }
-
     public string KnownDomain { get; set; }
     
     public PeakOrganization Organization { get; }
@@ -45,7 +43,6 @@ public class HealthcareOrganization : BaseEntity
         var newHealthcareOrganization = new HealthcareOrganization();
 
         newHealthcareOrganization.Name = healthcareOrganizationForCreation.Name;
-        newHealthcareOrganization.Email = healthcareOrganizationForCreation.Email;
         newHealthcareOrganization.Status = HealthcareOrganizationStatus.Active();
         newHealthcareOrganization.KnownDomain = healthcareOrganizationForCreation.KnownDomain;
         newHealthcareOrganization.OrganizationId = healthcareOrganizationForCreation.OrganizationId;
@@ -58,7 +55,6 @@ public class HealthcareOrganization : BaseEntity
     public HealthcareOrganization Update(HealthcareOrganizationForUpdate healthcareOrganizationForUpdate)
     {
         Name = healthcareOrganizationForUpdate.Name;
-        Email = healthcareOrganizationForUpdate.Email;
         KnownDomain = healthcareOrganizationForUpdate.KnownDomain;
 
         QueueDomainEvent(new HealthcareOrganizationUpdated(){ Id = Id });

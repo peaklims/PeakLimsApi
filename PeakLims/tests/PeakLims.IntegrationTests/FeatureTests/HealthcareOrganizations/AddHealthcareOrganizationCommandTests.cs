@@ -27,10 +27,8 @@ public class AddHealthcareOrganizationCommandTests : TestBase
 
         // Assert
         healthcareOrganizationReturned.Name.Should().Be(fakeHealthcareOrganizationOne.Name);
-        healthcareOrganizationReturned.Email.Should().Be(fakeHealthcareOrganizationOne.Email);
 
         healthcareOrganizationCreated.Name.Should().Be(fakeHealthcareOrganizationOne.Name);
-        healthcareOrganizationCreated.Email.Should().Be(fakeHealthcareOrganizationOne.Email);
     }
 
     [Fact(Skip = "need to redo permission granularity")]

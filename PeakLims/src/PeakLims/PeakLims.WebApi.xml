@@ -808,5 +808,17 @@
         <member name="M:PeakLims.Migrations.TatWork.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:PeakLims.Migrations.AddTitleToContactsAndRemoveOrgEmail">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddTitleToContactsAndRemoveOrgEmail.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddTitleToContactsAndRemoveOrgEmail.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddTitleToContactsAndRemoveOrgEmail.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

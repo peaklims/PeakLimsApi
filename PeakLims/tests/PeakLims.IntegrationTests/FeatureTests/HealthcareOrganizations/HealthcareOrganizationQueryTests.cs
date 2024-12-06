@@ -26,7 +26,6 @@ public class HealthcareOrganizationQueryTests : TestBase
 
         // Assert
         healthcareOrganization.Name.Should().Be(fakeHealthcareOrganizationOne.Name);
-        healthcareOrganization.Email.Should().Be(fakeHealthcareOrganizationOne.Email);
     }
 
     [Fact]

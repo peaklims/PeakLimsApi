@@ -32,7 +32,6 @@ public class UpdateHealthcareOrganizationCommandTests : TestBase
 
         // Assert
         updatedHealthcareOrganization.Name.Should().Be(updatedHealthcareOrganizationDto.Name);
-        updatedHealthcareOrganization.Email.Should().Be(updatedHealthcareOrganizationDto.Email);
     }
 
     [Fact(Skip = "need to redo permission granularity")]

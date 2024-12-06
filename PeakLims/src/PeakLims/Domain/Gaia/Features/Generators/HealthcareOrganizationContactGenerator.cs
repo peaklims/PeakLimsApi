@@ -38,10 +38,12 @@ public class HealthcareOrganizationContactGenerator()
         var contacts = new ConcurrentBag<HealthcareOrganizationContact>();
         foreach (var parsedJsonContact in people)
         {
+            var title = new Random().Next(0, 2) == 0 ? "Dr" : null;
             var contactToCreate = new HealthcareOrganizationContactForCreation()
             {
                 FirstName = parsedJsonContact.FirstName,
                 LastName = parsedJsonContact.LastName,
+                Title = title,
                 Email = $"{parsedJsonContact.FirstName.ToLower()}.{parsedJsonContact.LastName.ToLower()}@{organization.KnownDomain}",
                 Npi = NPI.Random().Value
             };

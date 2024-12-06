@@ -19,6 +19,7 @@ public class HealthcareOrganizationContact : BaseEntity
     public string Email { get; private set; }
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
+    public string Title { get; private set; }
     public NPI Npi { get; private set; }
     
     public HealthcareOrganization HealthcareOrganization { get; }
@@ -32,6 +33,7 @@ public class HealthcareOrganizationContact : BaseEntity
 
         newHealthcareOrganizationContact.FirstName = healthcareOrganizationContactForCreation.FirstName;
         newHealthcareOrganizationContact.LastName = healthcareOrganizationContactForCreation.LastName;
+        newHealthcareOrganizationContact.Title = healthcareOrganizationContactForCreation.Title;
         newHealthcareOrganizationContact.Email = healthcareOrganizationContactForCreation.Email;
         newHealthcareOrganizationContact.Npi = NPI.Of(healthcareOrganizationContactForCreation.Npi);
 
@@ -44,6 +46,7 @@ public class HealthcareOrganizationContact : BaseEntity
     {
         FirstName = healthcareOrganizationContactForUpdate.FirstName;
         LastName =healthcareOrganizationContactForUpdate.LastName;
+        Title = healthcareOrganizationContactForUpdate.Title;
         Email = healthcareOrganizationContactForUpdate.Email;
         Npi = NPI.Of(healthcareOrganizationContactForUpdate.Npi);
 

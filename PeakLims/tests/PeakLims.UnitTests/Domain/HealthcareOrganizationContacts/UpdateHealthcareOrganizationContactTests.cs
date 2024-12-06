@@ -23,6 +23,7 @@ public class UpdateHealthcareOrganizationContactTests
         // Assert
         fakeHealthcareOrganizationContact.FirstName.Should().Be(updatedHealthcareOrganizationContact.FirstName);
         fakeHealthcareOrganizationContact.LastName.Should().Be(updatedHealthcareOrganizationContact.LastName);
+        fakeHealthcareOrganizationContact.Title.Should().Be(updatedHealthcareOrganizationContact.Title);
         fakeHealthcareOrganizationContact.Email.Should().Be(updatedHealthcareOrganizationContact.Email);
         fakeHealthcareOrganizationContact.Npi.Value.Should().Be(updatedHealthcareOrganizationContact.Npi);
     }
