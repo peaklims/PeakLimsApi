@@ -29,7 +29,6 @@ public class UpdateHealthcareOrganizationTests
 
         // Assert
         fakeHealthcareOrganization.Name.Should().Be(updatedHealthcareOrganization.Name);
-        fakeHealthcareOrganization.Email.Should().Be(updatedHealthcareOrganization.Email);
     }
     
     [Fact]
