@@ -22,12 +22,6 @@ public class FakeHealthcareOrganizationBuilder
         return this;
     }
     
-    public FakeHealthcareOrganizationBuilder WithEmail(string email)
-    {
-        _creationData.Email = email;
-        return this;
-    }
-    
     public HealthcareOrganization Build()
     {
         var result = HealthcareOrganization.Create(_creationData);
