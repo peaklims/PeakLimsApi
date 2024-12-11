@@ -191,14 +191,6 @@ public sealed class PeakLimsDbContext(
             }
         }
     }
-    
-    // due to dumb breaking change in .net 9... https://github.com/dotnet/efcore/issues/34431
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-        optionsBuilder.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
-
-    }
 }
 
 public static class Extensions

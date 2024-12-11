@@ -87,6 +87,7 @@ public class TestFixture : IAsyncLifetime
     {
         var options = new DbContextOptionsBuilder<PeakLimsDbContext>()
             .UseNpgsql(connectionString)
+            .UseSnakeCaseNamingConvention()
             .Options;
         var context = new PeakLimsDbContext(options, null, null, null);
         await context?.Database?.MigrateAsync();
