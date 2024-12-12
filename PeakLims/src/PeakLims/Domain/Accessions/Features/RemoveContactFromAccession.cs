@@ -19,8 +19,7 @@ public static class RemoveContactFromAccession
     public sealed class Handler(
         IAccessionContactRepository accessionContactRepository,
         IUnitOfWork unitOfWork,
-        PeakLimsDbContext dbContext, 
-        IHeimGuardClient heimGuard)
+        PeakLimsDbContext dbContext)
         : IRequestHandler<Command>
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)

@@ -26,6 +26,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Domain.PatientRelationships;
 using Exceptions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
@@ -39,6 +40,7 @@ public sealed class PeakLimsDbContext(
     : DbContext(options)
 {
     #region DbSet Region - Do Not Delete
+    public DbSet<PatientRelationship> PatientRelationships { get; set; }
     public DbSet<PeakOrganization> PeakOrganizations { get; set; }
     public DbSet<HipaaAuditLog> HipaaAuditLogs { get; set; }
     public DbSet<PanelOrder> PanelOrders { get; set; }
@@ -82,6 +84,7 @@ public sealed class PeakLimsDbContext(
         */
 
         #region Entity Database Config Region - Only delete if you don't want to automatically add configurations
+        modelBuilder.ApplyConfiguration(new PatientRelationshipConfiguration());
         modelBuilder.ApplyConfiguration(new PanelTestAssignmentConfiguration());
         modelBuilder.ApplyConfiguration(new PeakOrganizationConfiguration());
         modelBuilder.ApplyConfiguration(new HipaaAuditLogConfiguration());
@@ -133,6 +136,8 @@ public sealed class PeakLimsDbContext(
             .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
         modelBuilder.Entity<PanelTestAssignment>()
             .HasQueryFilter(e => !e.IsDeleted && e.Panel.OrganizationId == currentUserService.OrganizationId);
+        modelBuilder.Entity<PatientRelationship>()
+            .HasQueryFilter(e => !e.IsDeleted && e.FromPatient.OrganizationId == currentUserService.OrganizationId);
     }
 
     public override int SaveChanges()
@@ -190,6 +195,14 @@ public sealed class PeakLimsDbContext(
                     break;
             }
         }
+    }
+    
+    // due to dumb breaking change in .net 9... https://github.com/dotnet/efcore/issues/34431
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
+
     }
 }
 
@@ -272,6 +285,10 @@ public static class Extensions
             .Include(x => x.TestOrders)
                 .ThenInclude(x => x.Sample)
             .Include(x => x.AccessionContacts)
+            .Include(x => x.Patient)
+                .ThenInclude(x => x.FromRelationships)
+            .Include(x => x.Patient)
+                .ThenInclude(x => x.ToRelationships)
             .AsSplitQuery();
     }
 
@@ -298,6 +315,8 @@ public static class Extensions
                 .ThenInclude(x => x.TestOrders)
                 .ThenInclude(x => x.PanelOrder)
                 .ThenInclude(x => x.Panel)
+            .Include(x => x.FromRelationships)
+            .Include(x => x.ToRelationships)
             .AsSplitQuery();
     }
     

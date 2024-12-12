@@ -364,6 +364,21 @@
             Updates an entire existing Patient.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.AddRelationship(PeakLims.Domain.PatientRelationships.Dtos.AddPatientRelationshipDto)">
+            <summary>
+            Adds a patient relationship
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.GetPatientRelationships(System.Guid)">
+            <summary>
+            Gets a list of patient relationships
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.RemoveRelationship(System.Guid)">
+            <summary>
+            Deletes a relationship
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PeakOrganizationsController.GetPeakOrganizations(PeakLims.Domain.PeakOrganizations.Dtos.PeakOrganizationParametersDto)">
             <summary>
             Gets a list of all PeakOrganizations.
@@ -644,6 +659,11 @@
             The database configuration for Patients. 
             </summary>
         </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.PatientRelationshipConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.PatientRelationships.PatientRelationship})">
+            <summary>
+            The database configuration for Patient Relationships
+            </summary>
+        </member>
         <member name="M:PeakLims.Databases.EntityConfigurations.PeakOrganizationConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.PeakOrganizations.PeakOrganization})">
             <summary>
             The database configuration for PeakOrganizations. 
@@ -818,6 +838,18 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.AddTitleToContactsAndRemoveOrgEmail.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.AddRelationships">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddRelationships.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddRelationships.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddRelationships.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

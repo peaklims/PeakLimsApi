@@ -10,10 +10,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using Ethnicities;
 using Lifespans;
+using PatientRelationships;
+using PatientRelationships.Services;
 using PeakLims.Domain.Samples;
 using PeakLims.Domain.Samples.Models;
 using PeakOrganizations;
 using Races;
+using RelationshipTypes;
 using Sexes;
 using ValidationException = Exceptions.ValidationException;
 
@@ -41,6 +44,12 @@ public class Patient : BaseEntity
     public List<Sample> Samples => _sample;
 
     public List<Accession> Accessions { get; }
+    
+    public virtual List<PatientRelationship> FromRelationships { get; private set; } 
+        = new List<PatientRelationship>();
+
+    public virtual List<PatientRelationship> ToRelationships { get; } 
+        = new List<PatientRelationship>();
 
     // Add Props Marker -- Deleting this comment will cause the add props utility to be incomplete
 
@@ -100,9 +109,63 @@ public class Patient : BaseEntity
 
         QueueDomainEvent(new PatientUpdated(){ Id = Id });
         return this;
+    }
+    
+    public IEnumerable<PatientRelationship> AddRelative(string fromRelationshipType, 
+        Patient toRelative, 
+        string toRelativeRelationshipType,
+        string? notes,
+        bool confirmedBidirectional)
+    {
+        var relationship = PatientRelationshipBuilder
+            .For(this)
+            .As(RelationshipType.Of(fromRelationshipType))
+            .To(toRelative)
+            .WhoIs(RelationshipType.Of(toRelativeRelationshipType))
+            .WithNotes(notes)
+            .Build();
+        FromRelationships.Add(relationship);
         
+        if(confirmedBidirectional)
+        {
+            var reverseRelationship = PatientRelationshipBuilder
+                .For(toRelative)
+                .As(RelationshipType.Of(toRelativeRelationshipType))
+                .To(this)
+                .WhoIs(RelationshipType.Of(fromRelationshipType))
+                .WithNotes(notes)
+                .Build();
+            toRelative.ToRelationships.Add(reverseRelationship);
+            
+            return [relationship, reverseRelationship];
+        }
+        
+        return [relationship];
     }
 
+    public void RemoveRelative(PatientRelationship relationship)
+    {
+        if(FromRelationships.Contains(relationship))
+            FromRelationships.RemoveAll(x => x.Id == relationship.Id);
+        
+        if(ToRelationships.Contains(relationship))
+            ToRelationships.RemoveAll(x => x.Id == relationship.Id);
+
+        var bidirectionalFrom = FromRelationships.FirstOrDefault(x => x.FromPatientId == relationship.ToPatientId
+                                              && x.ToPatientId == relationship.FromPatientId
+                                              && x.FromRelationship == relationship.ToRelationship
+                                              && x.ToRelationship == relationship.FromRelationship);
+        if(bidirectionalFrom != null)
+            FromRelationships.RemoveAll(x => x.Id == bidirectionalFrom.Id);
+
+        var bidirectionalTo = ToRelationships.FirstOrDefault(x => x.FromPatientId == relationship.ToPatientId
+                                                                  && x.ToPatientId == relationship.FromPatientId
+                                                                  && x.FromRelationship == relationship.ToRelationship
+                                                                  && x.ToRelationship == relationship.FromRelationship);
+        if(bidirectionalTo != null)
+            ToRelationships.RemoveAll(x => x.Id == bidirectionalTo.Id);
+    }
+    
     // Add Prop Methods Marker -- Deleting this comment will cause the add props utility to be incomplete
     
     protected Patient() { } // For EF + Mocking

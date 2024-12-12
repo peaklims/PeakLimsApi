@@ -16,6 +16,6 @@ public class RaceTests
         var race = Race.Of(input);
 
         // Assert
-        race.Value.Should().Be(RaceEnum.NotGiven.Name);
+        race.Value.Should().Be(Race.NotGiven().Value);
     }
 }

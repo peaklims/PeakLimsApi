@@ -18,7 +18,6 @@ public class Race : ValueObject
     }
     
     public Race(string value) => Value = value;
-    public Race(RaceEnum value) => Value = value.Name;
 
     public static Race Of(string value) => new Race(value);
     public static implicit operator string(Race value) => value.Value;
@@ -33,68 +32,68 @@ public class Race : ValueObject
     public static Race NotGiven() => new Race(RaceEnum.NotGiven.Name);
 
     protected Race() { } // EF Core
-}
-
-public abstract class RaceEnum : SmartEnum<RaceEnum>
-{
-    public static readonly RaceEnum Unknown = new UnknownType();
-    public static readonly RaceEnum AmericanIndianAlaskaNative = new AmericanIndianAlaskaNativeType();
-    public static readonly RaceEnum BlackOrAfricanAmerican = new BlackOrAfricanAmericanType();
-    public static readonly RaceEnum NativeHawaiianPacificIslander = new NativeHawaiianPacificIslanderType();
-    public static readonly RaceEnum White = new WhiteType();
-    public static readonly RaceEnum Asian = new AsianType();
-    public static readonly RaceEnum NotGiven = new NotGivenType();
-
-    protected RaceEnum(string name, int value) : base(name, value)
-    {
-    }
-
-    private class UnknownType : RaceEnum
-    {
-        public UnknownType() : base("Unknown", 0)
-        {
-        }
-    }
-
-    private class AmericanIndianAlaskaNativeType : RaceEnum
-    {
-        public AmericanIndianAlaskaNativeType() : base("American Indian/Alaska Native", 1)
-        {
-        }
-    }
-
-    private class AsianType : RaceEnum
-    {
-        public AsianType() : base("Asian", 2)
-        {
-        }
-    }
-
-    private class BlackOrAfricanAmericanType : RaceEnum
-    {
-        public BlackOrAfricanAmericanType() : base("Black or African American", 3)
-        {
-        }
-    }
-
-    private class NativeHawaiianPacificIslanderType : RaceEnum
-    {
-        public NativeHawaiianPacificIslanderType() : base("Native Hawaiian/Pacific Islander", 4)
-        {
-        }
-    }
-
-    private class WhiteType : RaceEnum
-    {
-        public WhiteType() : base("White", 5)
-        {
-        }
-    }
     
-    private class NotGivenType : RaceEnum
+    private abstract class RaceEnum : SmartEnum<RaceEnum>
     {
-        public NotGivenType() : base("Not Given", 6)
+        public static readonly RaceEnum Unknown = new UnknownType();
+        public static readonly RaceEnum AmericanIndianAlaskaNative = new AmericanIndianAlaskaNativeType();
+        public static readonly RaceEnum BlackOrAfricanAmerican = new BlackOrAfricanAmericanType();
+        public static readonly RaceEnum NativeHawaiianPacificIslander = new NativeHawaiianPacificIslanderType();
+        public static readonly RaceEnum White = new WhiteType();
+        public static readonly RaceEnum Asian = new AsianType();
+        public static readonly RaceEnum NotGiven = new NotGivenType();
+
+        protected RaceEnum(string name, int value) : base(name, value)
         {
+        }
+
+        private class UnknownType : RaceEnum
+        {
+            public UnknownType() : base("Unknown", 0)
+            {
+            }
+        }
+
+        private class AmericanIndianAlaskaNativeType : RaceEnum
+        {
+            public AmericanIndianAlaskaNativeType() : base("American Indian/Alaska Native", 1)
+            {
+            }
+        }
+
+        private class AsianType : RaceEnum
+        {
+            public AsianType() : base("Asian", 2)
+            {
+            }
+        }
+
+        private class BlackOrAfricanAmericanType : RaceEnum
+        {
+            public BlackOrAfricanAmericanType() : base("Black or African American", 3)
+            {
+            }
+        }
+
+        private class NativeHawaiianPacificIslanderType : RaceEnum
+        {
+            public NativeHawaiianPacificIslanderType() : base("Native Hawaiian/Pacific Islander", 4)
+            {
+            }
+        }
+
+        private class WhiteType : RaceEnum
+        {
+            public WhiteType() : base("White", 5)
+            {
+            }
+        }
+        
+        private class NotGivenType : RaceEnum
+        {
+            public NotGivenType() : base("Not Given", 6)
+            {
+            }
         }
     }
 }

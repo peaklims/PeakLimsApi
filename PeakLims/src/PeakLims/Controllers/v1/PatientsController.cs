@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
 using Asp.Versioning;
+using Domain.PatientRelationships.Dtos;
+using Domain.PatientRelationships.Features;
 
 [ApiController]
 [Route("api/v{v:apiVersion}/patients")]
@@ -117,5 +119,42 @@ public sealed class PatientsController(IMediator mediator) : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Adds a patient relationship
+    /// </summary>
+    [Authorize]
+    [HttpPost("relationship", Name = "AddRelationship")]
+    public async Task<IActionResult> AddRelationship([FromBody]AddPatientRelationshipDto relationship)
+    {
+        var command = new AddRelationship.Command(relationship);
+        await mediator.Send(command);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Gets a list of patient relationships
+    /// </summary>
+    [Authorize]
+    [HttpGet("{patientId:guid}/relationships", Name = "GetPatientRelationships")]
+    public async Task<IActionResult> GetPatientRelationships(Guid patientId)
+    {
+        var command = new GetPatientRelationships.Query(patientId);
+        var response = await mediator.Send(command);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Deletes a relationship
+    /// </summary>
+    [Authorize]
+    [HttpDelete("relationship/{relationshipId:guid}", Name = "RemoveRelationship")]
+    public async Task<IActionResult> RemoveRelationship(Guid relationshipId)
+    {
+        var command = new RemoveRelationship.Command(relationshipId);
+        await mediator.Send(command);
+        return NoContent();
+    }
+    
+    
     // endpoint marker - do not delete this comment
 }
