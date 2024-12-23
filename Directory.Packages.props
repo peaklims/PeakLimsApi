@@ -50,7 +50,7 @@
     <PackageVersion Include="Pulumi.Keycloak" Version="5.4.0" />
     <PackageVersion Include="QueryKit" Version="1.4.4" />
     <PackageVersion Include="Riok.Mapperly" Version="4.1.1" />
-    <PackageVersion Include="Scrutor" Version="5.0.2" />
+    <PackageVersion Include="Scrutor" Version="5.1.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.3" />
     <PackageVersion Include="Serilog.Enrichers.AspNetCore" Version="1.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
