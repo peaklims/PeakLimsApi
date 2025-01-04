@@ -3,10 +3,8 @@ namespace PeakLims.Domain.PatientRelationships.Services;
 using Patients;
 using RelationshipTypes;
 
-public sealed class PatientRelationshipBuilder
+public static class PatientRelationshipBuilder
 {
-    private PatientRelationshipBuilder() { }
-
     public static IIs For(Patient fromPatient)
         => new BuilderImpl(fromPatient);
 
@@ -59,25 +57,25 @@ public sealed class PatientRelationshipBuilder
             return newRelationship;
         }
     }
-}
 
-public interface IIs
-{
-    IAs As(RelationshipType fromRelationshipType);
-}
+    public interface IIs
+    {
+        IAs As(RelationshipType fromRelationshipType);
+    }
 
-public interface IAs
-{
-    IWhoIs To(Patient toPatient);
-}
+    public interface IAs
+    {
+        IWhoIs To(Patient toPatient);
+    }
 
-public interface IWhoIs
-{
-    IWithNotes WhoIs(RelationshipType toRelationshipType);
-}
+    public interface IWhoIs
+    {
+        IWithNotes WhoIs(RelationshipType toRelationshipType);
+    }
 
-public interface IWithNotes
-{
-    IWithNotes WithNotes(string? notes);
-    PatientRelationship Build();
+    public interface IWithNotes
+    {
+        IWithNotes WithNotes(string? notes);
+        PatientRelationship Build();
+    }
 }

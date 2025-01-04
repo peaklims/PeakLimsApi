@@ -11,6 +11,7 @@ using Domain.HealthcareOrganizations.Models;
 using Microsoft.Extensions.AI;
 using Panels;
 using Panels.Models;
+using PeakOrganizations;
 using SampleTypes;
 using Serilog;
 using Services.External.Keycloak;
@@ -49,21 +50,9 @@ public static class AssembleAWorld
             await dbContext.HealthcareOrganizations.AddRangeAsync(healthcareOrgsWithContacts, cancellationToken);
             // TODO save phase
             
-            // ----------------- Add Default Containers -----------------
-            
-            var containerList = new List<Container>();
-            foreach (var sampleTypeName in SampleType.ListNames())
-            {
-                var sampleType = SampleType.Of(sampleTypeName);
-                var defaultContainers = sampleType.GetDefaultContainers(organization.Id);
-                containerList.AddRange(defaultContainers);
-            }
-            await dbContext.Containers.AddRangeAsync(containerList, cancellationToken);
-            
-            // -----------------------------------------------------------
-            
             var panelsAndTests = await panelTestGenerator.Generate(organization.Id);
             
+            var containerList = await AddDefaultContainers(cancellationToken, organization);
             var patients = await PatientGenerator.Generate(organization.Id, containerList);
             // TODO save phase
 
@@ -111,6 +100,19 @@ public static class AssembleAWorld
                     }).ToList()
                 }).ToList(),
             };
+        }
+
+        private async Task<List<Container>> AddDefaultContainers(CancellationToken cancellationToken, PeakOrganization organization)
+        {
+            var containerList = new List<Container>();
+            foreach (var sampleTypeName in SampleType.ListNames())
+            {
+                var sampleType = SampleType.Of(sampleTypeName);
+                var defaultContainers = sampleType.GetDefaultContainers(organization.Id);
+                containerList.AddRange(defaultContainers);
+            }
+            await dbContext.Containers.AddRangeAsync(containerList, cancellationToken);
+            return containerList;
         }
     }
 
