@@ -17,6 +17,8 @@ using Services.External.Keycloak;
 using Tests;
 using Tests.Models;
 
+
+// TODO refactor to HF job or temporal workflow
 public static class AssembleAWorld
 {
     public sealed record Command() : IRequest<object>;
