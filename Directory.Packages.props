@@ -12,7 +12,7 @@
     <PackageVersion Include="AutoBogusLifesupport" Version="2.14.0" />
     <PackageVersion Include="AWSSDK.S3" Version="3.7.410.13" />
     <PackageVersion Include="Bogus" Version="35.6.1" />
-    <PackageVersion Include="Destructurama.Attributed" Version="5.0.0" />
+    <PackageVersion Include="Destructurama.Attributed" Version="5.1.0" />
     <PackageVersion Include="Ductus.FluentDocker" Version="2.10.59" />
     <PackageVersion Include="Duende.BFF" Version="2.3.0" />
     <PackageVersion Include="Duende.BFF.Yarp" Version="2.3.0" />
