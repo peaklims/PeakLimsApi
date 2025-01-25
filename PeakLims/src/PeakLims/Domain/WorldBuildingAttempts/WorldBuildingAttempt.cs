@@ -43,6 +43,8 @@ public class WorldBuildingAttempt : BaseEntity
             .AddWorldBuildingPhase(WorldBuildingPhaseName.GeneratePatients()
                 .CreateInitialPhaseState())
             .AddWorldBuildingPhase(WorldBuildingPhaseName.GenerateAccessions()
+                .CreateInitialPhaseState())
+            .AddWorldBuildingPhase(WorldBuildingPhaseName.FinalizeInDatabase()
                 .CreateInitialPhaseState());
         
         newWorldBuildingAttempt.QueueDomainEvent(new WorldBuildingAttemptCreated(){ WorldBuildingAttempt = newWorldBuildingAttempt });

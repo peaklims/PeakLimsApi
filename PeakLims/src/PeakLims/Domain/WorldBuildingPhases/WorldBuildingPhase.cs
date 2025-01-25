@@ -4,10 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using PeakLims.Domain.WorldBuildingAttempts;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Destructurama.Attributed;
 using PeakLims.Exceptions;
 using PeakLims.Domain.WorldBuildingPhases.DomainEvents;
 using PeakLims.Domain.WorldBuildingStatuses;
+using Utilities;
 using WorldBuildingPhaseNames;
 using ValidationException = Exceptions.ValidationException;
 
@@ -66,11 +68,35 @@ public class WorldBuildingPhase : BaseEntity
     {
         try
         {
-            return JsonSerializer.Serialize(resultData);
+            return JsonSerializer.Serialize(resultData, new JsonSerializerOptions
+            {
+                IncludeFields = true,
+                ReferenceHandler = ReferenceHandler.Preserve,
+                MaxDepth = 128
+            });
         }
         catch (Exception e)
         {
             throw new ValidationException($"Failed to serialize result data for {Name.Value}. {e.Message}");
+        }
+    }
+    
+    public TDataType GetResultData<TDataType>()
+    {
+        try
+        {
+            if(typeof(TDataType) != Name.ResultDataType)
+                throw new ValidationException($"Result Data Type for {typeof(TDataType)} is not of type {Name.ResultDataType}");
+            
+            // return JsonHelpers.DeserializeWithReflection(Name.ResultDataType, ResultData);
+            return JsonSerializer.Deserialize<TDataType>(ResultData, new JsonSerializerOptions
+            {
+                IncludeFields = true
+            });
+        }
+        catch (Exception e)
+        {
+            throw new ValidationException($"Failed to deserialize result data for {Name.Value}. {e.Message}");
         }
     }
     

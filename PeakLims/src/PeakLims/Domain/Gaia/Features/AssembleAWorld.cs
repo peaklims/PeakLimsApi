@@ -1,40 +1,69 @@
 namespace PeakLims.Domain.Gaia.Features;
 
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Threading;
-using Containers;
+using AccessionComments;
 using Databases;
 using MediatR;
 using Domain.Gaia.Features.Generators;
+using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using PeakOrganizations;
+using Resources.HangfireUtilities;
 using SampleTypes;
+using Serilog;
 using WorldBuildingAttempts;
 using WorldBuildingPhaseNames;
+using WorldBuildingPhases;
+using WorldBuildingStatuses;
+using Container = Containers.Container;
 
-// TODO refactor to HF job or temporal workflow
 public static class AssembleAWorld
 {
-    public sealed record Command(string SpecialOrganizationRequest) : IRequest<object>;
+    public sealed record Command(string SpecialOrganizationRequest) : IRequest<Guid>;
     
     public sealed class Handler(
+        IBackgroundJobClient backgroundJobClient,
         IOrganizationGenerator organizationGenerator,
         IUserInfoGenerator userInfoGenerator,
         IHealthcareOrganizationGenerator healthcareOrganizationGenerator,
         IAccessionGenerator accessionGenerator,
         IPanelTestGenerator panelTestGenerator,
         PeakLimsDbContext dbContext
-    ) : IRequestHandler<Command, object>
+    ) : IRequestHandler<Command, Guid>
     {
-        public async Task<object> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
         {
             var worldBuildingAttempt = WorldBuildingAttempt.CreateStandardWorld();
             dbContext.WorldBuildingAttempts.Add(worldBuildingAttempt);
+            await dbContext.SaveChangesAsync(cancellationToken);
+            
+            var command = new GenerateWorldJobCommand(request.SpecialOrganizationRequest, worldBuildingAttempt.Id);
+            
+            backgroundJobClient.Enqueue(() => GenerateWorldJob(command, cancellationToken));
+            
+            return worldBuildingAttempt.Id;
+        }
+
+        public sealed record GenerateWorldJobCommand(
+            string SpecialOrganizationRequest,
+            Guid WorldBuildingAttemptId);
+        
+        [JobUserFilter]
+        [DisplayName("Assemble A World")]
+        [AutomaticRetry(Attempts = 3)]
+        public async Task<object> GenerateWorldJob(GenerateWorldJobCommand command, CancellationToken cancellationToken)
+        {
+            var worldBuildingAttempt = await dbContext.WorldBuildingAttempts
+                .Include(x => x.WorldBuildingPhases)
+                .GetById(command.WorldBuildingAttemptId, cancellationToken: cancellationToken);
             
             var organization = await ExecutePhaseAsync(
                 worldBuildingAttempt,
                 WorldBuildingPhaseName.CreateOrganization(),
-                () => organizationGenerator.Generate(request.SpecialOrganizationRequest),
-                request.SpecialOrganizationRequest,
+                () => organizationGenerator.Generate(command.SpecialOrganizationRequest),
+                command.SpecialOrganizationRequest,
                 cancellationToken
             );
             
@@ -93,7 +122,6 @@ public static class AssembleAWorld
                 null,
                 cancellationToken
             );
-
             
             worldBuildingAttempt.StartPhase(WorldBuildingPhaseName.FinalizeInDatabase(), null);
             await dbContext.SaveChangesAsync(cancellationToken);
@@ -148,7 +176,7 @@ public static class AssembleAWorld
                 }).ToList(),
             };
         }
-        
+
         private async Task<T> ExecutePhaseAsync<T>(WorldBuildingAttempt worldBuildingAttempt,
             WorldBuildingPhaseName phaseName,
             Func<Task<T>> action,
@@ -187,5 +215,4 @@ public static class AssembleAWorld
             return containerList;
         }
     }
-
 }

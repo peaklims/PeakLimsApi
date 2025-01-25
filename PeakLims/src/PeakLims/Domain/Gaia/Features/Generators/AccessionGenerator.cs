@@ -111,13 +111,13 @@ public class AccessionGenerator(IChatClient chatClient, PeakLimsDbContext dbCont
             {
                 var accessionComment = AccessionComment.Create(accession, comment.OriginalCommentText, comment.UserIdentifier);
                 accessionComment.Update(comment.CommentText, comment.UserIdentifier, out var newComment, out var archivedComment);
-                dbContext.AccessionComments.Add(archivedComment);
-                dbContext.AccessionComments.Add(newComment);
+                // dbContext.AccessionComments.Add(archivedComment);
+                // dbContext.AccessionComments.Add(newComment);
                 continue;
             }
             
             var soloAccessionComment = AccessionComment.Create(accession, comment.CommentText, comment.UserIdentifier);
-            dbContext.AccessionComments.Add(soloAccessionComment);
+            // dbContext.AccessionComments.Add(soloAccessionComment);
         }
         
         return accession;
