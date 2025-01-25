@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PeakLims.Databases;
@@ -11,9 +12,11 @@ using PeakLims.Databases;
 namespace PeakLims.Migrations
 {
     [DbContext(typeof(PeakLimsDbContext))]
-    partial class PeakLimsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250120004536_AddWorldBuildingTracking")]
+    partial class AddWorldBuildingTracking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

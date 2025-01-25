@@ -21,6 +21,8 @@ using PeakLims.Domain.AccessionAttachments;
 using PeakLims.Domain.PanelOrders;
 using PeakLims.Domain.HipaaAuditLogs;
 using PeakLims.Domain.PeakOrganizations;
+using PeakLims.Domain.WorldBuildingAttempts;
+using PeakLims.Domain.WorldBuildingPhases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
@@ -40,6 +42,8 @@ public sealed class PeakLimsDbContext(
     : DbContext(options)
 {
     #region DbSet Region - Do Not Delete
+    public DbSet<WorldBuildingAttempt> WorldBuildingAttempts { get; set; }
+    public DbSet<WorldBuildingPhase> WorldBuildingPhases { get; set; }
     public DbSet<PatientRelationship> PatientRelationships { get; set; }
     public DbSet<PeakOrganization> PeakOrganizations { get; set; }
     public DbSet<HipaaAuditLog> HipaaAuditLogs { get; set; }
@@ -84,6 +88,8 @@ public sealed class PeakLimsDbContext(
         */
 
         #region Entity Database Config Region - Only delete if you don't want to automatically add configurations
+        modelBuilder.ApplyConfiguration(new WorldBuildingAttemptConfiguration());
+        modelBuilder.ApplyConfiguration(new WorldBuildingPhaseConfiguration());
         modelBuilder.ApplyConfiguration(new PatientRelationshipConfiguration());
         modelBuilder.ApplyConfiguration(new PanelTestAssignmentConfiguration());
         modelBuilder.ApplyConfiguration(new PeakOrganizationConfiguration());

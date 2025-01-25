@@ -6,23 +6,15 @@ using Containers;
 using Databases;
 using MediatR;
 using Domain.Gaia.Features.Generators;
-using Domain.HealthcareOrganizations;
-using Domain.HealthcareOrganizations.Models;
-using Microsoft.Extensions.AI;
-using Panels;
-using Panels.Models;
 using PeakOrganizations;
 using SampleTypes;
-using Serilog;
-using Services.External.Keycloak;
-using Tests;
-using Tests.Models;
-
+using WorldBuildingAttempts;
+using WorldBuildingPhaseNames;
 
 // TODO refactor to HF job or temporal workflow
 public static class AssembleAWorld
 {
-    public sealed record Command() : IRequest<object>;
+    public sealed record Command(string SpecialOrganizationRequest) : IRequest<object>;
     
     public sealed class Handler(
         IOrganizationGenerator organizationGenerator,
@@ -35,32 +27,87 @@ public static class AssembleAWorld
     {
         public async Task<object> Handle(Command request, CancellationToken cancellationToken)
         {
-            var organization = await organizationGenerator.Generate();
-            await dbContext.PeakOrganizations.AddAsync(organization, cancellationToken);
-            // TODO save phase
+            var worldBuildingAttempt = WorldBuildingAttempt.CreateStandardWorld();
+            dbContext.WorldBuildingAttempts.Add(worldBuildingAttempt);
             
-            var users = await userInfoGenerator.Generate(organization.Id, organization.Domain);
-            // TODO save phase
+            var organization = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.CreateOrganization(),
+                () => organizationGenerator.Generate(request.SpecialOrganizationRequest),
+                request.SpecialOrganizationRequest,
+                cancellationToken
+            );
             
-            var healthcareOrganizations = await healthcareOrganizationGenerator.Generate(organization);
-            // TODO save phase
-        
-            var healthcareOrgsWithContacts = await new HealthcareOrganizationContactGenerator()
-                .Generate(healthcareOrganizations);
-            await dbContext.HealthcareOrganizations.AddRangeAsync(healthcareOrgsWithContacts, cancellationToken);
-            // TODO save phase
-            
-            var panelsAndTests = await panelTestGenerator.Generate(organization.Id);
-            
-            var containerList = await AddDefaultContainers(cancellationToken, organization);
-            var patients = await PatientGenerator.Generate(organization.Id, containerList);
-            // TODO save phase
+            var users = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GenerateUsers(),
+                () => userInfoGenerator.Generate(organization.Id, organization.Domain),
+                null,
+                cancellationToken
+            );
 
-            var accessions =
-                await accessionGenerator.Generate(patients, healthcareOrganizations, panelsAndTests, users);
+            var healthcareOrganizations = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GenerateHealthcareOrganizations(),
+                () => healthcareOrganizationGenerator.Generate(organization),
+                null,
+                cancellationToken
+            );
+
+            var healthcareOrgsWithContacts = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GenerateHealthcareOrganizationContacts(),
+                () => new HealthcareOrganizationContactGenerator().Generate(healthcareOrganizations),
+                null,
+                cancellationToken
+            );
+
+            var panelsAndTests = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GeneratePanelsAndTests(),
+                () => panelTestGenerator.Generate(organization.Id),
+                null,
+                cancellationToken
+            );
+
+            var containerList = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.AddDefaultContainers(),
+                () => AddDefaultContainers(organization),
+                null,
+                cancellationToken
+            );
+
+            var patients = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GeneratePatients(),
+                () => PatientGenerator.Generate(organization.Id, containerList),
+                null,
+                cancellationToken
+            );
+
+            var accessions = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GenerateAccessions(),
+                () => accessionGenerator.Generate(patients, healthcareOrganizations, panelsAndTests, users),
+                null,
+                cancellationToken
+            );
+
+            
+            worldBuildingAttempt.StartPhase(WorldBuildingPhaseName.FinalizeInDatabase(), null);
+            await dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.PeakOrganizations.AddAsync(organization, cancellationToken);
+            await dbContext.Users.AddRangeAsync(users, cancellationToken);
+            await dbContext.HealthcareOrganizations.AddRangeAsync(healthcareOrgsWithContacts, cancellationToken);
+            
+            await dbContext.Panels.AddRangeAsync(panelsAndTests.Panels, cancellationToken);
+            await dbContext.Tests.AddRangeAsync(panelsAndTests.StandaloneTests, cancellationToken);
+            await dbContext.Containers.AddRangeAsync(containerList, cancellationToken);
+            
             await dbContext.Accessions.AddRangeAsync(accessions, cancellationToken);
             
-            // TODO save phase
+            worldBuildingAttempt.SuccessfullyEndPhase(WorldBuildingPhaseName.FinalizeInDatabase(), null);
             await dbContext.SaveChangesAsync(cancellationToken);
             
             return new
@@ -101,8 +148,34 @@ public static class AssembleAWorld
                 }).ToList(),
             };
         }
+        
+        private async Task<T> ExecutePhaseAsync<T>(WorldBuildingAttempt worldBuildingAttempt,
+            WorldBuildingPhaseName phaseName,
+            Func<Task<T>> action,
+            string specialRequest,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                worldBuildingAttempt.StartPhase(phaseName, specialRequest);
+                await dbContext.SaveChangesAsync(cancellationToken);
 
-        private async Task<List<Container>> AddDefaultContainers(CancellationToken cancellationToken, PeakOrganization organization)
+                var result = await action();
+
+                worldBuildingAttempt.SuccessfullyEndPhase(phaseName, result);
+                await dbContext.SaveChangesAsync(cancellationToken);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                worldBuildingAttempt.FailPhase(phaseName, e.Message);
+                await dbContext.SaveChangesAsync(cancellationToken);
+                throw;
+            }
+        }
+
+        private async Task<List<Container>> AddDefaultContainers(PeakOrganization organization)
         {
             var containerList = new List<Container>();
             foreach (var sampleTypeName in SampleType.ListNames())
@@ -111,7 +184,6 @@ public static class AssembleAWorld
                 var defaultContainers = sampleType.GetDefaultContainers(organization.Id);
                 containerList.AddRange(defaultContainers);
             }
-            await dbContext.Containers.AddRangeAsync(containerList, cancellationToken);
             return containerList;
         }
     }

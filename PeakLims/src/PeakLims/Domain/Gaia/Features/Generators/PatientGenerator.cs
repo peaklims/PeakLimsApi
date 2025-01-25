@@ -22,8 +22,8 @@ public static class PatientGenerator
         Log.Information("Starting Patient creation");
         var random = new Random();
         // var patientCount = random.Next(135, 210);
-        // var patientCount = random.Next(1, 2);
-        var patientCount = random.Next(160, 181);
+        var patientCount = random.Next(1, 2);
+        // var patientCount = random.Next(160, 181);
         var people = PersonInfoGenerator.Generate(patientCount);
         var patients = new ConcurrentBag<Patient>();
         ValueTask GeneratePatients(PersonInfo person, CancellationToken ct)

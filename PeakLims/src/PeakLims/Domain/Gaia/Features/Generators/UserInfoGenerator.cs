@@ -2,7 +2,6 @@ namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Collections.Concurrent;
 using Bogus.DataSets;
-using Databases;
 using Models;
 using Users;
 using Users.Models;
@@ -15,7 +14,7 @@ public interface IUserInfoGenerator
     Task<List<User>> Generate(Guid organizationId, string domain);
 }
 
-public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext dbContext) : IUserInfoGenerator
+public class UserInfoGenerator(IKeycloakClient keycloakClient) : IUserInfoGenerator
 {
     public async Task<List<User>> Generate(Guid organizationId, string domain)
     {
@@ -48,7 +47,6 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
         {
             var user = User.Create(userForCreation);
             users.Add(user);
-            await dbContext.Users.AddAsync(user);
         }
         // TODO add role
         return users.ToList();

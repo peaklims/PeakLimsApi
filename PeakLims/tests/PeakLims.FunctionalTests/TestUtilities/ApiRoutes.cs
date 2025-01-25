@@ -6,6 +6,28 @@ public class ApiRoutes
 
     // new api route marker - do not delete
 
+    public static class WorldBuildingPhases
+    {
+        public static string GetList(string version = "v1") => $"{Base}/{version}/worldBuildingPhases";
+        public static string GetAll(string version = "v1") => $"{Base}/{version}/worldBuildingPhases/all";
+        public static string GetRecord(Guid id, string version = "v1") => $"{Base}/{version}/worldBuildingPhases/{id}";
+        public static string Delete(Guid id, string version = "v1") => $"{Base}/{version}/worldBuildingPhases/{id}";
+        public static string Put(Guid id, string version = "v1") => $"{Base}/{version}/worldBuildingPhases/{id}";
+        public static string Create(string version = "v1") => $"{Base}/{version}/worldBuildingPhases";
+        public static string CreateBatch(string version = "v1") => $"{Base}/{version}/worldBuildingPhases/batch";
+    }
+
+    public static class WorldBuildingAttempts
+    {
+        public static string GetList(string version = "v1") => $"{Base}/{version}/worldBuildingAttempts";
+        public static string GetAll(string version = "v1") => $"{Base}/{version}/worldBuildingAttempts/all";
+        public static string GetRecord(Guid id, string version = "v1") => $"{Base}/{version}/worldBuildingAttempts/{id}";
+        public static string Delete(Guid id, string version = "v1") => $"{Base}/{version}/worldBuildingAttempts/{id}";
+        public static string Put(Guid id, string version = "v1") => $"{Base}/{version}/worldBuildingAttempts/{id}";
+        public static string Create(string version = "v1") => $"{Base}/{version}/worldBuildingAttempts";
+        public static string CreateBatch(string version = "v1") => $"{Base}/{version}/worldBuildingAttempts/batch";
+    }
+
     public static class PeakOrganizations
     {
         public static string GetList(string version = "v1") => $"{Base}/{version}/peakOrganizations";
