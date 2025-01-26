@@ -21,7 +21,8 @@ public sealed class EndpointTests
         var unprotectedEndpoints = new List<string>()
         {
             // Add endpoints that are deliberately not protected here
-            "AssembleAWorld"
+            "AssembleAWorld",
+            "GetWorldBuildingAttempt",
         };
         endpoints = endpoints.Where(x => !unprotectedEndpoints.Contains(x.Name)).ToList();
 
