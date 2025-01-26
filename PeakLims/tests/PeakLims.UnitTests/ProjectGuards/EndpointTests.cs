@@ -23,6 +23,7 @@ public sealed class EndpointTests
             // Add endpoints that are deliberately not protected here
             "AssembleAWorld",
             "GetWorldBuildingAttempt",
+            "GetWorldBuildingPhase"
         };
         endpoints = endpoints.Where(x => !unprotectedEndpoints.Contains(x.Name)).ToList();
 
@@ -36,6 +37,11 @@ public sealed class EndpointTests
     private static IEnumerable<Endpoint> GetEndpointsFromProject()
     {
         var apiAssembly = UnitTestUtils.GetApiAssembly();
+        if (apiAssembly == null)
+        {
+            throw new InvalidOperationException("Could not find the API assembly.");
+        }
+        
         var controllers = apiAssembly
             .GetTypes()
             .Where(t => t.IsSubclassOf(typeof(Controller)) || t.IsSubclassOf(typeof(ControllerBase)));

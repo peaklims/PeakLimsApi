@@ -609,11 +609,6 @@
             Gets a single WorldBuildingAttempt by ID.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.WorldBuildingAttemptsController.AddWorldBuildingAttempt(PeakLims.Domain.WorldBuildingAttempts.Dtos.WorldBuildingAttemptForCreationDto)">
-            <summary>
-            Creates a new WorldBuildingAttempt record.
-            </summary>
-        </member>
         <member name="M:PeakLims.Controllers.v1.WorldBuildingPhasesController.GetWorldBuildingPhases(PeakLims.Domain.WorldBuildingPhases.Dtos.WorldBuildingPhaseParametersDto)">
             <summary>
             Gets a list of all WorldBuildingPhases.
