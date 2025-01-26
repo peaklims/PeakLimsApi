@@ -114,55 +114,55 @@ public sealed class PeakLimsDbContext(
 
         modelBuilder.Entity<Patient>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Accession>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Sample>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.Patient.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.Patient.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Container>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<HealthcareOrganization>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<HealthcareOrganizationContact>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.HealthcareOrganization.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.HealthcareOrganization.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<AccessionComment>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.Accession.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.Accession.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<AccessionContact>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.Accession.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.Accession.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<AccessionAttachment>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.Accession.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.Accession.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<HipaaAuditLog>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<TestOrder>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.Accession.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.Accession.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<PanelOrder>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.Panel.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.Panel.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Test>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Panel>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<PanelTestAssignment>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.Panel.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.Panel.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<PatientRelationship>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.FromPatient.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.FromPatient.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<User>()
             .HasQueryFilter(e => !e.IsDeleted && 
-                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+                                 (currentUserService.HasCrossOrganizationContext || e.OrganizationId == currentUserService.OrganizationId));
 
     }
 

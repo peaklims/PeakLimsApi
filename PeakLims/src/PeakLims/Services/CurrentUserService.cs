@@ -17,7 +17,7 @@ public interface ICurrentUserService : IPeakLimsScopedService
     Guid? OrganizationId { get; }
     Guid GetOrganizationId();
     bool IsHangfire { get; }
-    bool IsSuperAdmin { get; }
+    bool HasCrossOrganizationContext { get; }
 }
 
 public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor, IJobContextAccessor jobContextAccessor)
@@ -38,7 +38,7 @@ public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor,
         ?.Value;
     public bool IsMachine => ClientId != null;
     public bool IsHangfire => jobContextAccessor?.UserContext?.User != null;
-    public bool IsSuperAdmin => User?.IsInRole("superadmin") ?? false;
+    public bool HasCrossOrganizationContext => User?.IsInRole(Consts.CrossOrganizationContext) ?? false;
     public Guid? OrganizationId
     {
         get
@@ -66,7 +66,7 @@ public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor,
         var identity = new ClaimsIdentity(claims, $"hangfirejob-{userId}");
         if (userId == Consts.SuperHangfireUser)
         {
-            identity.AddClaim(new Claim(ClaimTypes.Role, "superadmin"));
+            identity.AddClaim(new Claim(ClaimTypes.Role, Consts.CrossOrganizationContext));
         }
         return new ClaimsPrincipal(identity);
     }

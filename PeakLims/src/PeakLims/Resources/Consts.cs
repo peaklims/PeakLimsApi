@@ -29,6 +29,7 @@ public static class Consts
     }
 
     public const string SuperHangfireUser = "job-user-346f9812-16da-4a72-9db2-f066661d6593";
+    public const string CrossOrganizationContext = "cross-organization-context";
     
     public static class HangfireQueues
     {
