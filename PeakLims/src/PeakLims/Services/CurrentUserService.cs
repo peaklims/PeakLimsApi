@@ -1,6 +1,7 @@
 namespace PeakLims.Services;
 
 using System.Security.Claims;
+using Resources;
 using Resources.HangfireUtilities;
 
 public interface ICurrentUserService : IPeakLimsScopedService
@@ -15,6 +16,8 @@ public interface ICurrentUserService : IPeakLimsScopedService
     bool IsMachine { get; }
     Guid? OrganizationId { get; }
     Guid GetOrganizationId();
+    bool IsHangfire { get; }
+    bool IsSuperAdmin { get; }
 }
 
 public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor, IJobContextAccessor jobContextAccessor)
@@ -34,6 +37,8 @@ public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor,
         ?.FirstOrDefault(x => x.Type is "client_id" or "clientId")
         ?.Value;
     public bool IsMachine => ClientId != null;
+    public bool IsHangfire => jobContextAccessor?.UserContext?.User != null;
+    public bool IsSuperAdmin => User?.IsInRole("superadmin") ?? false;
     public Guid? OrganizationId
     {
         get
@@ -59,6 +64,10 @@ public sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor,
         };
 
         var identity = new ClaimsIdentity(claims, $"hangfirejob-{userId}");
+        if (userId == Consts.SuperHangfireUser)
+        {
+            identity.AddClaim(new Claim(ClaimTypes.Role, "superadmin"));
+        }
         return new ClaimsPrincipal(identity);
     }
 }

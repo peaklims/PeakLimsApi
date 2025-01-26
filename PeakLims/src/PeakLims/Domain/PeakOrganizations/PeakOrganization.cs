@@ -27,6 +27,19 @@ public class PeakOrganization : BaseEntity
         
         return newPeakOrganization;
     }
+    
+    public static PeakOrganization Create(Guid organizationId, PeakOrganizationForCreation peakOrganizationForCreation)
+    {
+        var newPeakOrganization = new PeakOrganization();
+
+        newPeakOrganization.OverrideId(organizationId);
+        newPeakOrganization.Name = peakOrganizationForCreation.Name;
+        newPeakOrganization.Domain = peakOrganizationForCreation.Domain;
+
+        newPeakOrganization.QueueDomainEvent(new PeakOrganizationCreated(){ PeakOrganization = newPeakOrganization });
+        
+        return newPeakOrganization;
+    }
 
     public PeakOrganization Update(PeakOrganizationForUpdate peakOrganizationForUpdate)
     {

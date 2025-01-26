@@ -45,7 +45,6 @@ public sealed class WorldBuildingPhaseName : ValueObject
     public static WorldBuildingPhaseName AddDefaultContainers() => new WorldBuildingPhaseName(NameEnum.AddDefaultContainers.Name);
     public static WorldBuildingPhaseName GeneratePatients() => new WorldBuildingPhaseName(NameEnum.GeneratePatients.Name);
     public static WorldBuildingPhaseName GenerateAccessions() => new WorldBuildingPhaseName(NameEnum.GenerateAccessions.Name);
-    public static WorldBuildingPhaseName FinalizeInDatabase() => new WorldBuildingPhaseName(NameEnum.FinalizeInDatabase.Name);
     
 
     public WorldBuildingPhase CreateInitialPhaseState() => _name.CreateInitialPhaseState();
@@ -66,7 +65,6 @@ public sealed class WorldBuildingPhaseName : ValueObject
         public static readonly NameEnum AddDefaultContainers = new AddDefaultContainersType();
         public static readonly NameEnum GeneratePatients = new GeneratePatientsType();
         public static readonly NameEnum GenerateAccessions = new GenerateAccessionsType();
-        public static readonly NameEnum FinalizeInDatabase = new FinalizeInDatabaseType();
 
         public abstract WorldBuildingPhase CreateInitialPhaseState();
         public abstract string DisplayName { get; }
@@ -144,15 +142,6 @@ public sealed class WorldBuildingPhaseName : ValueObject
             public override string DisplayName 
                 => "Generate Accessions";
             public override Type? ResultDataType => typeof(List<Accession>);
-        }
-
-        private class FinalizeInDatabaseType() : NameEnum("Finalize in Database", 8)
-        {
-            public override WorldBuildingPhase CreateInitialPhaseState() 
-                => WorldBuildingPhase.Create(Name);
-            public override string DisplayName 
-                => "Finalize in Database";
-            public override Type? ResultDataType => null;
         }
     }
 }

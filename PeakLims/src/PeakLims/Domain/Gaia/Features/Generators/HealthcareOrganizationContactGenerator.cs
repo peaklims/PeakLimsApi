@@ -1,24 +1,57 @@
 namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Collections.Concurrent;
+using Databases;
 using HealthcareOrganizationContacts;
 using HealthcareOrganizationContacts.Models;
 using HealthcareOrganizations;
+using Microsoft.EntityFrameworkCore;
 using Npis;
 using Serilog;
 
-public class HealthcareOrganizationContactGenerator()
+public interface IHealthcareOrganizationContactGenerator
 {
-    public async Task<List<HealthcareOrganization>> Generate(List<HealthcareOrganization> healthcareOrganizations)
+    Task<List<HealthcareOrganization>> Generate(Guid organizationId, CancellationToken cancellationToken = default);
+}
+
+public class HealthcareOrganizationContactGenerator(PeakLimsDbContext dbContext) : IHealthcareOrganizationContactGenerator
+{
+    public async Task<List<HealthcareOrganization>> Generate(Guid organizationId, CancellationToken cancellationToken = default)
+    {
+        var healthcareOrganizations = await dbContext.HealthcareOrganizations
+            .Include(x => x.HealthcareOrganizationContacts)
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken: cancellationToken);
+        
+        var existingHealthcareOrgContacts = healthcareOrganizations
+            .SelectMany(x => x.HealthcareOrganizationContacts)
+            .ToList();
+        
+        if (existingHealthcareOrgContacts.Count > 0)
+        {
+            Log.Information("Healthcare Organization Contactss already exist for organization {OrganizationId} -- skipping generation", organizationId);
+            return healthcareOrganizations;
+        }
+        
+        var organizationsWithContacts = await GenerateCore(healthcareOrganizations);
+
+        var contactsToAdd = organizationsWithContacts.SelectMany(x => x.HealthcareOrganizationContacts);
+        await dbContext.HealthcareOrganizationContacts.AddRangeAsync(contactsToAdd, cancellationToken);
+        
+        return organizationsWithContacts;
+    }
+    
+    public async Task<List<HealthcareOrganization>> GenerateCore(List<HealthcareOrganization> healthcareOrganizations)
     {
         Log.Information("Starting Healthcare Organization contact creation");
         var orgsToLoop = new ConcurrentBag<HealthcareOrganization>(healthcareOrganizations);
         var orgsWithContacts = new ConcurrentBag<HealthcareOrganization>();
         ValueTask AddContactsToOrgs(HealthcareOrganization org, CancellationToken ct)
         {
-            var contacts = GenerateContactsForOrganizationAsync(org);
+            var contacts = GenerateContactsForOrganizationAsync(org).ToList();
             org.AddContacts(contacts);
             orgsWithContacts.Add(org);
+            
             return ValueTask.CompletedTask;
         }
         var options = new ParallelOptions
@@ -31,7 +64,7 @@ public class HealthcareOrganizationContactGenerator()
         return orgsWithContacts.ToList();
     }
 
-    private IEnumerable<HealthcareOrganizationContact> GenerateContactsForOrganizationAsync(HealthcareOrganization organization)
+    private IEnumerable<HealthcareOrganizationContact> GenerateContactsForOrganizationAsync(HealthcareOrganization healthcareOrganization)
     {
         var people = PersonInfoGenerator.Generate();
         
@@ -44,14 +77,14 @@ public class HealthcareOrganizationContactGenerator()
                 FirstName = parsedJsonContact.FirstName,
                 LastName = parsedJsonContact.LastName,
                 Title = title,
-                Email = $"{parsedJsonContact.FirstName.ToLower()}.{parsedJsonContact.LastName.ToLower()}@{organization.KnownDomain}",
+                Email = $"{parsedJsonContact.FirstName.ToLower()}.{parsedJsonContact.LastName.ToLower()}@{healthcareOrganization.KnownDomain}",
                 Npi = NPI.Random().Value
             };
         
             var contact = HealthcareOrganizationContact.Create(contactToCreate);
             contacts.Add(contact);
         }
-        Log.Information("Parsed contacts for Organization {Organization}", organization.Name);
+        Log.Information("Parsed contacts for Organization {Organization}", healthcareOrganization.Name);
 
         return contacts;
     }

@@ -2,8 +2,10 @@ namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Databases;
 using HealthcareOrganizations;
 using HealthcareOrganizations.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Models;
 using PeakOrganizations;
@@ -13,12 +15,29 @@ using Serilog;
 
 public interface IHealthcareOrganizationGenerator
 {
-    Task<List<HealthcareOrganization>> Generate(PeakOrganization organization);
+    Task<List<HealthcareOrganization>> Generate(Guid organizationId, CancellationToken cancellationToken = default);
 }
 
-public class HealthcareOrganizationGenerator(IChatClient chatClient) : IHealthcareOrganizationGenerator
+public class HealthcareOrganizationGenerator(IChatClient chatClient, PeakLimsDbContext dbContext) : IHealthcareOrganizationGenerator
 {
-    public async Task<List<HealthcareOrganization>> Generate(PeakOrganization organization)
+    public async Task<List<HealthcareOrganization>> Generate(Guid organizationId, CancellationToken cancellationToken = default)
+    {
+        var organization = await dbContext.PeakOrganizations.GetById(organizationId, cancellationToken: cancellationToken);
+        
+        var existingHealthcareOrgs = await dbContext.HealthcareOrganizations
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken: cancellationToken);
+        
+        if (existingHealthcareOrgs.Count > 0)
+        {
+            Log.Information("Healthcare Organizations already exist for organization {OrganizationId} -- skipping generation", organizationId);
+            return existingHealthcareOrgs;
+        }
+        
+        return await GenerateCore(organization);
+    }
+    
+    public async Task<List<HealthcareOrganization>> GenerateCore(PeakOrganization organization)
     {
         var healthcareOrgInfo = await GenerateData();
         
@@ -33,6 +52,7 @@ public class HealthcareOrganizationGenerator(IChatClient chatClient) : IHealthca
                 OrganizationId = organization.Id
             });
             healthcareOrganizations.Add(domainOrg);
+            dbContext.HealthcareOrganizations.Add(domainOrg);
         }
         
         return healthcareOrganizations;

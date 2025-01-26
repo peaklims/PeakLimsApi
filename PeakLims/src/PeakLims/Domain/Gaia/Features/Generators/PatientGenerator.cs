@@ -2,7 +2,9 @@ namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Collections.Concurrent;
 using Containers;
+using Databases;
 using Ethnicities;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using Patients;
 using Npis;
@@ -15,9 +17,35 @@ using Sexes;
 using Soenneker.Utils.AutoBogus;
 using Utilities;
 
-public static class PatientGenerator
+public interface IPatientGenerator
 {
-    public static async Task<List<Patient>> Generate(Guid organizationId, List<Container> containerList)
+    Task<List<Patient>> Generate(Guid organizationId);
+}
+
+public class PatientGenerator(PeakLimsDbContext dbContext) : IPatientGenerator
+{
+    public async Task<List<Patient>> Generate(Guid organizationId)
+    {
+        var existingPatients = await dbContext.Patients
+            .Include(x => x.Samples)
+            .ThenInclude(x => x.Container)
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync();
+        
+        if (existingPatients.Count > 0)
+        {
+            Log.Information("Patients already exist for organization {OrganizationId} -- skipping generation", organizationId);
+            return existingPatients;
+        }
+        
+        var containerList = await dbContext.Containers
+            .Include(x => x.Samples)
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync();
+        return await GenerateCore(organizationId, containerList);
+    }
+    
+    public async Task<List<Patient>> GenerateCore(Guid organizationId, List<Container> containerList)
     {
         Log.Information("Starting Patient creation");
         var random = new Random();
@@ -57,7 +85,11 @@ public static class PatientGenerator
         };
         var patient = Patient.Create(patientToCreate);
         
-        var sampleCount = faker.Random.Int(1, 2);
+        var sampleCount = Math.Min(faker.Random.Int(1, 2), containerList.Count);
+        if (sampleCount == 0)
+        {
+            throw new InvalidOperationException("No containers available to pick for samples.");
+        }
         var containersToUse = faker.PickRandom(containerList, sampleCount);
         foreach (var container in containersToUse)
         {

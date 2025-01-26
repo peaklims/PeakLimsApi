@@ -9,6 +9,7 @@ using Bogus;
 using Databases;
 using HealthcareOrganizationContacts;
 using HealthcareOrganizations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Models;
 using Panels;
@@ -22,18 +23,51 @@ using Utilities;
 
 public interface IAccessionGenerator
 {
-    Task<List<Accession>> Generate(List<Patient> patients, List<HealthcareOrganization> healthcareOrganizations,
-        PanelTestResponse panelsAndTests, List<User> users);
+    Task<List<Accession>> Generate(Guid organizationId, CancellationToken cancellationToken = default);
 }
 
 public class AccessionGenerator(IChatClient chatClient, PeakLimsDbContext dbContext) : IAccessionGenerator
 {
     private static readonly Faker Faker = new AutoFaker().Faker;
     
-    public async Task<List<Accession>> Generate(List<Patient> patients, List<HealthcareOrganization> healthcareOrganizations, 
+    public async Task<List<Accession>> Generate(Guid organizationId, CancellationToken cancellationToken = default)
+    {
+        var existingAccessions = await dbContext.Accessions
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken: cancellationToken);
+        
+        if (existingAccessions.Count > 0)
+        {
+            Log.Information("Accessions already exist for organization {OrganizationId} -- skipping generation", organizationId);
+            return existingAccessions;
+        }
+        
+        var patients = await dbContext.Patients.Where(x => x.OrganizationId == organizationId)
+            .Include(x => x.Samples)
+            .ThenInclude(x => x.Container)
+            .ToListAsync(cancellationToken: cancellationToken);
+        var healthcareOrganizations = await dbContext.HealthcareOrganizations
+            .Include(x => x.HealthcareOrganizationContacts)
+            .ToListAsync(cancellationToken: cancellationToken);
+        var users = await dbContext.Users.ToListAsync(cancellationToken: cancellationToken);
+
+        var panelsAndTests = new PanelTestResponse
+        {
+            Panels = await dbContext.Panels.Where(x => x.OrganizationId == organizationId).ToListAsync(cancellationToken: cancellationToken),
+            StandaloneTests = await dbContext.Tests.Where(x => x.OrganizationId == organizationId).ToListAsync(cancellationToken: cancellationToken)
+        };
+        
+        var accessions = await GenerateCore(patients, healthcareOrganizations, panelsAndTests, users);
+        await dbContext.Accessions.AddRangeAsync(accessions, cancellationToken);
+        
+        return accessions;
+    }
+    
+    public async Task<List<Accession>> GenerateCore(List<Patient> patients, List<HealthcareOrganization> healthcareOrganizations, 
         PanelTestResponse panelsAndTests, List<User> users)
     {
         Log.Information("Starting Accession creation");
+        
         var accessions = new ConcurrentBag<Accession>();
         var patientBag = new ConcurrentBag<Patient>(patients);
         var orgBag = new ConcurrentBag<HealthcareOrganization>(healthcareOrganizations);
@@ -55,7 +89,7 @@ public class AccessionGenerator(IChatClient chatClient, PeakLimsDbContext dbCont
         await Parallel.ForEachAsync(patientBag, options, GenerateAccessions);
 
         Log.Information("Accessions created: {AccessionCount}", patients.Count);
-        return accessions.ToList();
+        return [.. accessions];
     }
 
     private async Task<Accession> CreateAccession(Patient patient, HealthcareOrganization healthOrg,
@@ -111,13 +145,13 @@ public class AccessionGenerator(IChatClient chatClient, PeakLimsDbContext dbCont
             {
                 var accessionComment = AccessionComment.Create(accession, comment.OriginalCommentText, comment.UserIdentifier);
                 accessionComment.Update(comment.CommentText, comment.UserIdentifier, out var newComment, out var archivedComment);
-                // dbContext.AccessionComments.Add(archivedComment);
-                // dbContext.AccessionComments.Add(newComment);
+                dbContext.AccessionComments.Add(archivedComment);
+                dbContext.AccessionComments.Add(newComment);
                 continue;
             }
             
             var soloAccessionComment = AccessionComment.Create(accession, comment.CommentText, comment.UserIdentifier);
-            // dbContext.AccessionComments.Add(soloAccessionComment);
+            dbContext.AccessionComments.Add(soloAccessionComment);
         }
         
         return accession;

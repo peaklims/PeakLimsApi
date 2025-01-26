@@ -20,6 +20,8 @@ public class User : BaseEntity
     public Email Email { get; private set; }
 
     public string Username { get; private set; }
+    
+    public Guid OrganizationId { get; private set; }
 
     [JsonIgnore]
     [IgnoreDataMember]
@@ -40,6 +42,7 @@ public class User : BaseEntity
         newUser.LastName = userForCreation.LastName;
         newUser.Email = new Email(userForCreation.Email);
         newUser.Username = userForCreation.Username;
+        newUser.OrganizationId = userForCreation.OrganizationId;
 
         newUser.QueueDomainEvent(new UserCreated(){ User = newUser });
         

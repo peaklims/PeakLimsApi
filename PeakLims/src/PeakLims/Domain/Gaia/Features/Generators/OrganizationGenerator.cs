@@ -2,32 +2,43 @@ namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Databases;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Models;
 using PeakOrganizations;
+using PeakOrganizations.Mappings;
 using PeakOrganizations.Models;
 using Resources;
 using Serilog;
 
 public interface IOrganizationGenerator
 {
-    Task<PeakOrganization> Generate(string? specialRequest);
+    Task<PeakOrganization> Generate(Guid organizationId, string? specialRequest, CancellationToken cancellationToken = default);
 }
 
-public class OrganizationGenerator(IChatClient chatClient) : IOrganizationGenerator
+public class OrganizationGenerator(IChatClient chatClient, PeakLimsDbContext dbContext) : IOrganizationGenerator
 {
-    public async Task<PeakOrganization> Generate(string? specialRequest)
+    public async Task<PeakOrganization> Generate(Guid organizationId, string? specialRequest, CancellationToken cancellationToken = default)
     {
+        var existingOrganization = await dbContext.PeakOrganizations.FirstOrDefaultAsync(x => x.Id == organizationId, cancellationToken: cancellationToken);
+        
+        if (existingOrganization != null)
+        {
+            Log.Information("Organization {OrganizationId} already exists -- skipping generation", organizationId);
+            return existingOrganization;
+        }
+        
         var organizationData = await GenerateData(specialRequest);
         Log.Information("Organization: {@Organization}", organizationData);
-        var org = PeakOrganization.Create(new PeakOrganizationForCreation()
+        
+        var org = PeakOrganization.Create(organizationId, new PeakOrganizationForCreation()
         {
             Name = organizationData.Name,
             Domain = organizationData.Domain
         });
 
-        // TODO save
-        
+        await dbContext.PeakOrganizations.AddAsync(org, cancellationToken);
         return org;
     }
     

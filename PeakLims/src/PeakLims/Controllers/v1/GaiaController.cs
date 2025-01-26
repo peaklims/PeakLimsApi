@@ -30,7 +30,7 @@ public sealed class GaiaController(IMediator mediator) : ControllerBase
     [HttpPost(Name = "AssembleAWorld")]
     public async Task<IActionResult> AssembleAWorld(string specialOrgRequest)
     {
-        var command = new AssembleAWorld.Command(specialOrgRequest);
+        var command = new AssembleAWorld.Command(Guid.NewGuid(), specialOrgRequest);
         var worldBuildingAttemptId = await mediator.Send(command);
         return Accepted(worldBuildingAttemptId);
     }

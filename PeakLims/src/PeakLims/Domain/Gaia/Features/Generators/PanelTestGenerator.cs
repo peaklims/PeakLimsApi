@@ -1,21 +1,41 @@
 namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using Databases;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using Panels;
 using Panels.Models;
+using Serilog;
 using Tests;
 using Tests.Models;
 
 public interface IPanelTestGenerator
 {
-    Task<PanelTestResponse> Generate(Guid organizationId);
+    Task<PanelTestResponse> Generate(Guid organizationId, CancellationToken cancellationToken = default);
 }
 
-public class PanelTestGenerator() : IPanelTestGenerator
+public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerator
 {
-    public async Task<PanelTestResponse> Generate(Guid organizationId)
+    public async Task<PanelTestResponse> Generate(Guid organizationId, CancellationToken cancellationToken = default)
     {
+        var existingPanels = await dbContext.Panels
+            .Include(x => x.TestAssignments)
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken: cancellationToken);
+        var existingTests = await dbContext.Tests
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken: cancellationToken);
+        
+        if (existingPanels.Count > 0 || existingTests.Count > 0)
+        {
+            Log.Information("Panels and Tests already exist for organization {OrganizationId} -- skipping generation", organizationId);
+            return new PanelTestResponse()
+            {
+                Panels = existingPanels,
+                StandaloneTests = existingTests
+            };
+        }
+        
         var fullTestList = new PanelTestResponse();
         var panelResponseOpticalGenomeMapping = await AddOpticalGenomeMapping(organizationId);
         var panelResponseWholeGenomeSequencing = await AddWholeGenomeSequencing(organizationId);
@@ -73,6 +93,9 @@ public class PanelTestGenerator() : IPanelTestGenerator
         }).Activate();
 
         fullTestList.StandaloneTests.AddRange([kfvTest, pgxAddOnTest, hlaAddOnTest, pkdAddOnTest, wgaAddOnTest]);
+        await dbContext.Panels.AddRangeAsync(fullTestList.Panels, cancellationToken);
+        await dbContext.Tests.AddRangeAsync(fullTestList.StandaloneTests, cancellationToken);
+        
         return fullTestList;
     }
 

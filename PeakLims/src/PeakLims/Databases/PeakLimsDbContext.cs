@@ -111,39 +111,59 @@ public sealed class PeakLimsDbContext(
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
         #endregion Entity Database Config Region - Only delete if you don't want to automatically add configurations
-    
+
         modelBuilder.Entity<Patient>()
-            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Accession>()
-            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Sample>()
-            .HasQueryFilter(e => !e.IsDeleted && e.Patient.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.Patient.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Container>()
-            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<HealthcareOrganization>()
-            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<HealthcareOrganizationContact>()
-            .HasQueryFilter(e => !e.IsDeleted && e.HealthcareOrganization.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.HealthcareOrganization.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<AccessionComment>()
-            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.Accession.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<AccessionContact>()
-            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.Accession.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<AccessionAttachment>()
-            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.Accession.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<HipaaAuditLog>()
-            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<TestOrder>()
-            .HasQueryFilter(e => !e.IsDeleted && e.Accession.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.Accession.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<PanelOrder>()
-            .HasQueryFilter(e => !e.IsDeleted && e.Panel.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.Panel.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Test>()
-            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<Panel>()
-            .HasQueryFilter(e => !e.IsDeleted && e.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<PanelTestAssignment>()
-            .HasQueryFilter(e => !e.IsDeleted && e.Panel.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.Panel.OrganizationId == currentUserService.OrganizationId));
         modelBuilder.Entity<PatientRelationship>()
-            .HasQueryFilter(e => !e.IsDeleted && e.FromPatient.OrganizationId == currentUserService.OrganizationId);
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.FromPatient.OrganizationId == currentUserService.OrganizationId));
+        modelBuilder.Entity<User>()
+            .HasQueryFilter(e => !e.IsDeleted && 
+                                 (currentUserService.IsSuperAdmin || e.OrganizationId == currentUserService.OrganizationId));
+
     }
 
     public override int SaveChanges()
