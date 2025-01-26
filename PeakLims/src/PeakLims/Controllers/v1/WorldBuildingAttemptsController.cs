@@ -60,20 +60,5 @@ public sealed class WorldBuildingAttemptsController(IMediator mediator): Control
         return Ok(queryResponse);
     }
 
-
-    /// <summary>
-    /// Creates a new WorldBuildingAttempt record.
-    /// </summary>
-    [HttpPost(Name = "AddWorldBuildingAttempt")]
-    public async Task<ActionResult<WorldBuildingAttemptDto>> AddWorldBuildingAttempt([FromBody]WorldBuildingAttemptForCreationDto worldBuildingAttemptForCreation)
-    {
-        var command = new AddWorldBuildingAttempt.Command(worldBuildingAttemptForCreation);
-        var commandResponse = await mediator.Send(command);
-
-        return CreatedAtRoute("GetWorldBuildingAttempt",
-            new { worldBuildingAttemptId = commandResponse.Id },
-            commandResponse);
-    }
-
     // endpoint marker - do not delete this comment
 }
