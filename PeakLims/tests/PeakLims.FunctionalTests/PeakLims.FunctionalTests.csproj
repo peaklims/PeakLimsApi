@@ -15,7 +15,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="WebMotions.Fake.Authentication.JwtBearer" />
     <PackageReference Include="Testcontainers.LocalStack" />
