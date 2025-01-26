@@ -27,6 +27,8 @@ public static class Consts
     {
         public const string KeycloakAdmin = "KeycloakAdmin";
     }
+
+    public const string SuperHangfireUser = "job-user-346f9812-16da-4a72-9db2-f066661d6593";
     
     public static class HangfireQueues
     {

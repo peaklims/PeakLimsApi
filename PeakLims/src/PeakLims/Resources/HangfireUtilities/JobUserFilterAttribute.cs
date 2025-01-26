@@ -7,7 +7,7 @@ public class JobUserFilterAttribute : JobFilterAttribute, IClientFilter
 {
     public void OnCreating(CreatingContext context)
     {
-        var user = "job-user-346f9812-16da-4a72-9db2-f066661d6593";
+        var user = Consts.SuperHangfireUser;
         context.SetJobParameter("User", user);
     }
 

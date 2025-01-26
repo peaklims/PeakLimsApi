@@ -5,7 +5,6 @@ using Dtos;
 using Mappings;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using QueryKit.Configuration;
 
 public static class GetPatientRelationships
 {

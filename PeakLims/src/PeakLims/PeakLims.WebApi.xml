@@ -179,7 +179,7 @@
             Deletes an existing Container record.
             </summary>
         </member>
-        <member name="M:PeakLims.Controllers.v1.GaiaController.AssembleAWorld">
+        <member name="M:PeakLims.Controllers.v1.GaiaController.AssembleAWorld(System.String)">
             <summary>
             Test Org Creation
             </summary>
@@ -599,6 +599,31 @@
             Deletes an existing User record.
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.WorldBuildingAttemptsController.GetWorldBuildingAttempts(PeakLims.Domain.WorldBuildingAttempts.Dtos.WorldBuildingAttemptParametersDto)">
+            <summary>
+            Gets a list of all WorldBuildingAttempts.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.WorldBuildingAttemptsController.GetWorldBuildingAttempt(System.Guid)">
+            <summary>
+            Gets a single WorldBuildingAttempt by ID.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.WorldBuildingAttemptsController.AddWorldBuildingAttempt(PeakLims.Domain.WorldBuildingAttempts.Dtos.WorldBuildingAttemptForCreationDto)">
+            <summary>
+            Creates a new WorldBuildingAttempt record.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.WorldBuildingPhasesController.GetWorldBuildingPhases(PeakLims.Domain.WorldBuildingPhases.Dtos.WorldBuildingPhaseParametersDto)">
+            <summary>
+            Gets a list of all WorldBuildingPhases.
+            </summary>
+        </member>
+        <member name="M:PeakLims.Controllers.v1.WorldBuildingPhasesController.GetWorldBuildingPhase(System.Guid)">
+            <summary>
+            Gets a single WorldBuildingPhase by ID.
+            </summary>
+        </member>
         <member name="M:PeakLims.Databases.EntityConfigurations.AccessionAttachmentConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.AccessionAttachments.AccessionAttachment})">
             <summary>
             The database configuration for AccessionAttachments. 
@@ -697,6 +722,16 @@
         <member name="M:PeakLims.Databases.EntityConfigurations.UserRoleConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.Users.UserRole})">
             <summary>
             The database configuration for UserRoles. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.WorldBuildingAttemptConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.WorldBuildingAttempts.WorldBuildingAttempt})">
+            <summary>
+            The database configuration for WorldBuildingAttempts. 
+            </summary>
+        </member>
+        <member name="M:PeakLims.Databases.EntityConfigurations.WorldBuildingPhaseConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{PeakLims.Domain.WorldBuildingPhases.WorldBuildingPhase})">
+            <summary>
+            The database configuration for WorldBuildingPhases. 
             </summary>
         </member>
         <member name="P:PeakLims.Domain.Addresses.Address.Line1">
@@ -850,6 +885,30 @@
             <inheritdoc />
         </member>
         <member name="M:PeakLims.Migrations.AddRelationships.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.AddWorldBuildingTracking">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddWorldBuildingTracking.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddWorldBuildingTracking.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddWorldBuildingTracking.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PeakLims.Migrations.AddOrgToUser">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddOrgToUser.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddOrgToUser.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:PeakLims.Migrations.AddOrgToUser.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

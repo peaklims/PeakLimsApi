@@ -1133,6 +1133,10 @@ namespace PeakLims.Migrations
                         .HasColumnType("text")
                         .HasColumnName("last_name");
 
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
                     b.Property<string>("Username")
                         .HasColumnType("text")
                         .HasColumnName("username");
@@ -1188,6 +1192,123 @@ namespace PeakLims.Migrations
                         .HasDatabaseName("ix_user_roles_user_id");
 
                     b.ToTable("user_roles", (string)null);
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.WorldBuildingAttempts.WorldBuildingAttempt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<DateTimeOffset?>("LastModifiedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_modified_on");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id")
+                        .HasName("pk_world_building_attempts");
+
+                    b.ToTable("world_building_attempts", (string)null);
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.WorldBuildingPhases.WorldBuildingPhase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AttemptNumber")
+                        .HasColumnType("integer")
+                        .HasColumnName("attempt_number");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("text")
+                        .HasColumnName("comments");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on");
+
+                    b.Property<DateTimeOffset?>("EndedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ended_at");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("text")
+                        .HasColumnName("error_message");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<DateTimeOffset?>("LastModifiedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_modified_on");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("ResultData")
+                        .HasColumnType("text")
+                        .HasColumnName("result_data");
+
+                    b.Property<string>("SpecialRequests")
+                        .HasColumnType("text")
+                        .HasColumnName("special_requests");
+
+                    b.Property<DateTimeOffset?>("StartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("started_at");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<int>("StepNumber")
+                        .HasColumnType("integer")
+                        .HasColumnName("step_number");
+
+                    b.Property<Guid?>("WorldBuildingAttemptId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("world_building_attempt_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_world_building_phases");
+
+                    b.HasIndex("WorldBuildingAttemptId")
+                        .HasDatabaseName("ix_world_building_phases_world_building_attempt_id");
+
+                    b.ToTable("world_building_phases", (string)null);
                 });
 
             modelBuilder.Entity("PeakLims.Domain.AccessionAttachments.AccessionAttachment", b =>
@@ -1605,6 +1726,16 @@ namespace PeakLims.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PeakLims.Domain.WorldBuildingPhases.WorldBuildingPhase", b =>
+                {
+                    b.HasOne("PeakLims.Domain.WorldBuildingAttempts.WorldBuildingAttempt", "WorldBuildingAttempt")
+                        .WithMany("WorldBuildingPhases")
+                        .HasForeignKey("WorldBuildingAttemptId")
+                        .HasConstraintName("fk_world_building_phases_world_building_attempts_world_buildin");
+
+                    b.Navigation("WorldBuildingAttempt");
+                });
+
             modelBuilder.Entity("PeakLims.Domain.Accessions.Accession", b =>
                 {
                     b.Navigation("AccessionAttachments");
@@ -1664,6 +1795,11 @@ namespace PeakLims.Migrations
             modelBuilder.Entity("PeakLims.Domain.Users.User", b =>
                 {
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("PeakLims.Domain.WorldBuildingAttempts.WorldBuildingAttempt", b =>
+                {
+                    b.Navigation("WorldBuildingPhases");
                 });
 #pragma warning restore 612, 618
         }

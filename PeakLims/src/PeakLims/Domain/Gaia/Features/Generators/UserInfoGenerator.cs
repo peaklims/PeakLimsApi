@@ -3,6 +3,7 @@ namespace PeakLims.Domain.Gaia.Features.Generators;
 using System.Collections.Concurrent;
 using Bogus.DataSets;
 using Databases;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using Users;
 using Users.Models;
@@ -12,13 +13,25 @@ using Services.External.Keycloak.Models;
 
 public interface IUserInfoGenerator
 {
-    Task<List<User>> Generate(Guid organizationId, string domain);
+    Task<List<User>> Generate(Guid organizationId, CancellationToken cancellationToken = default);
 }
 
 public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext dbContext) : IUserInfoGenerator
 {
-    public async Task<List<User>> Generate(Guid organizationId, string domain)
+    public async Task<List<User>> Generate(Guid organizationId, CancellationToken cancellationToken = default)
     {
+        var organization = await dbContext.PeakOrganizations.GetById(organizationId, cancellationToken: cancellationToken);
+        
+        var existingUsers = await dbContext.Users
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken: cancellationToken);
+        
+        if (existingUsers.Count > 0)
+        {
+            Log.Information("Users already exist for organization {OrganizationId} -- skipping generation", organizationId);
+            return existingUsers;
+        }
+        
         var random = new Random();
         var userCount = random.Next(3, 8);
         var people = PersonInfoGenerator.Generate(userCount);
@@ -33,7 +46,7 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
 
         async ValueTask GenerateUsers(PersonInfo person, CancellationToken ct)
         {
-            var user = await CreateUser(person, organizationId, domain);
+            var user = await CreateUser(person, organizationId, organization.Domain);
             userForCreations.Add(user);
         }
         var options = new ParallelOptions
@@ -42,16 +55,19 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
         };
         await Parallel.ForEachAsync(people, options, GenerateUsers);
 
-        var usersInfoToCreate = userForCreations.ToList();
+        var usersInfoToCreate = userForCreations
+            .DistinctBy(x => x.Email)
+            .ToList();
         var users = new List<User>();
         foreach (var userForCreation in usersInfoToCreate)
         {
             var user = User.Create(userForCreation);
             users.Add(user);
-            await dbContext.Users.AddAsync(user);
         }
+        await dbContext.Users.AddRangeAsync(users, cancellationToken);
+        
         // TODO add role
-        return users.ToList();
+        return [.. users];
     }
 
     private async Task<UserForCreation> CreateUser(PersonInfo personInfo, Guid organizationId, string domain)
@@ -62,7 +78,8 @@ public class UserInfoGenerator(IKeycloakClient keycloakClient, PeakLimsDbContext
             FirstName = personInfo.FirstName,
             LastName = personInfo.LastName,
             Email = email,
-            Username = email
+            Username = email,
+            OrganizationId = organizationId
         };
 
         var kcUser = new UserRepresentation()

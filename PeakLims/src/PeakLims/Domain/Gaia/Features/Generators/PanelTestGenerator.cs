@@ -1,21 +1,41 @@
 namespace PeakLims.Domain.Gaia.Features.Generators;
 
 using Databases;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using Panels;
 using Panels.Models;
+using Serilog;
 using Tests;
 using Tests.Models;
 
 public interface IPanelTestGenerator
 {
-    Task<PanelTestResponse> Generate(Guid organizationId);
+    Task<PanelTestResponse> Generate(Guid organizationId, CancellationToken cancellationToken = default);
 }
 
 public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerator
 {
-    public async Task<PanelTestResponse> Generate(Guid organizationId)
+    public async Task<PanelTestResponse> Generate(Guid organizationId, CancellationToken cancellationToken = default)
     {
+        var existingPanels = await dbContext.Panels
+            .Include(x => x.TestAssignments)
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken: cancellationToken);
+        var existingTests = await dbContext.Tests
+            .Where(x => x.OrganizationId == organizationId)
+            .ToListAsync(cancellationToken: cancellationToken);
+        
+        if (existingPanels.Count > 0 || existingTests.Count > 0)
+        {
+            Log.Information("Panels and Tests already exist for organization {OrganizationId} -- skipping generation", organizationId);
+            return new PanelTestResponse()
+            {
+                Panels = existingPanels,
+                StandaloneTests = existingTests
+            };
+        }
+        
         var fullTestList = new PanelTestResponse();
         var panelResponseOpticalGenomeMapping = await AddOpticalGenomeMapping(organizationId);
         var panelResponseWholeGenomeSequencing = await AddWholeGenomeSequencing(organizationId);
@@ -72,8 +92,10 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             Methodology = "Exome Sequencing"
         }).Activate();
 
-        await dbContext.Tests.AddRangeAsync(kfvTest, pgxAddOnTest, hlaAddOnTest, pkdAddOnTest, wgaAddOnTest);
         fullTestList.StandaloneTests.AddRange([kfvTest, pgxAddOnTest, hlaAddOnTest, pkdAddOnTest, wgaAddOnTest]);
+        await dbContext.Panels.AddRangeAsync(fullTestList.Panels, cancellationToken);
+        await dbContext.Tests.AddRangeAsync(fullTestList.StandaloneTests, cancellationToken);
+        
         return fullTestList;
     }
 
@@ -156,7 +178,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                      .AddTest(additionalFamilyMemberWgsTestThree)
                      .Activate();
         
-        await dbContext.Panels.AddRangeAsync(panelWgsProband, panelWgsDuo, panelWgsTrio, panelWgsQuartet);
+        
 
         return new PanelTestResponse()
         {
@@ -223,7 +245,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             .AddTest(additionalFamilyMemberOgmTest, 3)
             .Activate();
         
-        await dbContext.Panels.AddRangeAsync(panelOgmProband, panelOgmDuo, panelOgmTrio, panelOgmQuartet);
+        
 
         return new PanelTestResponse()
         {
@@ -291,7 +313,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                      .AddTest(additionalFamilyMemberTranTest, 3)
                      .Activate();
 
-        await dbContext.Panels.AddRangeAsync(panelTranProband, panelTranDuo, panelTranTrio, panelTranQuartet);
+        
 
         return new PanelTestResponse()
         {
@@ -359,7 +381,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                        .AddTest(additionalFamilyMemberCombTest, 3)
                        .Activate();
 
-        await dbContext.Panels.AddRangeAsync(panelCombProband, panelCombDuo, panelCombTrio, panelCombQuartet);
+        
 
         return new PanelTestResponse()
         {
@@ -427,7 +449,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                        .AddTest(additionalFamilyMemberComb1Test, 3)
                        .Activate();
 
-        await dbContext.Panels.AddRangeAsync(panelComb1Proband, panelComb1Duo, panelComb1Trio, panelComb1Quartet);
+        
 
         return new PanelTestResponse()
         {
@@ -495,7 +517,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                        .AddTest(additionalFamilyMemberComb9Test, 3)
                        .Activate();
 
-        await dbContext.Panels.AddRangeAsync(panelComb9Proband, panelComb9Duo, panelComb9Trio, panelComb9Quartet);
+        
 
         return new PanelTestResponse()
         {
@@ -505,6 +527,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
 
     private async Task<PanelTestResponse> AddBasicExomeSequencing(Guid organizationId)
     {
+        var response = new PanelTestResponse();
         var probandTexTest = Test.Create(new TestForCreation()
         {
             TestCode = "TEX001",
@@ -520,7 +543,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId,
             Methodology = "Whole Genome Sequencing"
         }).Activate();
-        dbContext.Tests.Add(probandTexGTest);
+        response.StandaloneTests.Add(probandTexGTest);
 
         var panelExProband = Panel.Create(new PanelForCreation()
         {
@@ -571,16 +594,14 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
         panelExQuartet.AddTest(probandTexTest)
                     .AddTest(additionalFamilyMemberTexTest, 3)
                     .Activate();
-
-        await dbContext.Panels.AddRangeAsync(panelExProband, panelExDuo, panelExTrio, panelExQuartet);
-        return new PanelTestResponse()
-        {
-            Panels = [panelExProband, panelExDuo, panelExTrio, panelExQuartet],
-        };
+        
+        response.Panels.AddRange([panelExProband, panelExDuo, panelExTrio, panelExQuartet]);
+        return response;
     }
 
     private async Task<PanelTestResponse> AddExpandedExomeSequencing(Guid organizationId)
     {
+        var response = new PanelTestResponse();
         var probandTeexTest = Test.Create(new TestForCreation()
         {
             TestCode = "TEEX001",
@@ -596,7 +617,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId,
             Methodology = "Whole Genome Sequencing"
         }).Activate();
-        dbContext.Tests.Add(probandTeexGTest);
+        response.StandaloneTests.Add(probandTeexGTest);
 
         var panelEexProband = Panel.Create(new PanelForCreation()
         {
@@ -644,7 +665,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
             OrganizationId = organizationId,
             Methodology = "Whole Genome Sequencing"
         }).Activate();
-        dbContext.Tests.Add(quartetTeexGTest);
+        response.StandaloneTests.Add(quartetTeexGTest);
 
         var panelEexQuartet = Panel.Create(new PanelForCreation()
         {
@@ -657,11 +678,7 @@ public class PanelTestGenerator(PeakLimsDbContext dbContext) : IPanelTestGenerat
                      .AddTest(additionalFamilyMemberTeexTest, 3)
                      .Activate();
 
-        await dbContext.Panels.AddRangeAsync(panelEexProband, panelEexDuo, panelEexTrio, panelEexQuartet);
-
-        return new PanelTestResponse()
-        {
-            Panels = [panelEexProband, panelEexDuo, panelEexTrio, panelEexQuartet],
-        };
+        response.Panels.AddRange([panelEexProband, panelEexDuo, panelEexTrio, panelEexQuartet]);
+        return response;
     }
 }

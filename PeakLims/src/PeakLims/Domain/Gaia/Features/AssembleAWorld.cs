@@ -1,119 +1,181 @@
 namespace PeakLims.Domain.Gaia.Features;
 
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Threading;
-using Containers;
+using AccessionComments;
 using Databases;
 using MediatR;
 using Domain.Gaia.Features.Generators;
-using Domain.HealthcareOrganizations;
-using Domain.HealthcareOrganizations.Models;
-using Microsoft.Extensions.AI;
-using Panels;
-using Panels.Models;
+using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using PeakOrganizations;
+using Resources.HangfireUtilities;
 using SampleTypes;
 using Serilog;
-using Services.External.Keycloak;
-using Tests;
-using Tests.Models;
+using WorldBuildingAttempts;
+using WorldBuildingPhaseNames;
+using WorldBuildingPhases;
+using WorldBuildingStatuses;
+using Container = Containers.Container;
 
-
-// TODO refactor to HF job or temporal workflow
 public static class AssembleAWorld
 {
-    public sealed record Command() : IRequest<object>;
+    public sealed record Command(Guid OrganizationId, string SpecialOrganizationRequest) : IRequest<Guid>;
     
     public sealed class Handler(
+        IBackgroundJobClient backgroundJobClient,
         IOrganizationGenerator organizationGenerator,
         IUserInfoGenerator userInfoGenerator,
         IHealthcareOrganizationGenerator healthcareOrganizationGenerator,
         IAccessionGenerator accessionGenerator,
         IPanelTestGenerator panelTestGenerator,
+        IPatientGenerator patientGenerator,
+        IHealthcareOrganizationContactGenerator healthcareOrganizationContactGenerator,
         PeakLimsDbContext dbContext
-    ) : IRequestHandler<Command, object>
+    ) : IRequestHandler<Command, Guid>
     {
-        public async Task<object> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
         {
-            var organization = await organizationGenerator.Generate();
-            await dbContext.PeakOrganizations.AddAsync(organization, cancellationToken);
-            // TODO save phase
-            
-            var users = await userInfoGenerator.Generate(organization.Id, organization.Domain);
-            // TODO save phase
-            
-            var healthcareOrganizations = await healthcareOrganizationGenerator.Generate(organization);
-            // TODO save phase
-        
-            var healthcareOrgsWithContacts = await new HealthcareOrganizationContactGenerator()
-                .Generate(healthcareOrganizations);
-            await dbContext.HealthcareOrganizations.AddRangeAsync(healthcareOrgsWithContacts, cancellationToken);
-            // TODO save phase
-            
-            var panelsAndTests = await panelTestGenerator.Generate(organization.Id);
-            
-            var containerList = await AddDefaultContainers(cancellationToken, organization);
-            var patients = await PatientGenerator.Generate(organization.Id, containerList);
-            // TODO save phase
-
-            var accessions =
-                await accessionGenerator.Generate(patients, healthcareOrganizations, panelsAndTests, users);
-            await dbContext.Accessions.AddRangeAsync(accessions, cancellationToken);
-            
-            // TODO save phase
+            var worldBuildingAttempt = WorldBuildingAttempt.CreateStandardWorld();
+            dbContext.WorldBuildingAttempts.Add(worldBuildingAttempt);
             await dbContext.SaveChangesAsync(cancellationToken);
             
-            return new
-            {
-                Organization = new
-                {
-                    organization.Name,
-                    organization.Domain
-                },
-                Users = users.Select(x => new
-                {
-                    x.FirstName,
-                    x.LastName,
-                    x.Email,
-                    x.Username
-                }).ToList(),
-                Accessions = accessions.Select(x => new
-                {
-                    x.AccessionNumber,
-                    Patient = new
-                    {
-                        x.Patient.FirstName,
-                        x.Patient.LastName,
-                        Sex = x.Patient.Sex.Value,
-                        x.Patient.Lifespan.Age,
-                        x.Patient.Lifespan.DateOfBirth,
-                        Race = x.Patient.Race.Value,
-                        Ethnicity = x.Patient.Ethnicity.Value
-                    },
-                    Org = x.HealthcareOrganization.Name,
-                    Contacts = x.AccessionContacts.Select(c => new
-                    {
-                        c.HealthcareOrganizationContact.FirstName,
-                        c.HealthcareOrganizationContact.LastName,
-                        c.HealthcareOrganizationContact.Email,
-                        Npi = c.HealthcareOrganizationContact.Npi.Value
-                    }).ToList()
-                }).ToList(),
-            };
+            var command = new GenerateWorldJobCommand(worldBuildingAttempt.Id, request.OrganizationId, request.SpecialOrganizationRequest);
+            
+            backgroundJobClient.Enqueue(() => GenerateWorldJob(command, cancellationToken));
+            
+            return worldBuildingAttempt.Id;
         }
 
-        private async Task<List<Container>> AddDefaultContainers(CancellationToken cancellationToken, PeakOrganization organization)
+        public sealed record GenerateWorldJobCommand(
+            Guid WorldBuildingAttemptId,
+            Guid OrganizationId,
+            string SpecialOrganizationRequest);
+        
+        [JobUserFilter]
+        [DisplayName("Assemble A World")]
+        [AutomaticRetry(Attempts = 3)]
+        public async Task GenerateWorldJob(GenerateWorldJobCommand command, CancellationToken cancellationToken)
         {
+            var worldBuildingAttempt = await dbContext.WorldBuildingAttempts
+                .Include(x => x.WorldBuildingPhases)
+                .GetById(command.WorldBuildingAttemptId, cancellationToken: cancellationToken);
+            
+            var organizationId = command.OrganizationId;
+            var organization = await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.CreateOrganization(),
+                () => organizationGenerator.Generate(organizationId, command.SpecialOrganizationRequest, cancellationToken),
+                command.SpecialOrganizationRequest,
+                cancellationToken
+            );
+            
+            await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GenerateUsers(),
+                () => userInfoGenerator.Generate(organizationId, cancellationToken),
+                null,
+                cancellationToken
+            );
+
+            await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GenerateHealthcareOrganizations(),
+                () => healthcareOrganizationGenerator.Generate(organizationId, cancellationToken),
+                null,
+                cancellationToken
+            );
+
+            await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GenerateHealthcareOrganizationContacts(),
+                () => healthcareOrganizationContactGenerator.Generate(organizationId, cancellationToken),
+                null,
+                cancellationToken
+            );
+
+            await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GeneratePanelsAndTests(),
+                () => panelTestGenerator.Generate(organizationId, cancellationToken),
+                null,
+                cancellationToken
+            );
+
+            await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.AddDefaultContainers(),
+                () => AddDefaultContainers(organization, cancellationToken),
+                null,
+                cancellationToken
+            );
+
+            await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GeneratePatients(),
+                () => patientGenerator.Generate(organizationId),
+                null,
+                cancellationToken
+            );
+
+            await ExecutePhaseAsync(
+                worldBuildingAttempt,
+                WorldBuildingPhaseName.GenerateAccessions(),
+                () => accessionGenerator.Generate(organizationId, cancellationToken),
+                null,
+                cancellationToken
+            );
+        }
+
+        private async Task<T> ExecutePhaseAsync<T>(WorldBuildingAttempt worldBuildingAttempt,
+            WorldBuildingPhaseName phaseName,
+            Func<Task<T>> action,
+            string specialRequest,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                worldBuildingAttempt.StartPhase(phaseName, specialRequest);
+                await dbContext.SaveChangesAsync(cancellationToken);
+
+                var result = await action();
+
+                worldBuildingAttempt.SuccessfullyEndPhase(phaseName, result);
+                await dbContext.SaveChangesAsync(cancellationToken);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                worldBuildingAttempt.FailPhase(phaseName, e.Message);
+                await dbContext.SaveChangesAsync(cancellationToken);
+                throw;
+            }
+        }
+
+        private async Task<List<Container>> AddDefaultContainers(PeakOrganization organization, CancellationToken cancellationToken = default)
+        {
+            var existingContainers = await dbContext.Containers
+                .Where(x => x.OrganizationId == organization.Id)
+                .ToListAsync(cancellationToken: cancellationToken);
+            
+            if (existingContainers.Count > 0)
+            {
+                Log.Information("Containers already exist for organization {OrganizationId} -- skipping generation", organization.Id);
+                return existingContainers;
+            }
+            
             var containerList = new List<Container>();
             foreach (var sampleTypeName in SampleType.ListNames())
             {
                 var sampleType = SampleType.Of(sampleTypeName);
                 var defaultContainers = sampleType.GetDefaultContainers(organization.Id);
                 containerList.AddRange(defaultContainers);
+                
+                await dbContext.Containers.AddRangeAsync(defaultContainers, cancellationToken);
             }
-            await dbContext.Containers.AddRangeAsync(containerList, cancellationToken);
             return containerList;
         }
     }
-
 }

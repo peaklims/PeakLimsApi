@@ -8,6 +8,7 @@ using PeakLims.Resources;
 using PeakLims.Services;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Resources.HangfireUtilities;
 
@@ -33,7 +34,7 @@ public static class ServiceRegistration
                             .UseSnakeCaseNamingConvention());
 
         services.AddHostedService<MigrationHostedService<PeakLimsDbContext>>();
-        services.SetupHangfire(env);
+        services.SetupHangfire(env, configuration);
 
         // Auth -- Do Not Delete
         var authOptions = configuration.GetAuthOptions();
@@ -83,19 +84,27 @@ public static class ServiceRegistration
     
 public static class HangfireConfig
 {
-    public static void SetupHangfire(this IServiceCollection services, IWebHostEnvironment env)
+    public static void SetupHangfire(this IServiceCollection services, 
+        IWebHostEnvironment env,
+        IConfiguration configuration)
     {
         services.AddScoped<IJobContextAccessor, JobContextAccessor>();
         services.AddScoped<IJobWithUserContext, JobWithUserContext>();
         // if you want tags with sql server
         // var tagOptions = new TagsOptions() { TagsListStyle = TagsListStyle.Dropdown };
         
-        // var hangfireConfig = new MemoryStorageOptions() { };
+        var connectionString = configuration.GetConnectionStringOptions().PeakLims;
+        var hangfireConfig = new PostgreSqlStorageOptions()
+        {
+            SchemaName = "hangfire",
+        };
         services.AddHangfire(config =>
         {
             config
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                .UseMemoryStorage()
+                .UsePostgreSqlStorage(x => 
+                        x.UseNpgsqlConnection(connectionString),
+                    hangfireConfig)                
                 .UseColouredConsoleLogProvider()
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
