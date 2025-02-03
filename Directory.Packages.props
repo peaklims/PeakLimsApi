@@ -62,7 +62,7 @@
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />
     <PackageVersion Include="Serilog.Settings.Configuration" Version="9.0.0" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
-    <PackageVersion Include="Soenneker.Utils.AutoBogus" Version="3.0.631" />
+    <PackageVersion Include="Soenneker.Utils.AutoBogus" Version="3.0.637" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageVersion Include="Testcontainers" Version="4.1.0" />
     <PackageVersion Include="Testcontainers.LocalStack" Version="4.1.0" />
