@@ -52,6 +52,6 @@ updates:
     ignore:
       - dependency-name: "FluentAssertions"
     commit-message:
-      prefix: "build: [nuget]"
+      prefix: "build [dependabot]"
     # Temporarily disable PR limit, till initial dependency update goes through
     open-pull-requests-limit: 1000
