@@ -128,13 +128,7 @@ public class Patient : BaseEntity
         
         if(confirmedBidirectional)
         {
-            var reverseRelationship = PatientRelationshipBuilder
-                .For(toRelative)
-                .As(RelationshipType.Of(toRelativeRelationshipType))
-                .To(this)
-                .WhoIs(RelationshipType.Of(fromRelationshipType))
-                .WithNotes(notes)
-                .Build();
+            var reverseRelationship = relationship.BuildReverseRelationship();
             toRelative.ToRelationships.Add(reverseRelationship);
             
             return [relationship, reverseRelationship];

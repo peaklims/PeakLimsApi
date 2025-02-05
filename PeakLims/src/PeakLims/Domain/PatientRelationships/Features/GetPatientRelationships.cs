@@ -17,8 +17,10 @@ public static class GetPatientRelationships
             var patientRelationships = await dbContext.PatientRelationships
                 .Where(x => x.FromPatientId == request.PatientId || x.ToPatientId == request.PatientId)
                 .AsNoTracking()
+                .OrderBy(x => x.FromPatient.Id == request.PatientId ? 0 : 1)
                 .Select(x => new PatientRelationshipDto()
                 {
+                    Id = x.Id,
                     FromPatient = x.FromPatient.ToPatientRelationshipData(),
                     FromRelationship = x.FromRelationship.Value,
                     ToPatient = x.ToPatient.ToPatientRelationshipData(),

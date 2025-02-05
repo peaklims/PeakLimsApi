@@ -65,13 +65,7 @@ public class GetPatientRelationshipsQueryTests : TestBase
             .WithNotes(_faker.Lorem.Sentence())
             .Build();
 
-        var relationship2 = PatientRelationshipBuilder
-            .For(toPatient)
-            .As(new RelationshipType(toRelationshipType))
-            .To(fromPatient)
-            .WhoIs(new RelationshipType(fromRelationshipType))
-            .WithNotes(_faker.Lorem.Sentence())
-            .Build();
+        var relationship2 = relationship1.BuildReverseRelationship();
 
         await testingServiceScope.InsertAsync(relationship1, relationship2);
 

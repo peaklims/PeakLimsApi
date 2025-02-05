@@ -2,6 +2,7 @@ namespace PeakLims.Domain.PatientRelationships;
 
 using Patients;
 using RelationshipTypes;
+using Services;
 
 public class PatientRelationship : BaseEntity
 {
@@ -27,5 +28,15 @@ public class PatientRelationship : BaseEntity
 
         return newPatientRelationship;
     }
-    
+
+    public PatientRelationship BuildReverseRelationship()
+    {
+        return PatientRelationshipBuilder
+            .For(ToPatient)
+            .As(ToRelationship)
+            .To(FromPatient)
+            .WhoIs(FromRelationship)
+            .WithNotes(Notes)
+            .Build();
+    }
 }
