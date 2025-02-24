@@ -20,7 +20,7 @@
     <PackageVersion Include="FluentAssertions" Version="[7.0.0]" />
     <PackageVersion Include="FluentValidation" Version="11.11.0" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageVersion Include="Hangfire" Version="1.8.17" />
+    <PackageVersion Include="Hangfire" Version="1.8.18" />
     <PackageVersion Include="Hangfire.MemoryStorage" Version="1.8.1.1" />
     <PackageVersion Include="Hangfire.PostgreSql" Version="1.20.10" />
     <PackageVersion Include="HeimGuard" Version="1.1.0" />
