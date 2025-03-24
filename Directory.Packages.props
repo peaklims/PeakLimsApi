@@ -10,7 +10,7 @@
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageVersion Include="AutoBogus.Conventions" Version="2.13.1" />
     <PackageVersion Include="AutoBogusLifesupport" Version="2.14.0" />
-    <PackageVersion Include="AWSSDK.S3" Version="3.7.413.3" />
+    <PackageVersion Include="AWSSDK.S3" Version="3.7.415.23" />
     <PackageVersion Include="Bogus" Version="35.6.1" />
     <PackageVersion Include="Destructurama.Attributed" Version="5.1.0" />
     <PackageVersion Include="Ductus.FluentDocker" Version="2.10.59" />
