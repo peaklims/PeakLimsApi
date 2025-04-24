@@ -154,6 +154,17 @@ public sealed class PatientsController(IMediator mediator) : ControllerBase
         await mediator.Send(command);
         return NoContent();
     }
+
+    /// <summary>
+    /// Gets a suggested relationship
+    /// </summary>
+    [Authorize]
+    [HttpPost("relationship/suggested", Name = "GetSuggestedMatchingRole")]
+    public async Task<IActionResult> GetSuggestedMatchingRole(GetSuggestedMatchingRoleRequestDto getSuggestedMatchingRoleRequestDto)
+    {
+        var command = new GetSuggestedMatchingRole.Command(getSuggestedMatchingRoleRequestDto);
+        return Ok(await mediator.Send(command));
+    }
     
     
     // endpoint marker - do not delete this comment

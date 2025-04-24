@@ -41,6 +41,8 @@ public static class SearchExistingPatients
                     .HasQueryName("internalId");
                 config.Property<Patient>(x => x.Lifespan.DateOfBirth)
                     .HasQueryName("dob");
+                config.DerivedProperty<Patient>(p => p.FirstName + " " + p.LastName)
+                    .HasQueryName("fullname");
             });
             var queryKitData = new QueryKitData()
             {

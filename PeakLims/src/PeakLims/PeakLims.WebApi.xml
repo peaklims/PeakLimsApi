@@ -379,6 +379,11 @@
             Deletes a relationship
             </summary>
         </member>
+        <member name="M:PeakLims.Controllers.v1.PatientsController.GetSuggestedMatchingRole(PeakLims.Domain.PatientRelationships.Dtos.GetSuggestedMatchingRoleRequestDto)">
+            <summary>
+            Gets a suggested relationship
+            </summary>
+        </member>
         <member name="M:PeakLims.Controllers.v1.PeakOrganizationsController.GetPeakOrganizations(PeakLims.Domain.PeakOrganizations.Dtos.PeakOrganizationParametersDto)">
             <summary>
             Gets a list of all PeakOrganizations.
