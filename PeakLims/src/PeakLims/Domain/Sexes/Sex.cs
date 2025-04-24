@@ -32,6 +32,10 @@ public class Sex : ValueObject
     {
         Value = value.Name;
     }
+
+    public bool IsFemale() => _sex == SexEnum.Female;
+    public bool IsMale() => _sex == SexEnum.Male;
+    public bool IsUnknown() => _sex == SexEnum.Unknown;
     
     public static Sex Of(string value) => new Sex(value);
     public static implicit operator string(Sex value) => value.Value;

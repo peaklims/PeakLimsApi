@@ -57,13 +57,6 @@ public class Patient : BaseEntity
     public static Patient Create(PatientForCreation patientForCreation)
     {
         var newPatient = new Patient();
-        
-        ValidationException.ThrowWhenNullOrWhitespace(patientForCreation.FirstName, "Please provide a first name.");
-        ValidationException.ThrowWhenNullOrWhitespace(patientForCreation.LastName, "Please provide a last name.");
-        ValidationException.ThrowWhenNullOrWhitespace(patientForCreation.Sex, "Please provide a sex.");
-        ValidationException.MustNot(patientForCreation.Age == null && patientForCreation.DateOfBirth == null, 
-            "Please provide a valid age and birth date.");
-        ValidationException.ThrowWhenEmpty(patientForCreation.OrganizationId, "Please provide an organization id.");
 
         newPatient.FirstName = patientForCreation.FirstName;
         newPatient.LastName = patientForCreation.LastName;
@@ -72,10 +65,22 @@ public class Patient : BaseEntity
         newPatient.Sex = Sex.Of(patientForCreation.Sex);
         newPatient.Race = Race.Of(patientForCreation.Race);
         newPatient.Ethnicity = Ethnicity.Of(patientForCreation.Ethnicity);
+        
+        ValidatePatient(newPatient);
 
         newPatient.QueueDomainEvent(new PatientCreated(){ Patient = newPatient });
         
         return newPatient;
+    }
+
+    private static void ValidatePatient(Patient patient)
+    {
+        ValidationException.ThrowWhenNullOrWhitespace(patient.FirstName, "Please provide a first name.");
+        ValidationException.ThrowWhenNullOrWhitespace(patient.LastName, "Please provide a last name.");
+        ValidationException.ThrowWhenNullOrWhitespace(patient.Sex, "Please provide a sex.");
+        ValidationException.MustNot(patient.Lifespan.Age == null && patient.Lifespan.DateOfBirth == null, 
+            "Please provide a valid age and birth date.");
+        ValidationException.ThrowWhenEmpty(patient.OrganizationId, "Please provide an organization id.");
     }
 
     public Patient Update(PatientForUpdate patientForUpdate)
@@ -86,6 +91,8 @@ public class Patient : BaseEntity
         Sex = Sex.Of(patientForUpdate.Sex);
         Race = Race.Of(patientForUpdate.Race);
         Ethnicity = Ethnicity.Of(patientForUpdate.Ethnicity);
+        
+        ValidatePatient(this);
 
         QueueDomainEvent(new PatientUpdated(){ Id = Id });
         return this;
