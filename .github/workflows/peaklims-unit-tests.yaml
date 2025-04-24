@@ -25,12 +25,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
+      - name: Find solution file
+        id: find-solution
+        run: echo "SOLUTION_FILE=$(find . -name "*.sln" | head -n 1)" >> $GITHUB_ENV
+
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore $SOLUTION_FILE
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build $SOLUTION_FILE --configuration Release --no-restore
 
       - name: Test
-        working-directory: PeakLims/tests/PeakLims.UnitTests
-        run: dotnet test --configuration Release --no-restore --verbosity normal
+        run: dotnet test PeakLims/tests/PeakLims.UnitTests/PeakLims.UnitTests.csproj --configuration Release --no-restore --verbosity normal
