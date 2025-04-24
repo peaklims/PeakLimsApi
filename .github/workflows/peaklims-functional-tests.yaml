@@ -9,16 +9,31 @@ jobs:
       matrix:
         dotnet-version: ['9.0.x']
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v1.7.2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Find solution file
+        id: find-solution
+        run: echo "SOLUTION_FILE=$(find . -name "*.sln" | head -n 1)" >> $GITHUB_ENV
+
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore $SOLUTION_FILE
+
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build $SOLUTION_FILE --configuration Release --no-restore
+
       - name: Test
-        working-directory: PeakLims/tests/PeakLims.FunctionalTests
-        run: dotnet test --no-restore --verbosity minimal
+        run: dotnet test PeakLims/tests/PeakLims.FunctionalTests/PeakLims.FunctionalTests.csproj --configuration Release --no-restore --verbosity normal
