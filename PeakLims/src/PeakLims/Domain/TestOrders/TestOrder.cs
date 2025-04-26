@@ -100,7 +100,7 @@ public class TestOrder : BaseEntity
         Priority = TestOrderPriority.Normal();
         
         var receivedDate = Sample!.ReceivedDate;
-        DueDate = receivedDate.AddDays(Test.StatTurnAroundTime);
+        DueDate = receivedDate.AddDays(Test.TurnAroundTime);
         
         QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
         return this;
