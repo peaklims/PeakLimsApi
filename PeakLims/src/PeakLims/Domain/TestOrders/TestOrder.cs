@@ -78,10 +78,6 @@ public class TestOrder : BaseEntity
     
     public TestOrder MarkAsStat()
     {
-        var hasSampleAssigned = Sample != null;
-        ValidationException.Must(hasSampleAssigned, 
-            $"A sample must be assigned to a test order before it can be marked STAT.");
-
         Priority = TestOrderPriority.Stat();
         SetDueDate();
         
@@ -109,10 +105,6 @@ public class TestOrder : BaseEntity
     
     public TestOrder MarkAsNormal()
     {
-        var hasSampleAssigned = Sample != null;
-        ValidationException.Must(hasSampleAssigned, 
-            $"A sample must be assigned to a test order before it can be marked as normal.");
-
         Priority = TestOrderPriority.Normal();
         SetDueDate();
         
