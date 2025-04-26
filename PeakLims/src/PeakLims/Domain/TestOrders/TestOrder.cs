@@ -83,11 +83,27 @@ public class TestOrder : BaseEntity
             $"A sample must be assigned to a test order before it can be marked STAT.");
 
         Priority = TestOrderPriority.Stat();
-        
-        var receivedDate = Sample!.ReceivedDate;
-        DueDate = receivedDate.AddDays(Test.StatTurnAroundTime);
+        SetDueDate();
         
         QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
+        return this;
+    }
+    
+    private TestOrder SetDueDate()
+    {
+        if (Sample == null)
+        {
+            DueDate = null;
+            return this;
+        }
+
+        if (Priority.IsStat())
+        {
+            DueDate = Sample.ReceivedDate.AddDays(Test.StatTurnAroundTime);
+            return this;
+        }
+        
+        DueDate = Sample.ReceivedDate.AddDays(Test.TurnAroundTime);
         return this;
     }
     
@@ -98,9 +114,7 @@ public class TestOrder : BaseEntity
             $"A sample must be assigned to a test order before it can be marked as normal.");
 
         Priority = TestOrderPriority.Normal();
-        
-        var receivedDate = Sample!.ReceivedDate;
-        DueDate = receivedDate.AddDays(Test.TurnAroundTime);
+        SetDueDate();
         
         QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
         return this;
@@ -155,6 +169,7 @@ public class TestOrder : BaseEntity
         GuardSampleIfTestOrderIsProcessing();
 
         Sample = null;
+        SetDueDate();
         QueueDomainEvent(new TestOrderUpdated(){ Id = Id });
         return this;
     }
