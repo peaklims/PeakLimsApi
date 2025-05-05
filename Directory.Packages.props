@@ -52,7 +52,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.5.1-beta.1" />
     <PackageVersion Include="Pulumi.Keycloak" Version="6.2.1" />
     <PackageVersion Include="QueryKit" Version="1.5.0" />
-    <PackageVersion Include="Riok.Mapperly" Version="4.1.1" />
+    <PackageVersion Include="Riok.Mapperly" Version="4.2.1" />
     <PackageVersion Include="Scrutor" Version="6.0.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Serilog.Enrichers.AspNetCore" Version="1.0.0" />
