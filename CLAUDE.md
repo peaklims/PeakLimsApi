@@ -27,7 +27,7 @@ Set up Keycloak with Pulumi:
 
 ## Architecture Overview
 
-This is a **Clean Architecture .NET 9.0 application** implementing **Domain-Driven Design (DDD)** and **CQRS** patterns for a Laboratory Information Management System (LIMS).
+This is a **Vertical Slice Architecture .NET 9.0 application** implementing **Domain-Driven Design (DDD)** and **CQRS** patterns for a Laboratory Information Management System (LIMS).
 
 ### Key Architectural Patterns
 
