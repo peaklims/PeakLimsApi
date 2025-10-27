@@ -14,8 +14,8 @@
     <PackageVersion Include="Bogus" Version="35.6.3" />
     <PackageVersion Include="Destructurama.Attributed" Version="5.1.0" />
     <PackageVersion Include="Ductus.FluentDocker" Version="2.10.59" />
-    <PackageVersion Include="Duende.BFF" Version="2.3.0" />
-    <PackageVersion Include="Duende.BFF.Yarp" Version="2.3.0" />
+    <PackageVersion Include="Duende.BFF" Version="3.0.0" />
+    <PackageVersion Include="Duende.BFF.Yarp" Version="3.0.0" />
     <PackageVersion Include="EFCore.NamingConventions" Version="9.0.0" />
     <PackageVersion Include="FluentAssertions" Version="[7.0.0]" />
     <PackageVersion Include="FluentValidation" Version="11.11.0" />
