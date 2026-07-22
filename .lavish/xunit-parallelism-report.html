@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en" data-theme="luxury">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IntegrationTests → xunit v4 + Parallelism</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/daisyui.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/themes.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.2.4/dist/index.global.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :where(.grid, .flex) > * { min-width: 0; }
+    :where(p, h1, h2, h3, h4, h5, h6, li, dd, td, th, .badge) { overflow-wrap: anywhere; }
+    :where(img, svg, video, canvas, iframe) { max-width: 100%; height: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    .mermaid svg { max-width: 100%; height: auto; }
+    .pierre-scroll { border-radius: 0.75rem; overflow: hidden; border: 1px solid color-mix(in oklch, var(--color-base-content) 10%, transparent); }
+    .lede-gradient {
+      background: radial-gradient(1200px 400px at 15% -10%, color-mix(in oklch, var(--color-primary) 22%, transparent), transparent 60%),
+                  radial-gradient(900px 400px at 95% 0%, color-mix(in oklch, var(--color-accent) 18%, transparent), transparent 55%);
+    }
+    .rule-num { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="bg-base-100 text-base-content">
+  <main class="mx-auto max-w-6xl px-5 py-8 lg:px-8 lg:py-12">
+
+    <!-- ================= HERO ================= -->
+    <section class="lede-gradient rounded-3xl border border-base-content/10 p-7 lg:p-10 mb-10">
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <span class="badge badge-success badge-soft gap-1">✔ Complete &amp; verified</span>
+        <span class="badge badge-ghost">branch <code class="ml-1">hello-world</code></span>
+        <span class="badge badge-ghost">uncommitted · nothing pushed</span>
+        <span class="badge badge-ghost">2026-07-16</span>
+      </div>
+      <h1 class="text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+        IntegrationTests → xunit v4 preview<br class="hidden sm:block" /> + real test parallelism
+      </h1>
+      <p class="mt-4 max-w-3xl text-lg text-base-content/70">
+        Migrated the PeakLims <strong>IntegrationTests</strong> project to the xunit v3
+        <span class="whitespace-nowrap">"v4 preview"</span> line, turned on class-level parallelism, and
+        removed the real bottleneck: sequential Testcontainer startup. Unit &amp; Functional projects stay on xunit v2.
+      </p>
+
+      <div class="stats stats-vertical sm:stats-horizontal shadow mt-7 w-full bg-base-100/60 border border-base-content/10">
+        <div class="stat">
+          <div class="stat-title">Warm wall-clock</div>
+          <div class="stat-value text-success">~10.5s</div>
+          <div class="stat-desc">down from ~24.5s · <strong>~2.3× faster</strong></div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">Tests</div>
+          <div class="stat-value">226</div>
+          <div class="stat-desc"><span class="text-success font-semibold">0 failures</span> · 64 skipped by design</div>
+        </div>
+        <div class="stat">
+          <div class="stat-title">Test-execution slice</div>
+          <div class="stat-value text-accent">~5×</div>
+          <div class="stat-desc">~5.8s → ~1.1s once the fixture is warm</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= THE INSIGHT ================= -->
+    <section class="mb-12">
+      <div class="flex items-baseline gap-3 mb-1">
+        <h2 class="text-2xl font-bold">The one insight that mattered</h2>
+      </div>
+      <p class="text-base-content/70 max-w-3xl mb-6">
+        Turning on xunit parallelism <em>alone</em> barely moved the needle (24.5s → 22s), because
+        <strong>container &amp; fixture startup was a ~20s floor</strong> that every run paid up front.
+        The big lever was starting the three Testcontainers <strong>concurrently</strong> with
+        <code>Task.WhenAll</code>. Parallelism then compresses the test-execution slice on top of the lower floor.
+      </p>
+
+      <div class="rounded-2xl border border-base-content/10 bg-base-200/40 p-4 lg:p-6">
+        <pre class="mermaid">
+%%{init: {"flowchart": {"htmlLabels": true}} }%%
+flowchart LR
+    subgraph BEFORE["Before · sequential startup (~20s floor)"]
+      direction TB
+      b1["Postgres start"] --> b2["migrate"] --> b3["RabbitMQ start"] --> b4["LocalStack start"] --> b5["S3 buckets"] --> b6["run tests (serial ~5.8s)"]
+    end
+    subgraph AFTER["After · concurrent startup (~9s floor)"]
+      direction TB
+      a0["Task.WhenAll: Postgres + RabbitMQ + LocalStack start together"]
+      a0 --> a1["Task.WhenAll: migrate + S3 buckets"]
+      a1 --> a2["run tests in parallel (~1.1s)"]
+    end
+    BEFORE -.->|"~24.5s → ~10.5s"| AFTER
+        </pre>
+      </div>
+      <p class="text-sm text-base-content/50 mt-3">
+        Numbers are medians from a Docker-for-Mac VM and are noisy by nature. The <strong>shape</strong> is the point:
+        the floor dominates, and concurrency lowers the floor.
+      </p>
+    </section>
+
+    <!-- ================= PERFORMANCE COMPARISON ================= -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-1">Where the time goes</h2>
+      <p class="text-base-content/70 max-w-3xl mb-5">Each run pays a fixed fixture floor plus a test-execution slice. Both levers were pulled.</p>
+
+      <div class="grid gap-4 lg:grid-cols-2">
+        <!-- Before card -->
+        <div class="card card-border bg-base-100 border-base-content/10">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <h3 class="card-title text-base-content/80">Baseline — xunit v2, serial</h3>
+              <span class="badge badge-ghost">before</span>
+            </div>
+            <div class="text-3xl font-black">~24.5<span class="text-lg font-semibold text-base-content/50">s</span></div>
+            <div class="mt-3 space-y-2 text-sm">
+              <div>
+                <div class="flex justify-between"><span>Fixture floor (sequential containers)</span><span class="rule-num">~20s</span></div>
+                <progress class="progress progress-warning w-full" value="20" max="24.5"></progress>
+              </div>
+              <div>
+                <div class="flex justify-between"><span>Test execution (serial)</span><span class="rule-num">~5.8s</span></div>
+                <progress class="progress progress-warning w-full" value="5.8" max="24.5"></progress>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- After card -->
+        <div class="card card-border bg-base-100 border-success/40">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <h3 class="card-title text-success">Now — xunit v4, parallel</h3>
+              <span class="badge badge-success badge-soft">after</span>
+            </div>
+            <div class="text-3xl font-black text-success">~10.5<span class="text-lg font-semibold text-base-content/50">s</span></div>
+            <div class="mt-3 space-y-2 text-sm">
+              <div>
+                <div class="flex justify-between"><span>Fixture floor (concurrent containers)</span><span class="rule-num">~9s</span></div>
+                <progress class="progress progress-success w-full" value="9" max="24.5"></progress>
+              </div>
+              <div>
+                <div class="flex justify-between"><span>Test execution (parallel classes)</span><span class="rule-num">~1.1s</span></div>
+                <progress class="progress progress-success w-full" value="1.1" max="24.5"></progress>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100 mt-5">
+        <table class="table table-zebra">
+          <thead>
+            <tr>
+              <th>Run mode</th>
+              <th>Command flag</th>
+              <th class="text-right">Wall-clock</th>
+              <th>Reads as</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">v2 serial (baseline)</td>
+              <td><code>—</code></td>
+              <td class="text-right rule-num">~24.5s</td>
+              <td>Old world</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">v4, parallelism only</td>
+              <td><code>-parallel collections</code></td>
+              <td class="text-right rule-num">~22s</td>
+              <td>Floor still dominates</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">v4, forced serial</td>
+              <td><code>-parallel none</code></td>
+              <td class="text-right rule-num">~15s</td>
+              <td>Concurrent startup, serial tests</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">Fixture floor only</td>
+              <td><code>-class "*PatientListQueryTests"</code></td>
+              <td class="text-right rule-num">~9s</td>
+              <td>Pure startup cost</td>
+            </tr>
+            <tr class="bg-success/5">
+              <td class="font-bold text-success">v4, parallel (default)</td>
+              <td><code>runner.json</code></td>
+              <td class="text-right rule-num font-bold text-success">~10.5s</td>
+              <td class="font-semibold">Both levers pulled</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= KEY CODE CHANGES ================= -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-1">The three changes that did the work</h2>
+      <p class="text-base-content/70 max-w-3xl mb-6">Focused before/after snippets from <code>TestFixture.cs</code>, <code>TestBase.cs</code> and the new assembly-fixture file.</p>
+
+      <div class="space-y-8">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <span class="badge badge-primary badge-soft">1 · biggest wall-clock win</span>
+            <h3 class="font-semibold">Start the 3 containers concurrently</h3>
+          </div>
+          <p class="text-sm text-base-content/60 mb-3"><code>PeakLims/tests/PeakLims.IntegrationTests/TestFixture.cs</code> — sequential <code>await … StartAsync()</code> → two <code>Task.WhenAll</code> waves.</p>
+          <div id="diff-containers" class="pierre-scroll"></div>
+        </div>
+
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <span class="badge badge-accent badge-soft">2 · enables parallelism</span>
+            <h3 class="font-semibold">Assembly fixture, not collection fixture</h3>
+          </div>
+          <p class="text-sm text-base-content/60 mb-3">One shared container set across parallel classes. An <code>ICollectionFixture</code> would spin up N sets; the global <code>[Collection]</code> serialized every class.</p>
+          <div id="diff-fixture" class="pierre-scroll"></div>
+        </div>
+
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <span class="badge badge-secondary badge-soft">3 · parallel safety</span>
+            <h3 class="font-semibold">Scoped mocks + real AsyncLocal HttpContext</h3>
+          </div>
+          <p class="text-sm text-base-content/60 mb-3">Singleton mocks shared mutable state across concurrent tests. Scoped mocks give each <code>TestingServiceScope</code> its own; the real <code>IHttpContextAccessor</code> isolates the current user per async flow.</p>
+          <div id="diff-mocks" class="pierre-scroll"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LATENT BUGS ================= -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-1">3 latent bugs parallelism exposed</h2>
+      <p class="text-base-content/70 max-w-3xl mb-5">
+        All three were order-dependent tests that never validated their own inserted rows — they silently counted
+        <em>other</em> tests' rows accumulating in the shared <code>DefaultTestingOrganizationId</code>. Serial execution hid them.
+      </p>
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="card card-border bg-base-100 border-base-content/10">
+          <div class="card-body gap-2">
+            <span class="badge badge-warning badge-soft badge-sm">org-scoped filter</span>
+            <h3 class="card-title text-base">AccessionContact</h3>
+            <p class="text-sm text-base-content/70">Fake inserted a child with no org-defining parent, so the org-scoped query filter excluded it. <strong>Fix:</strong> attach contacts to an accession in the org.</p>
+          </div>
+        </div>
+        <div class="card card-border bg-base-100 border-base-content/10">
+          <div class="card-body gap-2">
+            <span class="badge badge-warning badge-soft badge-sm">org-scoped filter</span>
+            <h3 class="card-title text-base">Sample</h3>
+            <p class="text-sm text-base-content/70">Same shape: samples are filtered by the owning patient's org. <strong>Fix:</strong> attach samples to a <code>Patient</code> before insert.</p>
+          </div>
+        </div>
+        <div class="card card-border bg-base-100 border-error/40">
+          <div class="card-body gap-2">
+            <span class="badge badge-error badge-soft badge-sm">cross-test blast radius</span>
+            <h3 class="card-title text-base">AccessionAttachment</h3>
+            <p class="text-sm text-base-content/70">List projection pre-signs an S3 URL for <em>every</em> in-scope attachment and threw <code>ValidationException: S3 bucket not set</code> on another test's bucketless row. <strong>Fix:</strong> run in a dedicated <code>PeakOrganization</code>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= WHAT CHANGED ================= -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-1">Everything that changed</h2>
+      <p class="text-base-content/70 max-w-3xl mb-5">7 files modified, 2 new. Prior unrelated WIP is safe at <code>stash@{0}</code>.</p>
+      <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100">
+        <table class="table">
+          <thead>
+            <tr><th>File</th><th>Kind</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Directory.Packages.props</code></td>
+              <td><span class="badge badge-ghost badge-sm">edit</span></td>
+              <td>Add <code>xunit.v3 4.0.0-pre.128</code>; pin <code>EF Core.Relational 9.0.4</code>; keep <code>xunit 2.9.3</code> for other projects.</td>
+            </tr>
+            <tr>
+              <td><code>…IntegrationTests.csproj</code></td>
+              <td><span class="badge badge-ghost badge-sm">edit</span></td>
+              <td><code>xunit</code>→<code>xunit.v3</code>; runner.visualstudio <code>4.0.0-pre.4</code>; <code>&lt;OutputType&gt;Exe&lt;/OutputType&gt;</code>; copy runner.json.</td>
+            </tr>
+            <tr>
+              <td><code>xunit.runner.json</code></td>
+              <td><span class="badge badge-success badge-soft badge-sm">new</span></td>
+              <td><code>parallelizeTestCollections: true</code>, <code>maxParallelThreads: "1x"</code>, <code>conservative</code>.</td>
+            </tr>
+            <tr>
+              <td><code>AssemblyFixtureRegistration.cs</code></td>
+              <td><span class="badge badge-success badge-soft badge-sm">new</span></td>
+              <td><code>[assembly: AssemblyFixture(typeof(TestFixture))]</code> — one container set, shared by all parallel classes.</td>
+            </tr>
+            <tr>
+              <td><code>TestFixture.cs</code></td>
+              <td><span class="badge badge-ghost badge-sm">edit</span></td>
+              <td><code>ValueTask</code> lifetimes; concurrent start/teardown; scoped mocks; real HttpContext; one-time faker config.</td>
+            </tr>
+            <tr>
+              <td><code>TestBase.cs</code></td>
+              <td><span class="badge badge-ghost badge-sm">edit</span></td>
+              <td>Removed the global <code>[Collection]</code> so classes parallelize; faker config moved to fixture.</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-sm text-base-content/60"><span class="badge badge-warning badge-soft badge-sm mr-2">3 test fixes</span><code>AccessionContactListQueryTests</code> · <code>SampleListQueryTests</code> · <code>AccessionAttachmentListQueryTests</code> — see latent bugs above.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= HOW TO RUN ================= -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-1">How to run &amp; re-verify</h2>
+      <p class="text-base-content/70 max-w-3xl mb-2">
+        .NET 10's SDK dropped VSTest for MTP, so <code>dotnet test</code> fails for v3 —
+        build, then run the self-contained exe directly.
+      </p>
+      <div class="mockup-code w-full text-sm">
+<pre data-prefix="$"><code>dotnet build PeakLims/tests/PeakLims.IntegrationTests/PeakLims.IntegrationTests.csproj</code></pre>
+<pre data-prefix="$"><code>EXE=PeakLims/tests/PeakLims.IntegrationTests/bin/Debug/net9.0/PeakLims.IntegrationTests.dll</code></pre>
+<pre data-prefix="$" class="text-success"><code>dotnet $EXE                                 # default (runner.json) ~10-11s · 0 fail</code></pre>
+<pre data-prefix="$"><code>dotnet $EXE -parallel none                  # serial ~15s</code></pre>
+<pre data-prefix="$"><code>dotnet $EXE -class "*PatientListQueryTests" # fixture floor ~9s</code></pre>
+      </div>
+      <p class="text-sm text-base-content/60 mt-3">Regression-safe: <code>dotnet test PeakLims.UnitTests</code> (163/0) and the FunctionalTests build both still pass on xunit v2.</p>
+    </section>
+
+    <!-- ================= XUNIT VERSIONS ================= -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-1">xunit versions &amp; updates</h2>
+      <p class="text-base-content/70 max-w-3xl mb-5">The package naming and the version numbers are genuinely confusing, so here is the whole picture plus how to bump.</p>
+
+      <div class="grid gap-4 lg:grid-cols-2 mb-6">
+        <div class="card card-border bg-base-100 border-base-content/10">
+          <div class="card-body gap-2">
+            <h3 class="card-title text-base">The package split</h3>
+            <p class="text-sm text-base-content/70"><code>xunit</code> <span class="badge badge-ghost badge-xs">v2 · 2.9.3</span> is the classic package — <strong>kept</strong> for the Unit &amp; Functional projects.</p>
+            <p class="text-sm text-base-content/70"><code>xunit.v3</code> is the rewrite: self-contained exe (MTP), <code>ValueTask</code> lifetimes, <code>[assembly: AssemblyFixture]</code>, <code>typeof</code>-based attributes. <strong>Only</strong> IntegrationTests uses it.</p>
+          </div>
+        </div>
+        <div class="alert alert-info alert-soft items-start">
+          <div>
+            <h3 class="font-semibold">"v4 preview" is a misnomer</h3>
+            <p class="text-sm">The <em>framework generation</em> is xunit <strong>v3</strong>. <code>4.0.0-pre</code> is just the 4th major of the <code>xunit.v3</code> <em>package</em> — still prerelease. A <strong>stable 3.2.2</strong> line already exists.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100 mb-6">
+        <table class="table table-zebra">
+          <thead><tr><th><code>xunit.v3</code> package version</th><th>Status</th><th>This repo</th></tr></thead>
+          <tbody>
+            <tr><td><code>1.x</code>, <code>2.x</code></td><td>early v3 releases</td><td></td></tr>
+            <tr><td class="font-semibold"><code>3.2.2</code></td><td><span class="badge badge-success badge-soft badge-sm">current stable</span></td><td class="text-base-content/50">recommended target ↓</td></tr>
+            <tr class="bg-warning/5"><td class="font-semibold"><code>4.0.0-pre.128</code></td><td><span class="badge badge-warning badge-soft badge-sm">preview · latest published</span></td><td class="font-semibold">← pinned now</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-warning alert-soft items-start mb-6">
+        <div>
+          <h3 class="font-semibold">The pending update</h3>
+          <p class="text-sm">The update notice referenced <code>4.0.0-pre.151</code>. The newest actually published on nuget.org is <code>4.0.0-pre.128</code> — already the pin — so <strong>there is nothing to bump on the preview line right now.</strong></p>
+        </div>
+      </div>
+
+      <h3 class="font-semibold mb-3">Two forward paths — your decision</h3>
+      <div class="grid gap-4 lg:grid-cols-2 mb-6">
+        <div class="card card-border bg-base-100 border-base-content/10">
+          <div class="card-body gap-2">
+            <div class="flex items-center justify-between"><h4 class="font-semibold">Stay on preview</h4><span class="badge badge-ghost">no work today</span></div>
+            <p class="text-sm text-base-content/70"><code>xunit.v3 4.0.0-pre.128</code> + <code>xunit.runner.visualstudio 4.0.0-pre.4</code>. Already pinned. Bump when <code>.151</code>+ publishes.</p>
+          </div>
+        </div>
+        <div class="card card-border bg-base-100 border-success/40">
+          <div class="card-body gap-2">
+            <div class="flex items-center justify-between"><h4 class="font-semibold text-success">Move to stable</h4><span class="badge badge-success badge-soft">recommended, once verified</span></div>
+            <p class="text-sm text-base-content/70"><code>xunit.v3 3.2.2</code> + <code>xunit.runner.visualstudio 3.1.5</code>. The stable line already ships <code>AssemblyFixture</code>, MTP, and <code>ValueTask</code> lifetimes — everything here relies on. Prerelease pins carry churn/yank risk. <strong>Run the full suite before committing.</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-sm font-semibold mb-2">How to check for / apply an update</p>
+      <div class="mockup-code w-full text-sm">
+<pre data-prefix="$"><code>curl -s https://api.nuget.org/v3-flatcontainer/xunit.v3/index.json | jq -r '.versions[]' | tail</code></pre>
+<pre data-prefix="#" class="text-warning"><code>bump the central pin in Directory.Packages.props:</code></pre>
+<pre data-prefix=" "><code>&lt;PackageVersion Include="xunit.v3" Version="X.Y.Z" /&gt;</code></pre>
+<pre data-prefix="#" class="text-warning"><code>keep the runner matched: stable v3 -> runner.visualstudio 3.1.x ; 4.0-pre -> 4.0.0-pre.x</code></pre>
+<pre data-prefix="$"><code>dotnet build …/PeakLims.IntegrationTests.csproj &amp;&amp; dotnet …/PeakLims.IntegrationTests.dll</code></pre>
+      </div>
+    </section>
+
+    <!-- ================= REUSABLE RECIPE ================= -->
+    <section class="mb-12">
+      <div class="flex flex-wrap items-center gap-2 mb-1">
+        <h2 class="text-2xl font-bold">Reusable recipe: assembly-fixture parallelism</h2>
+        <span class="badge badge-primary badge-soft">any repo</span>
+      </div>
+      <p class="text-base-content/70 max-w-3xl mb-6">A repo-agnostic checklist to give <strong>any</strong> xunit v3 integration suite one shared set of expensive resources (containers, DB) while classes run in parallel. This is the pattern behind <code>[assembly: AssemblyFixture(typeof(TestFixture))]</code>.</p>
+
+      <div class="space-y-3">
+        <div class="collapse collapse-arrow bg-base-100 border border-base-content/10">
+          <input type="checkbox" checked />
+          <div class="collapse-title font-semibold"><span class="badge badge-primary badge-sm mr-2">1</span>Register the fixture at the assembly level, in its own file</div>
+          <div class="collapse-content text-sm text-base-content/80">
+            <p class="mb-2"><code>[assembly: …]</code> attributes cannot live inside a file-scoped <code>namespace X;</code> block — use a dedicated file (e.g. <code>AssemblyFixtureRegistration.cs</code>).</p>
+            <div class="mockup-code text-xs"><pre><code>using Xunit;
+[assembly: AssemblyFixture(typeof(TestFixture))]</code></pre></div>
+            <p class="mt-2">Created <strong>once before any test</strong>, disposed <strong>after all tests</strong> — one instance shared across every class. That is what lets classes share containers.</p>
+          </div>
+        </div>
+
+        <div class="collapse collapse-arrow bg-base-100 border border-error/30">
+          <input type="checkbox" checked />
+          <div class="collapse-title font-semibold"><span class="badge badge-error badge-sm mr-2">2</span>Remove <code class="ml-1">ICollectionFixture</code> and any global <code class="ml-1">[Collection]</code></div>
+          <div class="collapse-content text-sm text-base-content/80">
+            <p>These are what a typical v2 shared-context suite uses — and exactly what serializes everything.</p>
+            <ul class="list-disc ml-5 mt-2 space-y-1">
+              <li><code>ICollectionFixture&lt;T&gt;</code> + <code>[CollectionDefinition]</code> scope the fixture to a collection.</li>
+              <li>A global <code>[Collection(...)]</code> on your base class puts <strong>every</strong> test in one collection → serial.</li>
+              <li>Delete both. With no collection attribute, <strong>each class is its own collection</strong> and classes parallelize.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="collapse collapse-arrow bg-base-100 border border-warning/40">
+          <input type="checkbox" checked />
+          <div class="collapse-title font-semibold"><span class="badge badge-warning badge-sm mr-2">3</span>Make the fixture parallel-safe — mandatory, not optional</div>
+          <div class="collapse-content text-sm text-base-content/80">
+            <div class="rounded-lg bg-base-200/60 p-3 mb-2 italic text-base-content/70">"there is no change in parallelization when using an assembly fixture … fixtures used as assembly fixtures may be used from multiple tests simultaneously, and must be designed for with this parallelism requirement in mind." — xunit docs</div>
+            <ul class="list-disc ml-5 space-y-1">
+              <li>Register per-test mutable services as <strong>scoped</strong>, not singleton (permissions, jobs, current user).</li>
+              <li>Prefer real <strong>AsyncLocal-backed</strong> services (e.g. <code>IHttpContextAccessor</code>) over singleton mocks — AsyncLocal isolates per async flow.</li>
+              <li>Any shared mutable field on the fixture must be thread-safe.</li>
+              <li>One-time global config (AutoFaker/Bogus) goes in the fixture's <code>InitializeAsync</code>, not a per-test constructor.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="collapse collapse-arrow bg-base-100 border border-base-content/10">
+          <input type="checkbox" />
+          <div class="collapse-title font-semibold"><span class="badge badge-neutral badge-sm mr-2">4</span>Access the fixture — either style works</div>
+          <div class="collapse-content text-sm text-base-content/80">
+            <ul class="list-disc ml-5 space-y-1">
+              <li><strong>Constructor injection:</strong> <code>public MyTests(TestFixture fixture)</code> — xunit passes the single instance.</li>
+              <li><strong>Static handoff:</strong> expose a <code>static</code> accessor (this repo uses <code>static IServiceScopeFactory BaseScopeFactory</code> via <code>TestingServiceScope</code>). Handy when a helper needs it without threading it through every constructor.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="collapse collapse-arrow bg-base-100 border border-base-content/10">
+          <input type="checkbox" />
+          <div class="collapse-title font-semibold"><span class="badge badge-neutral badge-sm mr-2">5</span>Migrate the fixture to the v3 API</div>
+          <div class="collapse-content text-sm text-base-content/80">
+            <ul class="list-disc ml-5 space-y-1">
+              <li><code>IAsyncLifetime.InitializeAsync</code> / <code>DisposeAsync</code> return <strong><code>ValueTask</code></strong> (not <code>Task</code>); <code>IAsyncLifetime</code> now implies <code>IAsyncDisposable</code>.</li>
+              <li>Assembly attributes take <strong><code>typeof(T)</code></strong>, not a string.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="collapse collapse-arrow bg-base-100 border border-success/40">
+          <input type="checkbox" checked />
+          <div class="collapse-title font-semibold"><span class="badge badge-success badge-sm mr-2">6</span>Start expensive resources concurrently — the real perf win</div>
+          <div class="collapse-content text-sm text-base-content/80">
+            <div class="mockup-code text-xs"><pre><code>await Task.WhenAll(db.StartAsync(), mq.StartAsync(), storage.StartAsync());
+await Task.WhenAll(Migrate(db.ConnectionString), SeedStorage(storage)); // each needs a running container</code></pre></div>
+          </div>
+        </div>
+
+        <div class="collapse collapse-arrow bg-base-100 border border-base-content/10">
+          <input type="checkbox" />
+          <div class="collapse-title font-semibold"><span class="badge badge-neutral badge-sm mr-2">7</span>Project + runner setup</div>
+          <div class="collapse-content text-sm text-base-content/80">
+            <ul class="list-disc ml-5 space-y-1">
+              <li><code>.csproj</code>: <code>xunit</code> → <code>xunit.v3</code>; add <code>&lt;OutputType&gt;Exe&lt;/OutputType&gt;</code>; copy <code>xunit.runner.json</code> to output.</li>
+              <li><code>xunit.runner.json</code>: <code>parallelizeTestCollections: true</code>; tune <code>maxParallelThreads</code> (<code>"1x"</code> = one per core; past ~cores shows diminishing returns when one shared DB is the contention point); <code>parallelAlgorithm: conservative</code>.</li>
+              <li>Run the built exe/dll directly: <code>dotnet path/to/Tests.dll [-parallel none|collections -maxThreads N]</code>. <code>dotnet test</code> may fail if the SDK dropped VSTest for MTP.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="collapse collapse-arrow bg-base-100 border border-base-content/10">
+          <input type="checkbox" />
+          <div class="collapse-title font-semibold"><span class="badge badge-neutral badge-sm mr-2">8</span>Expect to fix latent order-dependent tests</div>
+          <div class="collapse-content text-sm text-base-content/80">
+            <p>Serial execution hides tests that never validate their own inserted data — they silently count rows other tests leave in a shared scope. Make each test self-sufficient (own parent/org, or a dedicated tenant). Parallelism <strong>will</strong> surface these; treat it as part of the migration, not a surprise.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= NEXT ================= -->
+    <section class="mb-4">
+      <h2 class="text-2xl font-bold mb-4">Open items &amp; decisions for you</h2>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="alert alert-info alert-soft items-start">
+          <div>
+            <h3 class="font-semibold">Commit?</h3>
+            <p class="text-sm">Not done yet (house rule). If you want it: commit to <code>hello-world</code>, no agent co-author. <code>conventional-commits</code> skill is ready.</p>
+          </div>
+        </div>
+        <div class="alert alert-warning alert-soft items-start">
+          <div>
+            <h3 class="font-semibold">Isolation is still soft</h3>
+            <p class="text-sm">One shared Postgres + default org means cross-test isolation leans on <code>&gt;=</code> assertions. Optional hardening: give each test its own org by default.</p>
+          </div>
+        </div>
+        <div class="alert alert-soft items-start">
+          <div>
+            <h3 class="font-semibold">Contention ceiling</h3>
+            <p class="text-sm">Single Postgres caps gains; <code>maxThreads</code> above ~8 shows diminishing returns on Docker-for-Mac. <code>aggressive</code> algorithm untested.</p>
+          </div>
+        </div>
+        <div class="alert alert-soft items-start">
+          <div>
+            <h3 class="font-semibold">Version bump / stable move</h3>
+            <p class="text-sm"><code>4.0.0-pre.151</code> isn't on nuget.org yet — <code>.128</code> is newest and already pinned. Bigger call: move to <strong>stable <code>xunit.v3 3.2.2</code></strong>. See <em>"xunit versions &amp; updates"</em> above.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-10 pt-6 border-t border-base-content/10 text-sm text-base-content/50">
+      PeakLimsApi · IntegrationTests xunit v4 preview + parallelism · report generated 2026-07-16.
+      Design system: Lavish-recommended Tailwind + DaisyUI (no app UI to mirror in this backend repo).
+    </footer>
+  </main>
+
+  <!-- ===== @pierre/diffs code rendering ===== -->
+  <script type="module">
+    import { FileDiff } from "https://esm.sh/@pierre/diffs@1.2.10?bundle";
+    const theme = { light: "github-light", dark: "github-dark" };
+    const options = { theme, themeType: "dark", overflow: "wrap", diffStyle: "unified" };
+
+    const diffs = [
+      {
+        mount: "#diff-containers",
+        name: "TestFixture.cs",
+        old: `_dbContainer = new PostgreSqlBuilder().Build();
+await _dbContainer.StartAsync();
+await RunMigration(_dbContainer.GetConnectionString());
+
+_rmqContainer = new RabbitMqBuilder()
+    .WithPortBinding(rmqPort, 5672)
+    .Build();
+await _rmqContainer.StartAsync();
+
+_localStackContainer = new LocalStackBuilder()
+    .WithPortBinding(localstackPort, 4566)
+    .Build();
+await _localStackContainer.StartAsync();
+await AddS3Buckets(localstackPort);
+`,
+        new: `_dbContainer = new PostgreSqlBuilder().Build();
+_rmqContainer = new RabbitMqBuilder()
+    .WithPortBinding(rmqPort, 5672)
+    .Build();
+_localStackContainer = new LocalStackBuilder()
+    .WithPortBinding(localstackPort, 4566)
+    .Build();
+
+// Container startup dominates the fixture's wall-clock time, so start
+// all three containers concurrently instead of awaiting each in turn.
+await Task.WhenAll(
+    _dbContainer.StartAsync(),
+    _rmqContainer.StartAsync(),
+    _localStackContainer.StartAsync());
+
+// Post-start setup that each depends on a running container.
+await Task.WhenAll(
+    RunMigration(_dbContainer.GetConnectionString()),
+    AddS3Buckets(localstackPort));
+`,
+      },
+      {
+        mount: "#diff-fixture",
+        name: "TestFixture.cs / TestBase.cs / AssemblyFixtureRegistration.cs",
+        old: `// TestFixture.cs
+[CollectionDefinition(nameof(TestFixture))]
+public class TestFixtureCollection : ICollectionFixture<TestFixture> {}
+
+// TestBase.cs
+[Collection(nameof(TestFixture))]
+public class TestBase : IDisposable { }
+`,
+        new: `// AssemblyFixtureRegistration.cs  (new)
+// One TestFixture instance shared across the whole assembly, even
+// though every test class is its own collection - so classes run
+// in parallel while still sharing one set of containers.
+[assembly: AssemblyFixture(typeof(TestFixture))]
+
+// TestBase.cs  (no [Collection]: each class is its own collection)
+public class TestBase : IDisposable { }
+`,
+      },
+      {
+        mount: "#diff-mocks",
+        name: "TestFixture.cs",
+        old: `// add any mock services here
+services.ReplaceServiceWithSingletonMock<IHttpContextAccessor>();
+services.ReplaceServiceWithSingletonMock<IHeimGuardClient>();
+services.ReplaceServiceWithSingletonMock<IBackgroundJobClient>();
+`,
+        new: `// Registered as *scoped* so each TestingServiceScope gets its own
+// instance - isolates per-test permissions/jobs for parallel runs.
+// IHttpContextAccessor stays REAL: its AsyncLocal isolates the
+// "current user" per async flow, exactly what parallel tests need.
+services.ReplaceServiceWithScopedMock<IHeimGuardClient>();
+services.ReplaceServiceWithScopedMock<IBackgroundJobClient>();
+`,
+      },
+    ];
+
+    for (const d of diffs) {
+      const el = document.querySelector(d.mount);
+      if (!el) continue;
+      new FileDiff(options).render({
+        containerWrapper: el,
+        oldFile: { name: d.name, contents: d.old },
+        newFile: { name: d.name, contents: d.new },
+      });
+    }
+  </script>
+
+  <!-- ===== theme-aware Mermaid ===== -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.esm.min.mjs";
+    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const paint = document.createElement("canvas").getContext("2d");
+    function toRgba(color) {
+      paint.clearRect(0, 0, 1, 1); paint.fillStyle = "#000"; paint.fillStyle = color; paint.fillRect(0, 0, 1, 1);
+      return paint.getImageData(0, 0, 1, 1).data;
+    }
+    function compositeRgba(fg, bg) {
+      const fa = fg[3] / 255, ba = bg[3] / 255, a = fa + ba * (1 - fa);
+      if (a === 0) return [0, 0, 0, 0];
+      return [(fg[0]*fa + bg[0]*ba*(1-fa))/a, (fg[1]*fa + bg[1]*ba*(1-fa))/a, (fg[2]*fa + bg[2]*ba*(1-fa))/a, a*255];
+    }
+    function pageIsDark() {
+      const root = document.documentElement;
+      const rb = toRgba(getComputedStyle(root).backgroundColor);
+      const bb = document.body ? toRgba(getComputedStyle(document.body).backgroundColor) : [0,0,0,0];
+      const [r,g,b,a] = compositeRgba(bb, rb);
+      if (a > 0) return (0.2126*r + 0.7152*g + 0.0722*b)/255 < 0.5;
+      const cs = getComputedStyle(root).colorScheme;
+      if (cs.includes("dark") && !cs.includes("light")) return true;
+      if (cs.includes("light") && !cs.includes("dark")) return false;
+      return darkQuery.matches;
+    }
+    const diagrams = [...document.querySelectorAll(".mermaid")].map((el) => ({ el, src: el.textContent }));
+    let applied, rendering = false, queued = false;
+    function queueRender() { queued = true; if (rendering) return; void render(); }
+    async function render() {
+      rendering = true;
+      try {
+        while (queued) {
+          queued = false;
+          const t = pageIsDark() ? "dark" : "default";
+          if (t === applied) continue;
+          mermaid.initialize({ startOnLoad: false, theme: t, securityLevel: "strict" });
+          for (const { el, src } of diagrams) { el.removeAttribute("data-processed"); el.textContent = src; }
+          try { await mermaid.run({ nodes: diagrams.map((d) => d.el) }); }
+          catch (e) { console.error("Mermaid render failed:", e); return; }
+          applied = t;
+        }
+      } finally { rendering = false; if (queued) queueRender(); }
+    }
+    if (document.readyState === "complete") queueRender();
+    else window.addEventListener("load", queueRender, { once: true });
+    const obs = new MutationObserver(queueRender);
+    for (const el of [document.documentElement, document.body]) if (el) obs.observe(el, { attributes: true, attributeFilter: ["data-theme","class","style"] });
+    darkQuery.addEventListener("change", queueRender);
+  </script>
+</body>
+</html>

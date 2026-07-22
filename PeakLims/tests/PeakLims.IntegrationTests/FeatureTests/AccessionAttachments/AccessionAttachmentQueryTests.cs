@@ -47,7 +47,11 @@ public class AccessionAttachmentQueryTests : TestBase
         accessionAttachment.Filename.Should().Be(attachment.Filename);
         accessionAttachment.Comments.Should().Be(attachment.Comments);
         accessionAttachment.PreSignedUrl.Should().NotBeNull();
-        accessionAttachment.PreSignedUrl.Should().Be(attachment.GetPreSignedUrl(fileStorage));
+        // The presigned URL embeds a time-based Expires/Signature (DateTime.Now), so two
+        // independently generated URLs differ whenever they straddle a one-second boundary.
+        // Compare only the stable object path (bucket + key), not the volatile query string.
+        accessionAttachment.PreSignedUrl.Split('?')[0]
+            .Should().Be(attachment.GetPreSignedUrl(fileStorage).Split('?')[0]);
     }
 
     [Fact]

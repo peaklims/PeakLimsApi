@@ -2,6 +2,7 @@ namespace PeakLims.IntegrationTests.FeatureTests.Samples;
 
 using PeakLims.Domain.Samples.Dtos;
 using PeakLims.SharedTestHelpers.Fakes.Sample;
+using PeakLims.SharedTestHelpers.Fakes.Patient;
 using PeakLims.Domain.Samples.Features;
 using FluentAssertions;
 using Domain;
@@ -11,17 +12,21 @@ using Exceptions;
 
 public class SampleListQueryTests : TestBase
 {
-    
+
     [Fact]
     public async Task can_get_sample_list()
     {
         // Arrange
+        // Samples are filtered by the owning patient's organization (Patient.OrganizationId), so they must
+        // belong to a patient in the org to be visible. Attaching them to a patient here keeps the test
+        // correct when it runs in parallel with others.
         var testingServiceScope = new TestingServiceScope();
-        var fakeSampleOne = new FakeSampleBuilder().Build();
-        var fakeSampleTwo = new FakeSampleBuilder().Build();
+        var patient = new FakePatientBuilder().Build();
+        patient.AddSample(new FakeSampleBuilder().Build());
+        patient.AddSample(new FakeSampleBuilder().Build());
         var queryParameters = new SampleParametersDto();
 
-        await testingServiceScope.InsertAsync(fakeSampleOne, fakeSampleTwo);
+        await testingServiceScope.InsertAsync(patient);
 
         // Act
         var query = new GetSampleList.Query(queryParameters);

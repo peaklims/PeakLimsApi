@@ -1,27 +1,10 @@
 namespace PeakLims.IntegrationTests;
 
-using AutoBogus;
-using AutoBogus.Conventions;
-
-[Collection(nameof(TestFixture))]
+// No [Collection] attribute: each test class is its own collection so classes run in
+// parallel against each other, all sharing the single assembly-level TestFixture
+// (see AssemblyFixtureRegistration.cs). AutoFaker is configured once in the fixture.
 public class TestBase : IDisposable
 {
-    public TestBase()
-    {
-        AutoFaker.Configure(builder =>
-        {
-            // configure global autobogus settings here
-            builder.WithDateTimeKind(DateTimeKind.Utc)
-                .WithConventions(config =>
-                {
-                    // config.Email.Aliases("AnotherEmail");  // Generates an email value for members named AnotherEmail
-                })
-                .WithRecursiveDepth(3)
-                .WithTreeDepth(1)
-                .WithRepeatCount(1);
-        });
-    }
-    
     public void Dispose()
     {
     }

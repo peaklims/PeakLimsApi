@@ -2,6 +2,9 @@ namespace PeakLims.IntegrationTests;
 
 using System.Security.Claims;
 using Amazon.S3;
+using DotNet.Testcontainers.Builders;
+using AutoBogus;
+using AutoBogus.Conventions;
 using PeakLims.Extensions.Services;
 using PeakLims.Databases;
 using PeakLims.Resources;
@@ -22,9 +25,6 @@ using SharedTestHelpers.Fakes.PeakOrganization;
 using Testcontainers.LocalStack;
 using static Resources.PeakLimsOptions;
 
-[CollectionDefinition(nameof(TestFixture))]
-public class TestFixtureCollection : ICollectionFixture<TestFixture> {}
-
 public class TestFixture : IAsyncLifetime
 {
     public static IServiceScopeFactory BaseScopeFactory;
@@ -32,55 +32,110 @@ public class TestFixture : IAsyncLifetime
     private RabbitMqContainer _rmqContainer;
     private LocalStackContainer _localStackContainer;
 
-    public async Task InitializeAsync()
+    // Reuse the containers across local test runs so the container-startup floor (which
+    // dominates the fixture's wall-clock time) is paid once instead of on every run.
+    // Disabled in CI: ephemeral runners can't reconnect to a prior container, and a fresh
+    // database per job is safer there.
+    private static readonly bool ReuseContainers =
+        Environment.GetEnvironmentVariable("CI") is null;
+
+    public async ValueTask InitializeAsync()
     {
+        ConfigureAutoFaker();
         var builder = WebApplication.CreateBuilder(new WebApplicationOptions
         {
             EnvironmentName = Consts.Testing.IntegrationTestingEnvName
         });
 
-        _dbContainer = new PostgreSqlBuilder().Build();
-        await _dbContainer.StartAsync();
-        builder.Configuration.GetSection(ConnectionStringOptions.SectionName)[ConnectionStringOptions.PeakLimsKey] = _dbContainer.GetConnectionString();
-        await RunMigration(_dbContainer.GetConnectionString());
-
-        var freePort = DockerUtilities.GetFreePort();
-        _rmqContainer = new RabbitMqBuilder()
-            .WithPortBinding(freePort, 5672)
+        _dbContainer = new PostgreSqlBuilder()
+            .WithReuse(ReuseContainers)
+            .WithLabel("peaklims.reuse", "integration-db")
             .Build();
-        await _rmqContainer.StartAsync();
+
+        _rmqContainer = new RabbitMqBuilder()
+            .WithReuse(ReuseContainers)
+            .WithLabel("peaklims.reuse", "integration-rmq")
+            // Same reuse concern as LocalStack: the default RabbitMQ wait strategy is
+            // log-based and hangs on a reused container. A port probe is re-runnable and
+            // sufficient here (nothing in the suite actually connects to the broker).
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5672))
+            .Build();
+
+        _localStackContainer = new LocalStackBuilder()
+            .WithReuse(ReuseContainers)
+            .WithLabel("peaklims.reuse", "integration-localstack")
+            // Boot only S3 (the sole AWS service the suite exercises) rather than the full
+            // LocalStack service set - this cuts container readiness time substantially.
+            .WithEnvironment("SERVICES", "s3")
+            .WithEnvironment("EAGER_SERVICE_LOADING", "1")
+            // Poll the health endpoint instead of the default log-message wait. A log-based
+            // wait hangs on a reused container because the "Ready." line was already emitted
+            // on the original boot and never reappears; an HTTP probe succeeds either way.
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilHttpRequestIsSucceeded(request => request
+                    .ForPort(4566)
+                    .ForPath("/_localstack/health")))
+            .Build();
+
+        // Container startup dominates the fixture's wall-clock time, so start all three
+        // containers concurrently instead of awaiting each one in turn.
+        await Task.WhenAll(
+            _dbContainer.StartAsync(),
+            _rmqContainer.StartAsync(),
+            _localStackContainer.StartAsync());
+
+        // Let Docker assign ephemeral host ports and read them back after start. Fixed
+        // GetFreePort() bindings both broke reuse (the host port feeds the reuse hash, so it
+        // changed every run) and raced other processes for the port ("address already in use").
+        var localstackPort = _localStackContainer.GetMappedPublicPort(4566);
+
+        builder.Configuration.GetSection(ConnectionStringOptions.SectionName)[ConnectionStringOptions.PeakLimsKey] = _dbContainer.GetConnectionString();
         builder.Configuration.GetSection(RabbitMqOptions.SectionName)[RabbitMqOptions.HostKey] = "localhost";
         builder.Configuration.GetSection(RabbitMqOptions.SectionName)[RabbitMqOptions.VirtualHostKey] = "/";
         builder.Configuration.GetSection(RabbitMqOptions.SectionName)[RabbitMqOptions.UsernameKey] = "guest";
         builder.Configuration.GetSection(RabbitMqOptions.SectionName)[RabbitMqOptions.PasswordKey] = "guest";
         builder.Configuration.GetSection(RabbitMqOptions.SectionName)[RabbitMqOptions.PortKey] = _rmqContainer.GetConnectionString();
-
-        var localstackPort = DockerUtilities.GetFreePort();
         builder.Configuration["PeakLims:LocalstackPort"] = localstackPort.ToString();
-        _localStackContainer = new LocalStackBuilder()
-            .WithPortBinding(localstackPort, 4566)
-            .Build();
-        await _localStackContainer.StartAsync();
-        await AddS3Buckets(localstackPort);
-        
+
+        // Post-start setup that each depends on a running container - also run concurrently.
+        await Task.WhenAll(
+            RunMigration(_dbContainer.GetConnectionString()),
+            AddS3Buckets(localstackPort));
+
         builder.ConfigureServices();
         var services = builder.Services;
 
-        // add any mock services here
-        services.ReplaceServiceWithSingletonMock<IHttpContextAccessor>();
-        services.ReplaceServiceWithSingletonMock<IHeimGuardClient>();
-        services.ReplaceServiceWithSingletonMock<IBackgroundJobClient>();
+        // Add any mock services here.
+        // These are registered as *scoped* so each TestingServiceScope gets its own instance.
+        // This isolates per-test state (permissions, enqueued jobs) so tests can run in parallel.
+        // IHttpContextAccessor is intentionally left as the real implementation: its internal
+        // AsyncLocal isolates the "current user" per async flow, which is exactly what parallel
+        // tests need (see TestingServiceScope.SetUser).
+        services.ReplaceServiceWithScopedMock<IHeimGuardClient>();
+        services.ReplaceServiceWithScopedMock<IBackgroundJobClient>();
 
         var provider = services.BuildServiceProvider();
         BaseScopeFactory = provider.GetService<IServiceScopeFactory>();
         
         var dbContext = provider.GetService<PeakLimsDbContext>();
+        await SeedDefaultTestingOrganization(dbContext);
+
+        SetupDateAssertions();
+    }
+
+    private static async Task SeedDefaultTestingOrganization(PeakLimsDbContext dbContext)
+    {
+        // Idempotent: a reused DB container already holds this row from a prior run, and
+        // re-inserting the fixed id would violate the primary key.
+        var alreadySeeded = await dbContext.PeakOrganizations
+            .AnyAsync(o => o.Id == TestingConsts.DefaultTestingOrganizationId);
+        if (alreadySeeded)
+            return;
+
         var testingOrganization = new FakePeakOrganizationBuilder().Build();
         testingOrganization.OverrideId(TestingConsts.DefaultTestingOrganizationId);
         await dbContext.PeakOrganizations.AddAsync(testingOrganization);
         await dbContext.SaveChangesAsync();
-        
-        SetupDateAssertions();
     }
     
     private static async Task RunMigration(string connectionString)
@@ -97,17 +152,43 @@ public class TestFixture : IAsyncLifetime
     {
         var config = new AmazonS3Config { ForcePathStyle = true, ServiceURL = $"http://localhost:{localstackPort}" };
         var client = new AmazonS3Client("test", "test", config);
+        var existing = await client.ListBucketsAsync();
         foreach (var bucket in Consts.S3Buckets.List())
         {
-            await client.PutBucketAsync(bucket);
+            // Idempotent: a reused LocalStack container may already hold the bucket.
+            var alreadyExists = existing.Buckets?.Any(b => b.BucketName == bucket) ?? false;
+            if (!alreadyExists)
+                await client.PutBucketAsync(bucket);
         }
     }
 
-    public async Task DisposeAsync()
-    {        
-        await _dbContainer.DisposeAsync();
-        await _rmqContainer.DisposeAsync();
-        await _localStackContainer.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        // When reusing, leave the containers running so the next local run reconnects to them
+        // instead of paying the startup floor again.
+        if (ReuseContainers)
+            return;
+
+        await Task.WhenAll(
+            _dbContainer.DisposeAsync().AsTask(),
+            _rmqContainer.DisposeAsync().AsTask(),
+            _localStackContainer.DisposeAsync().AsTask());
+    }
+
+    private static void ConfigureAutoFaker()
+    {
+        AutoFaker.Configure(builder =>
+        {
+            // configure global autobogus settings here
+            builder.WithDateTimeKind(DateTimeKind.Utc)
+                .WithConventions(config =>
+                {
+                    // config.Email.Aliases("AnotherEmail");  // Generates an email value for members named AnotherEmail
+                })
+                .WithRecursiveDepth(3)
+                .WithTreeDepth(1)
+                .WithRepeatCount(1);
+        });
     }
 
     private static void SetupDateAssertions()
@@ -134,6 +215,14 @@ public static class ServiceCollectionServiceExtensions
     {
         services.RemoveAll(typeof(TService));
         services.AddSingleton(_ => Substitute.For<TService>());
+        return services;
+    }
+
+    public static IServiceCollection ReplaceServiceWithScopedMock<TService>(this IServiceCollection services)
+        where TService : class
+    {
+        services.RemoveAll(typeof(TService));
+        services.AddScoped(_ => Substitute.For<TService>());
         return services;
     }
 }
